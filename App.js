@@ -1,26 +1,15 @@
 import * as React from 'react';
-import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, View} from 'react-native';
-import {Provider as PaperProvider} from 'react-native-paper';
+import { StatusBar } from 'expo-status-bar';
+import MainScreen from './screens/MainScreen';
+import AppContainer from './components/AppContainer';
 
-export default function App() {
+const App = () => {
   return (
-    <>
-      <PaperProvider>
-        <View style={styles.container}>
-          <Text>Open up App.js to start working on your app!</Text>
-        </View>
-      </PaperProvider>
+    <AppContainer>
+      <MainScreen />
       <StatusBar style="auto" />
-    </>
+    </AppContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
