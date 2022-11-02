@@ -9,3 +9,6 @@
 - Start the app
 `npm start`
 - Scan the QR code with Expo Go on your mobile phone
+
+[Backend repository](https://github.com/Paattis/ideabarrel-backend)
+
