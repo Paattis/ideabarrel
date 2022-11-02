@@ -2,10 +2,10 @@ import * as React from 'react';
 import { StyleSheet, View, useColorScheme } from 'react-native';
 import { Button } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
+import ThemeToggle from '../components/ThemeToggle';
 
 const MainScreen = ({ navigation }) => {
   const scheme = useColorScheme();
-
   return (
     <View
       style={[
@@ -16,6 +16,7 @@ const MainScreen = ({ navigation }) => {
       <Button mode="elevated" onPress={() => navigation.navigate('Second')}>
         Navigate to Details
       </Button>
+      <ThemeToggle />
     </View>
   );
 };

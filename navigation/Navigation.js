@@ -1,6 +1,9 @@
-import * as React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { PreferencesContext } from '../contexts/PreferencesContext';
+import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import MainScreen from '../screens/MainScreen';
 import SecondScreen from '../screens/SecondScreen';
 
@@ -16,10 +19,29 @@ const StackScreen = () => {
 };
 
 const Navigation = () => {
+  const [isThemeDark, setIsThemeDark] = useState(false);
+  const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+
+  const toggleTheme = useCallback(() => {
+    return setIsThemeDark(!isThemeDark);
+  }, [isThemeDark]);
+
+  const preferences = useMemo(
+    () => ({
+      toggleTheme,
+      isThemeDark,
+    }),
+    [toggleTheme, isThemeDark]
+  );
+
   return (
-    <NavigationContainer>
-      <StackScreen />
-    </NavigationContainer>
+    <PreferencesContext.Provider value={preferences}>
+      <PaperProvider theme={theme}>
+        <NavigationContainer theme={theme}>
+          <StackScreen />
+        </NavigationContainer>
+      </PaperProvider>
+    </PreferencesContext.Provider>
   );
 };
 

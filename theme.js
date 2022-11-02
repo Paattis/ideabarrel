@@ -1,12 +1,15 @@
-import { DefaultTheme } from 'react-native-paper';
+import {
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+} from '@react-navigation/native';
+import { MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 
-// Placeholder colors
-const lightTheme = {
-  ...DefaultTheme,
+// Placeholder color
+const CustomNavigationDefaultTheme = {
+  ...NavigationDefaultTheme,
   roundness: 2,
-  myOwnProperty: true,
   colors: {
-    ...DefaultTheme.colors,
+    ...NavigationDefaultTheme.colors,
     primary: 'rgb(0, 110, 0)',
     onPrimary: 'rgb(255, 255, 255)',
     primaryContainer: 'rgb(141, 251, 119)',
@@ -50,13 +53,12 @@ const lightTheme = {
   },
 };
 
-// Placeholder colors
-const darkTheme = {
-  ...DefaultTheme,
+// Placeholder color
+const CustomNavigationDarkTheme = {
+  ...NavigationDarkTheme,
   roundness: 2,
-  myOwnProperty: true,
   colors: {
-    ...DefaultTheme.colors,
+    ...NavigationDarkTheme.colors,
     primary: 'rgb(114, 222, 94)',
     onPrimary: 'rgb(0, 58, 0)',
     primaryContainer: 'rgb(0, 83, 0)',
@@ -100,4 +102,24 @@ const darkTheme = {
   },
 };
 
-export { lightTheme, darkTheme };
+// Placeholder color
+const CombinedDefaultTheme = {
+  ...MD3LightTheme,
+  ...CustomNavigationDefaultTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    ...CustomNavigationDefaultTheme.colors,
+  },
+};
+
+// Placeholder color
+const CombinedDarkTheme = {
+  ...MD3DarkTheme,
+  ...CustomNavigationDarkTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    ...CustomNavigationDarkTheme.colors,
+  },
+};
+
+export { CombinedDefaultTheme, CombinedDarkTheme };
