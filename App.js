@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import MainScreen from './screens/MainScreen';
 import AppContainer from './components/AppContainer';
-import { NavigationContainer } from '@react-navigation/native';
+import Navigation from './navigation/Navigation';
 
 const App = () => {
   return (
     <AppContainer>
-      <NavigationContainer>
-        <MainScreen />
-        <StatusBar style="auto" />
-      </NavigationContainer>
+      <Navigation />
+      <StatusBar style="auto" />
     </AppContainer>
   );
 };

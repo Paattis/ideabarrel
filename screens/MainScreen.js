@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { StyleSheet, View, useColorScheme } from 'react-native';
 import { Button } from 'react-native-paper';
+import { PropTypes } from 'prop-types';
 
-const MainScreen = () => {
+const MainScreen = ({ navigation }) => {
   const scheme = useColorScheme();
 
   return (
@@ -12,12 +13,8 @@ const MainScreen = () => {
         { backgroundColor: scheme === 'dark' ? '#000' : '#fff' },
       ]}
     >
-      <Button
-        loading={true}
-        mode="elevated"
-        onPress={() => console.log('Pressed')}
-      >
-        Button
+      <Button mode="elevated" onPress={() => navigation.navigate('Second')}>
+        Navigate to Details
       </Button>
     </View>
   );
@@ -30,5 +27,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+MainScreen.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default MainScreen;
