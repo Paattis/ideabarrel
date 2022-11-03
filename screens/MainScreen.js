@@ -9,7 +9,7 @@ const MainScreen = ({ navigation }) => {
   return (
     <ScreenWrapper style={styles.container}>
       <Button mode="elevated" onPress={() => navigation.navigate('Second')}>
-        Navigate to Details
+        Navigate
       </Button>
       <ThemeToggle />
     </ScreenWrapper>
