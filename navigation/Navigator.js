@@ -6,7 +6,7 @@ import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import { StatusBar } from 'expo-status-bar';
 import StackScreen from './StackScreen';
 
-const Navigation = () => {
+const Navigator = () => {
   const [isThemeDark, setIsThemeDark] = useState(false);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
 
@@ -27,11 +27,11 @@ const Navigation = () => {
       <PaperProvider theme={theme}>
         <NavigationContainer theme={theme}>
           <StackScreen />
+          <StatusBar style={isThemeDark ? 'light' : 'dark'} />
         </NavigationContainer>
       </PaperProvider>
-      <StatusBar style={isThemeDark ? 'light' : 'dark'} />
     </PreferencesContext.Provider>
   );
 };
 
-export default Navigation;
+export default Navigator;

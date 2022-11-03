@@ -29,4 +29,4 @@ ScreenWrapper.propTypes = {
   style: PropTypes.object,
 };
 
-export default ScreenWrapper;
+export { ScreenWrapper };

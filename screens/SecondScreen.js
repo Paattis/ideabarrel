@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
-import ScreenWrapper from '../components/ScreenWrapper';
+import { ScreenWrapper } from '../components';
 
 const SecondScreen = () => {
   return (
