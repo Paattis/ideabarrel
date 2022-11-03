@@ -10,6 +10,7 @@ import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import { PropTypes } from 'prop-types';
 import MainScreen from '../screens/MainScreen';
 import SecondScreen from '../screens/SecondScreen';
+import { StatusBar } from 'expo-status-bar';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +61,7 @@ const Navigation = () => {
           <StackScreen />
         </NavigationContainer>
       </PaperProvider>
+      <StatusBar style={isThemeDark ? 'light' : 'dark'} />
     </PreferencesContext.Provider>
   );
 };
