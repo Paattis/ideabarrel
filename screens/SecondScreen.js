@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const SecondScreen = () => {
   return (
-    <View style={styles.container}>
+    <ScreenWrapper style={styles.container}>
       <Text>Second Screen</Text>
-    </View>
+    </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

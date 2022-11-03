@@ -27,6 +27,7 @@ const StackScreen = () => {
     <Stack.Navigator
       initialRouteName="Main"
       screenOptions={{
+        animation: 'fade_from_bottom',
         header: (props) => <PaperNavigationBar {...props} />,
       }}
     >
@@ -66,6 +67,7 @@ const Navigation = () => {
 PaperNavigationBar.propTypes = {
   navigation: PropTypes.object,
   route: PropTypes.object,
+  back: PropTypes.shape(),
 };
 
 export default Navigation;
