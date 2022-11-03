@@ -1,42 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import {
-  Provider as PaperProvider,
-  Appbar as AppBar,
-} from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
-import { PropTypes } from 'prop-types';
-import MainScreen from '../screens/MainScreen';
-import SecondScreen from '../screens/SecondScreen';
 import { StatusBar } from 'expo-status-bar';
-
-const Stack = createNativeStackNavigator();
-
-const PaperNavigationBar = ({ navigation, back, route }) => {
-  return (
-    <AppBar.Header elevated>
-      {back ? <AppBar.BackAction onPress={navigation.goBack} /> : null}
-      <AppBar.Content title={route.name} />
-    </AppBar.Header>
-  );
-};
-
-const StackScreen = () => {
-  return (
-    <Stack.Navigator
-      initialRouteName="Main"
-      screenOptions={{
-        animation: 'fade_from_bottom',
-        header: (props) => <PaperNavigationBar {...props} />,
-      }}
-    >
-      <Stack.Screen name="Main" component={MainScreen} />
-      <Stack.Screen name="Second" component={SecondScreen} />
-    </Stack.Navigator>
-  );
-};
+import StackScreen from './StackScreen';
 
 const Navigation = () => {
   const [isThemeDark, setIsThemeDark] = useState(false);
@@ -64,12 +32,6 @@ const Navigation = () => {
       <StatusBar style={isThemeDark ? 'light' : 'dark'} />
     </PreferencesContext.Provider>
   );
-};
-
-PaperNavigationBar.propTypes = {
-  navigation: PropTypes.object,
-  route: PropTypes.object,
-  back: PropTypes.shape(),
 };
 
 export default Navigation;
