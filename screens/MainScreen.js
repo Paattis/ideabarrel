@@ -1,29 +1,23 @@
 import * as React from 'react';
-import { StyleSheet, View, useColorScheme } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import ThemeToggle from '../components/ThemeToggle';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const MainScreen = ({ navigation }) => {
-  const scheme = useColorScheme();
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: scheme === 'dark' ? '#000' : '#fff' },
-      ]}
-    >
+    <ScreenWrapper style={styles.container}>
       <Button mode="elevated" onPress={() => navigation.navigate('Second')}>
         Navigate to Details
       </Button>
       <ThemeToggle />
-    </View>
+    </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

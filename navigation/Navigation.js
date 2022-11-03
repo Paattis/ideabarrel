@@ -1,17 +1,35 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Provider as PaperProvider } from 'react-native-paper';
+import {
+  Provider as PaperProvider,
+  Appbar as AppBar,
+} from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
+import { PropTypes } from 'prop-types';
 import MainScreen from '../screens/MainScreen';
 import SecondScreen from '../screens/SecondScreen';
 
 const Stack = createNativeStackNavigator();
 
+const PaperNavigationBar = ({ navigation, back, route }) => {
+  return (
+    <AppBar.Header elevated>
+      {back ? <AppBar.BackAction onPress={navigation.goBack} /> : null}
+      <AppBar.Content title={route.name} />
+    </AppBar.Header>
+  );
+};
+
 const StackScreen = () => {
   return (
-    <Stack.Navigator initialRouteName="Main">
+    <Stack.Navigator
+      initialRouteName="Main"
+      screenOptions={{
+        header: (props) => <PaperNavigationBar {...props} />,
+      }}
+    >
       <Stack.Screen name="Main" component={MainScreen} />
       <Stack.Screen name="Second" component={SecondScreen} />
     </Stack.Navigator>
@@ -43,6 +61,11 @@ const Navigation = () => {
       </PaperProvider>
     </PreferencesContext.Provider>
   );
+};
+
+PaperNavigationBar.propTypes = {
+  navigation: PropTypes.object,
+  route: PropTypes.object,
 };
 
 export default Navigation;
