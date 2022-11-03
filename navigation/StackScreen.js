@@ -1,20 +1,10 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { PropTypes } from 'prop-types';
 import MainScreen from '../screens/MainScreen';
 import SecondScreen from '../screens/SecondScreen';
-import { Appbar as AppBar } from 'react-native-paper';
+import PaperNavigationBar from './NavigationBar';
 
 const Stack = createNativeStackNavigator();
-
-const PaperNavigationBar = ({ navigation, back, route }) => {
-  return (
-    <AppBar.Header elevated>
-      {back ? <AppBar.BackAction onPress={navigation.goBack} /> : null}
-      <AppBar.Content title={route.name} />
-    </AppBar.Header>
-  );
-};
 
 const StackScreen = () => {
   return (
@@ -29,12 +19,6 @@ const StackScreen = () => {
       <Stack.Screen name="Second" component={SecondScreen} />
     </Stack.Navigator>
   );
-};
-
-PaperNavigationBar.propTypes = {
-  navigation: PropTypes.object,
-  route: PropTypes.object,
-  back: PropTypes.shape(),
 };
 
 export default StackScreen;
