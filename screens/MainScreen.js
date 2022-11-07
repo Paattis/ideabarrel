@@ -5,9 +5,11 @@ import { PropTypes } from 'prop-types';
 import { ThemeToggle, ScreenWrapper } from '../components';
 
 const MainScreen = ({ navigation }) => {
+  const second = () => navigation.navigate('Second');
+
   return (
     <ScreenWrapper style={styles.container}>
-      <Button mode="elevated" onPress={() => navigation.navigate('Second')}>
+      <Button mode="elevated" onPress={second}>
         Navigate
       </Button>
       <ThemeToggle />

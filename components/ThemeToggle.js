@@ -9,7 +9,11 @@ const ThemeToggle = () => {
   return (
     <View style={styles.container}>
       <Text>Light</Text>
-      <Switch value={isThemeDark} onValueChange={toggleTheme} />
+      <Switch
+        style={styles.switch}
+        value={isThemeDark}
+        onValueChange={toggleTheme}
+      />
       <Text>Dark</Text>
     </View>
   );
@@ -19,6 +23,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    margin: 4,
+  },
+  switch: {
+    margin: 4,
   },
 });
+
 export { ThemeToggle };
