@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest"
+    "checkCodeStyle": "npx prettier src --check",
+    "test": "npx jest --forceExit --detectOpenHandles --watchAll --maxWorkers=1"
   },
   "jest": {
     "preset": "jest-expo"
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
+    "@testing-library/react-native": "^11.4.0",
     "eslint": "^8.26.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.5.0",
