@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "checkCodeStyle": "npx prettier src --check",
-    "test": "npx jest --forceExit --detectOpenHandles --watchAll --maxWorkers=1"
+    "test": "npx jest"
   },
   "jest": {
     "preset": "jest-expo"
