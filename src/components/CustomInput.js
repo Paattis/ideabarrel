@@ -1,19 +1,41 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { HelperText, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
+import { Controller } from 'react-hook-form';
 
-const CustomInput = ({ value, setValue, label, secureTextEntry }) => {
+const CustomInput = ({
+  control,
+  rules = {},
+  fieldName,
+  label,
+  secureTextEntry,
+}) => {
   return (
-    <View style={styles.container}>
-      <TextInput
-        label={label}
-        value={value}
-        mode="outlined"
-        onChangeText={setValue}
-        secureTextEntry={secureTextEntry}
-      />
-    </View>
+    <Controller
+      control={control}
+      name={fieldName}
+      rules={rules}
+      render={({
+        field: { value, onChange, onBlur },
+        fieldState: { error },
+      }) => (
+        <View style={styles.container}>
+          <TextInput
+            mode="outlined"
+            value={value}
+            onChangeText={onChange}
+            onBlur={onBlur}
+            label={label}
+            secureTextEntry={secureTextEntry}
+            error={error ? true : false}
+          />
+          <HelperText type="error" visible={error ? true : false}>
+            {error?.message || 'Please insert the correct info'}
+          </HelperText>
+        </View>
+      )}
+    />
   );
 };
 
@@ -25,8 +47,9 @@ const styles = StyleSheet.create({
 });
 
 CustomInput.propTypes = {
-  value: PropTypes.string,
-  setValue: PropTypes.object,
+  control: PropTypes.object,
+  rules: PropTypes.object,
+  fieldName: PropTypes.string,
   label: PropTypes.string,
   secureTextEntry: PropTypes.bool,
 };
