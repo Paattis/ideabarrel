@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Controller } from 'react-hook-form';
 
 const CustomInput = ({
+  testID,
   control,
   rules = {},
   fieldName,
@@ -22,6 +23,7 @@ const CustomInput = ({
       }) => (
         <View style={styles.container}>
           <TextInput
+            testID={testID}
             mode="outlined"
             value={value}
             onChangeText={onChange}
@@ -52,6 +54,7 @@ CustomInput.propTypes = {
   fieldName: PropTypes.string,
   label: PropTypes.string,
   secureTextEntry: PropTypes.bool,
+  testID: PropTypes.string,
 };
 
 export default CustomInput;

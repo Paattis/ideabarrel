@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { CustomInput, ScreenWrapper } from '../components';
 import { PropTypes } from 'prop-types';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import {
   EMAIL_REGEX,
@@ -19,9 +19,11 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <ScreenWrapper contentContainerStyle={styles.container} withScrollView>
+      <Text>Create your new account</Text>
       <CustomInput
+        testID="email_input"
         fieldName="email"
-        label="Email"
+        label="Email*"
         control={control}
         rules={{
           required: 'Email required',
@@ -32,8 +34,9 @@ const RegisterScreen = ({ navigation }) => {
         }}
       />
       <CustomInput
+        testID="full_name_input"
         fieldName="full_name"
-        label="Full name"
+        label="Full name*"
         control={control}
         rules={{
           required: 'Full name required',
@@ -48,8 +51,9 @@ const RegisterScreen = ({ navigation }) => {
         }}
       />
       <CustomInput
+        testID="username_input"
         fieldName="username"
-        label="Username"
+        label="Username*"
         control={control}
         rules={{
           required: 'Username required',
@@ -60,8 +64,9 @@ const RegisterScreen = ({ navigation }) => {
         }}
       />
       <CustomInput
+        testID="password_input"
         fieldName="password"
-        label="Password"
+        label="Password*"
         control={control}
         rules={{
           required: 'Password required',
@@ -73,15 +78,19 @@ const RegisterScreen = ({ navigation }) => {
         }}
       />
       <CustomInput
+        testID="confirm_password_input"
         fieldName="confirm_password"
-        label="Confirm password"
+        label="Confirm password*"
         control={control}
         rules={{
+          required: 'Please confirm password',
           validate: (value) => value === password || 'Password does not match',
         }}
       />
 
-      <Button onPress={handleSubmit(signInScreen)}>Sign Up</Button>
+      <Button testID="register_button" onPress={handleSubmit(signInScreen)}>
+        Sign Up
+      </Button>
     </ScreenWrapper>
   );
 };
