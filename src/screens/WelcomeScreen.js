@@ -5,8 +5,8 @@ import { ScreenWrapper } from '../components';
 import { Button } from 'react-native-paper';
 
 const WelcomeScreen = ({ navigation }) => {
-  const registerScreen = () => navigation.navigate('Register');
-  const signInScreen = () => navigation.navigate('SignIn');
+  const registerScreen = () => navigation.navigate('Sign Up');
+  const signInScreen = () => navigation.navigate('Sign In');
 
   return (
     <ScreenWrapper style={styles.container}>

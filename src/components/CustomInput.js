@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 import { HelperText, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { Controller } from 'react-hook-form';
@@ -10,8 +9,28 @@ const CustomInput = ({
   rules = {},
   fieldName,
   label,
-  secureTextEntry,
+  leftIcon,
+  rightIcon,
+  passwordField = false,
 }) => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const iconLeft = leftIcon ? (
+    <TextInput.Icon icon={leftIcon} iconColor="#B4B4B4" />
+  ) : null;
+
+  const iconRight = rightIcon ? (
+    <TextInput.Icon icon={rightIcon} iconColor="#B4B4B4" />
+  ) : null;
+
+  const passwordIcon = rightIcon ? (
+    <TextInput.Icon
+      icon={passwordVisible ? 'eye' : 'eye-off'}
+      iconColor="#B4B4B4"
+      onPress={() => setPasswordVisible(!passwordVisible)}
+    />
+  ) : null;
+
   return (
     <Controller
       control={control}
@@ -21,40 +40,39 @@ const CustomInput = ({
         field: { value, onChange, onBlur },
         fieldState: { error },
       }) => (
-        <View style={styles.container}>
+        <>
           <TextInput
-            testID={testID}
+            dense
+            outlineColor="#B4B4B4"
             mode="outlined"
+            testID={testID}
+            left={iconLeft}
+            right={passwordField ? passwordIcon : iconRight}
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
             label={label}
-            secureTextEntry={secureTextEntry}
-            error={error ? true : false}
+            error={error}
+            secureTextEntry={passwordVisible}
           />
           <HelperText type="error" visible={error ? true : false}>
             {error?.message || 'Please insert the correct info'}
           </HelperText>
-        </View>
+        </>
       )}
     />
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 10,
-    marginVertical: 10,
-  },
-});
-
 CustomInput.propTypes = {
+  testID: PropTypes.string,
   control: PropTypes.object,
   rules: PropTypes.object,
   fieldName: PropTypes.string,
   label: PropTypes.string,
-  secureTextEntry: PropTypes.bool,
-  testID: PropTypes.string,
+  leftIcon: PropTypes.string,
+  rightIcon: PropTypes.string,
+  passwordField: PropTypes.bool,
 };
 
 export default CustomInput;

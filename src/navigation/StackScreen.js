@@ -34,8 +34,8 @@ const StackScreen = () => {
             component={WelcomeScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="Sign Up" component={RegisterScreen} />
+          <Stack.Screen name="Sign In" component={SignInScreen} />
         </>
       )}
     </Stack.Navigator>

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
@@ -9,8 +9,9 @@ const ScreenWrapper = ({
   style,
   contentContainerStyle,
   withScrollView = false,
+  ...rest
 }) => {
-  const { isThemeDark } = React.useContext(PreferencesContext);
+  const { isThemeDark } = useContext(PreferencesContext);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
 
   const containerStyle = [
@@ -24,6 +25,7 @@ const ScreenWrapper = ({
     <>
       {withScrollView ? (
         <ScrollView
+          {...rest}
           contentContainerStyle={contentContainerStyle}
           showsVerticalScrollIndicator={false}
           style={[containerStyle, style]}
