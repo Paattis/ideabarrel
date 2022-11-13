@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 });
 
 ScreenWrapper.propTypes = {
-  children: PropTypes.any,
+  children: PropTypes.node,
   style: PropTypes.object,
   withScrollView: PropTypes.bool,
   contentContainerStyle: PropTypes.object,

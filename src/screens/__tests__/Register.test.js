@@ -22,7 +22,7 @@ describe('<RegisterScreen />', () => {
         fireEvent.press(getByTestId('register_button'));
       });
 
-      expect(navigation.navigate).toHaveBeenCalledWith('SignIn');
+      expect(navigation.navigate).toHaveBeenCalledWith('Sign In');
     });
   });
 
@@ -45,7 +45,7 @@ describe('<RegisterScreen />', () => {
         fireEvent.press(getByTestId('register_button'));
       });
 
-      expect(navigation.navigate).not.toHaveBeenCalledWith('SignIn');
+      expect(navigation.navigate).not.toHaveBeenCalledWith('Sign In');
     });
   });
 
@@ -68,7 +68,7 @@ describe('<RegisterScreen />', () => {
         fireEvent.press(getByTestId('register_button'));
       });
 
-      expect(navigation.navigate).not.toHaveBeenCalledWith('SignIn');
+      expect(navigation.navigate).not.toHaveBeenCalledWith('Sign In');
     });
   });
 
@@ -94,7 +94,7 @@ describe('<RegisterScreen />', () => {
         fireEvent.press(getByTestId('register_button'));
       });
 
-      expect(navigation.navigate).not.toHaveBeenCalledWith('SignIn');
+      expect(navigation.navigate).not.toHaveBeenCalledWith('Sign In');
     });
   });
 
@@ -117,7 +117,7 @@ describe('<RegisterScreen />', () => {
         fireEvent.press(getByTestId('register_button'));
       });
 
-      expect(navigation.navigate).not.toHaveBeenCalledWith('SignIn');
+      expect(navigation.navigate).not.toHaveBeenCalledWith('Sign In');
     });
   });
 
@@ -140,7 +140,7 @@ describe('<RegisterScreen />', () => {
         fireEvent.press(getByTestId('register_button'));
       });
 
-      expect(navigation.navigate).not.toHaveBeenCalledWith('SignIn');
+      expect(navigation.navigate).not.toHaveBeenCalledWith('Sign In');
     });
   });
 });
