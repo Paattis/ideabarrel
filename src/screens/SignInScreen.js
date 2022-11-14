@@ -3,6 +3,7 @@ import { CustomInput } from '../components';
 import CustomCard from '../components/CustomCard';
 import { Button } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
+import { StyleSheet } from 'react-native';
 
 const SingInScreen = () => {
   const { control, handleSubmit } = useForm({ mode: 'onBlur' });
@@ -35,7 +36,14 @@ const SingInScreen = () => {
         }}
       />
       <Button
-        testID="register_button"
+        style={styles.passwordBtn}
+        mode="text"
+        onPress={() => console.warn('test')}
+      >
+        Forgot password?
+      </Button>
+      <Button
+        style={styles.signInBtn}
         mode="contained"
         onPress={handleSubmit()}
       >
@@ -44,5 +52,14 @@ const SingInScreen = () => {
     </CustomCard>
   );
 };
+
+const styles = StyleSheet.create({
+  passwordBtn: {
+    alignItems: 'flex-end',
+  },
+  signInBtn: {
+    marginTop: 20,
+  },
+});
 
 export default SingInScreen;
