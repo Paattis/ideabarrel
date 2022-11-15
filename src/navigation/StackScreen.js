@@ -12,7 +12,7 @@ import {
 const Stack = createNativeStackNavigator();
 
 const StackScreen = () => {
-  const signedIn = false;
+  const signedIn = true;
 
   return (
     <Stack.Navigator

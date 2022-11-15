@@ -30,7 +30,6 @@ const SingInScreen = () => {
         <CustomInput
           passwordField
           testID="password"
-          rightIcon="eye"
           leftIcon="lock"
           fieldName="password"
           label="Password*"

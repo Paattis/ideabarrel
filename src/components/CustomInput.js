@@ -23,13 +23,13 @@ const CustomInput = ({
     <TextInput.Icon icon={rightIcon} iconColor="#B4B4B4" />
   ) : null;
 
-  const passwordIcon = rightIcon ? (
+  const passwordIcon = (
     <TextInput.Icon
       icon={passwordVisible ? 'eye' : 'eye-off'}
       iconColor="#B4B4B4"
       onPress={() => setPasswordVisible(!passwordVisible)}
     />
-  ) : null;
+  );
 
   return (
     <Controller

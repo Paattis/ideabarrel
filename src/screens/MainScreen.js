@@ -1,26 +1,34 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
-import { ThemeToggle, ScreenWrapper } from '../components';
+import { ThemeToggle, Post } from '../components';
+import MainBG from '../../assets/svg/main-bg.svg';
 
 const MainScreen = ({ navigation }) => {
   const second = () => navigation.navigate('Second');
 
   return (
-    <ScreenWrapper style={styles.container}>
-      <Button testID="navButton" mode="elevated" onPress={second}>
-        Navigate
-      </Button>
-      <ThemeToggle />
-    </ScreenWrapper>
+    <View>
+      <MainBG style={styles.bgShape} />
+      <ScrollView contentContainerStyle={styles.container}>
+        <Post />
+
+        <Button testID="navButton" mode="elevated" onPress={second}>
+          Navigate
+        </Button>
+        <ThemeToggle />
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  bgShape: {
+    position: 'absolute',
   },
 });
 

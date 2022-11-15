@@ -77,7 +77,6 @@ const RegisterScreen = ({ navigation }) => {
         />
         <CustomInput
           testID="password_input"
-          rightIcon="eye"
           leftIcon="lock"
           passwordField
           fieldName="password"
@@ -94,7 +93,6 @@ const RegisterScreen = ({ navigation }) => {
         />
         <CustomInput
           testID="confirm_password_input"
-          rightIcon="eye"
           leftIcon="lock"
           passwordField
           fieldName="confirm_password"
