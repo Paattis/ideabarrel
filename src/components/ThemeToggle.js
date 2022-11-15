@@ -30,4 +30,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { ThemeToggle };
+export default ThemeToggle;
