@@ -15,7 +15,15 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest",
       "^.+\\.svg$": "jest-svg-transformer"
-    }
+    },
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "jsx",
+      "ts",
+      "tsx",
+      "node"
+    ]
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.19.1",

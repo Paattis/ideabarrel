@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Button, Divider, Text } from 'react-native-paper';
-import WelcomeBG from '../../assets/svg/welcome-screen-bg';
+import WelcomeBG from '../../assets/svg/welcome-screen-bg.svg';
 
 const WelcomeScreen = ({ navigation }) => {
   const registerScreen = () => navigation.navigate('Sign Up');
