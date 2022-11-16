@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import { ScreenWrapper } from '../components';
 
-const SecondScreen = () => {
+const AddPost = () => {
   return (
     <ScreenWrapper style={styles.container}>
       <Text>Second Screen</Text>
@@ -18,4 +18,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SecondScreen;
+export default AddPost;

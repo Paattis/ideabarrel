@@ -1,18 +1,16 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import MainScreen from '../MainScreen';
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 
 describe('<MainScreen />', () => {
-  it('should navigate to second screen on navigate press', () => {
+  it('should navigate to new post screen on fab press', () => {
     const navigation = { navigate: () => {} };
     jest.spyOn(navigation, 'navigate');
+    const { getByTestId } = render(<MainScreen navigation={navigation} />);
 
-    const screen = render(<MainScreen navigation={navigation} />);
+    fireEvent.press(getByTestId('main_fab'));
 
-    const navButton = screen.getByTestId('navButton');
-
-    fireEvent.press(navButton);
-
-    expect(navigation.navigate).toHaveBeenCalledWith('Second');
+    expect(navigation.navigate).toHaveBeenCalledWith('New Post');
   });
 });
