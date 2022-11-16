@@ -1,15 +1,23 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Card, Divider, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
+import Like from './Like';
 
 const Post = ({ post }) => {
+  const rightButtons = () => (
+    <View style={{ flexDirection: 'row' }}>
+      <Like />
+    </View>
+  );
+
   return (
     <Card mode="elevated" style={styles.card}>
       <Card.Title
         titleStyle={styles.title}
         title={post.title}
         style={styles.header}
+        right={rightButtons}
       />
       <Card.Content style={styles.content}>
         <Text>*tags*</Text>
