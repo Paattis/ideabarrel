@@ -5,14 +5,14 @@ import {
   WelcomeScreen,
   MainScreen,
   RegisterScreen,
-  SecondScreen,
+  NewPost,
   SignInScreen,
 } from '../screens/';
 
 const Stack = createNativeStackNavigator();
 
 const StackScreen = () => {
-  const signedIn = false;
+  const signedIn = true;
 
   return (
     <Stack.Navigator
@@ -25,7 +25,7 @@ const StackScreen = () => {
       {signedIn ? (
         <>
           <Stack.Screen name="Main" component={MainScreen} />
-          <Stack.Screen name="Second" component={SecondScreen} />
+          <Stack.Screen name="New Post" component={NewPost} />
         </>
       ) : (
         <>
