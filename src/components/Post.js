@@ -1,20 +1,21 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Card, Divider, Text } from 'react-native-paper';
+import { PropTypes } from 'prop-types';
 
-const Post = () => {
+const Post = ({ post }) => {
   return (
     <Card mode="elevated" style={styles.card}>
       <Card.Title
         titleStyle={styles.title}
-        title="idea title"
+        title={post.title}
         style={styles.header}
       />
       <Card.Content style={styles.content}>
         <Text>*tags*</Text>
-        <Divider bold style={{ marginTop: 15 }} />
+        <Divider bold style={styles.divider} />
         <Text numberOfLines={5} style={styles.description}>
-          post description
+          {post.description}
         </Text>
         <Text style={styles.profile}>*profile*</Text>
       </Card.Content>
@@ -24,9 +25,10 @@ const Post = () => {
 
 const styles = StyleSheet.create({
   card: {
-    width: '85%',
-    marginTop: 17,
+    flex: 1,
     borderRadius: 4,
+    marginHorizontal: 30,
+    marginVertical: 10,
   },
   header: {
     borderTopEndRadius: 4,
@@ -40,6 +42,10 @@ const styles = StyleSheet.create({
   content: {
     height: 180,
   },
+  divider: {
+    marginTop: 15,
+    marginBottom: 5,
+  },
   description: {
     height: 90,
   },
@@ -47,5 +53,9 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
+
+Post.propTypes = {
+  post: PropTypes.object,
+};
 
 export default Post;

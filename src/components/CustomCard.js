@@ -23,7 +23,7 @@ const CustomCard = ({ children, title }) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: '88%',
+    marginHorizontal: 20,
     borderRadius: 9,
   },
 });

@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   bgShape: {
     position: 'absolute',
