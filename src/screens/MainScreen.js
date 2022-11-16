@@ -46,7 +46,12 @@ const MainScreen = ({ navigation }) => {
           renderItem={({ item }) => <Post post={item} />}
         />
       </SafeAreaView>
-      <FAB label="New Post" extended={isExtended} onPress={newPost} />
+      <FAB
+        testID="main_fab"
+        label="New Post"
+        extended={isExtended}
+        onPress={newPost}
+      />
     </>
   );
 };

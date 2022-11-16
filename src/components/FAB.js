@@ -3,9 +3,10 @@ import { StyleSheet } from 'react-native';
 import { AnimatedFAB } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 
-const FAB = ({ label, visible = true, extended, onPress }) => {
+const FAB = ({ label, visible = true, extended, onPress, testID }) => {
   return (
     <AnimatedFAB
+      testID={testID}
       icon="plus"
       label={label}
       extended={extended}
@@ -30,6 +31,7 @@ FAB.propTypes = {
   visible: PropTypes.bool,
   extended: PropTypes.bool,
   onPress: PropTypes.func,
+  testID: PropTypes.string,
 };
 
 export default FAB;
