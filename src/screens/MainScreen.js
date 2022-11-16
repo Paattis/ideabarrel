@@ -1,26 +1,41 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
+import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { ThemeToggle, ScreenWrapper } from '../components';
+import { Post } from '../components';
+import MainBG from '../../assets/svg/main-bg.svg';
+
+// mock data
+const data = [
+  {
+    title: 'test1',
+    description: 'some desc',
+  },
+  {
+    title: 'test2',
+    description: 'some desc2',
+  },
+  {
+    title: 'test3',
+    description: 'some desc3',
+  },
+  {
+    title: 'test4',
+    description: 'some desc4',
+  },
+];
 
 const MainScreen = ({ navigation }) => {
-  const second = () => navigation.navigate('Second');
-
   return (
-    <ScreenWrapper style={styles.container}>
-      <Button testID="navButton" mode="elevated" onPress={second}>
-        Navigate
-      </Button>
-      <ThemeToggle />
-    </ScreenWrapper>
+    <SafeAreaView>
+      <MainBG style={styles.bgShape} />
+      <FlatList data={data} renderItem={({ item }) => <Post post={item} />} />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  bgShape: {
+    position: 'absolute',
   },
 });
 

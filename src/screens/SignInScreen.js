@@ -30,7 +30,6 @@ const SingInScreen = () => {
         <CustomInput
           passwordField
           testID="password"
-          rightIcon="eye"
           leftIcon="lock"
           fieldName="password"
           label="Password*"
@@ -62,7 +61,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   passwordBtn: {
     alignItems: 'flex-end',
