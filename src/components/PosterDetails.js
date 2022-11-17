@@ -17,12 +17,8 @@ const PosterDetails = ({ avatarPosition = 'row' }) => {
       <View style={container}>
         <Avatar.Image size={30} />
         <View style={styles.textContainer}>
-          <Text style={styles.posterName} variant="BodyMedium">
-            Pekka Pekkarinen
-          </Text>
-          <Text style={styles.posterRole} variant="bodySmall">
-            Junior Test Engineer
-          </Text>
+          <Text style={styles.posterName}>Pekka Pekkarinen</Text>
+          <Text style={styles.posterRole}>Junior Test Engineer</Text>
         </View>
       </View>
     </TouchableOpacity>

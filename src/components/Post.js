@@ -36,7 +36,7 @@ const Post = ({ navigation, post }) => {
           {post.description}
         </Text>
         <View style={styles.profile}>
-          <PosterDetails avatarPosition="right" />
+          <PosterDetails avatarPosition="left" />
         </View>
       </Card.Content>
     </Card>
