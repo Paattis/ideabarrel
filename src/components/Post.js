@@ -1,15 +1,33 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Card, Divider, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
+import Like from '../components/Like';
+import Comments from '../components/Comments';
+import PosterDetails from './PosterDetails';
 
-const Post = ({ post }) => {
+const Post = ({ navigation, post }) => {
+  // extended post screen will be added later
+  const extendedPost = () => navigation.navigate('New Post');
+
+  const rightButtons = () => (
+    <View style={{ flexDirection: 'row' }}>
+      <Like />
+      <Comments onPress={extendedPost} />
+    </View>
+  );
+
   return (
-    <Card mode="elevated" style={styles.card}>
+    <Card
+      mode="elevated"
+      style={styles.card}
+      onPress={() => console.log('card')}
+    >
       <Card.Title
         titleStyle={styles.title}
         title={post.title}
         style={styles.header}
+        right={rightButtons}
       />
       <Card.Content style={styles.content}>
         <Text>*tags*</Text>
@@ -17,7 +35,9 @@ const Post = ({ post }) => {
         <Text numberOfLines={5} style={styles.description}>
           {post.description}
         </Text>
-        <Text style={styles.profile}>*profile*</Text>
+        <View style={styles.profile}>
+          <PosterDetails avatarPosition="left" />
+        </View>
       </Card.Content>
     </Card>
   );
@@ -50,11 +70,13 @@ const styles = StyleSheet.create({
     height: 90,
   },
   profile: {
-    textAlign: 'right',
+    marginTop: 8,
+    alignItems: 'flex-end',
   },
 });
 
 Post.propTypes = {
+  navigation: PropTypes.object,
   post: PropTypes.object,
 };
 
