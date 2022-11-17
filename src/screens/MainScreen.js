@@ -43,7 +43,9 @@ const MainScreen = ({ navigation }) => {
           onScroll={onScroll}
           showsVerticalScrollIndicator={false}
           data={data}
-          renderItem={({ item }) => <Post post={item} />}
+          renderItem={({ item }) => (
+            <Post post={item} navigation={navigation} />
+          )}
         />
       </SafeAreaView>
       <FAB
