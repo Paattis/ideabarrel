@@ -16,13 +16,15 @@ const Like = () => {
     setLikes(0);
   };
 
+  const likesFormatted = numeral(likes).format('0a');
+
   return (
     <Button
       textColor="#fff"
       icon={liked ? 'thumb-up' : 'thumb-up-outline'}
       onPress={liked ? unlike : like}
     >
-      {numeral(likes).format('0a')}
+      {likesFormatted}
     </Button>
   );
 };
