@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Card, Divider, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import Like from '../components/Like';
-import CommentsCount from '../components/CommentsCount';
+import Comments from '../components/Comments';
 
 const Post = ({ navigation, post }) => {
   // extended post screen will be added later
@@ -12,7 +12,7 @@ const Post = ({ navigation, post }) => {
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
       <Like />
-      <CommentsCount onPress={extendedPost} />
+      <Comments onPress={extendedPost} />
     </View>
   );
 
