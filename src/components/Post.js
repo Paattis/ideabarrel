@@ -4,6 +4,7 @@ import { Card, Divider, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import Like from '../components/Like';
 import Comments from '../components/Comments';
+import PosterDetails from './PosterDetails';
 
 const Post = ({ navigation, post }) => {
   // extended post screen will be added later
@@ -17,7 +18,11 @@ const Post = ({ navigation, post }) => {
   );
 
   return (
-    <Card mode="elevated" style={styles.card}>
+    <Card
+      mode="elevated"
+      style={styles.card}
+      onPress={() => console.log('card')}
+    >
       <Card.Title
         titleStyle={styles.title}
         title={post.title}
@@ -30,7 +35,9 @@ const Post = ({ navigation, post }) => {
         <Text numberOfLines={5} style={styles.description}>
           {post.description}
         </Text>
-        <Text style={styles.profile}>*profile*</Text>
+        <View style={styles.profile}>
+          <PosterDetails avatarPosition="right" />
+        </View>
       </Card.Content>
     </Card>
   );
@@ -63,7 +70,8 @@ const styles = StyleSheet.create({
     height: 90,
   },
   profile: {
-    textAlign: 'right',
+    marginTop: 8,
+    alignItems: 'flex-end',
   },
 });
 
