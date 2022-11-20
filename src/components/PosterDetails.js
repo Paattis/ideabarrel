@@ -7,16 +7,15 @@ const PosterDetails = ({ avatarPosition = 'row' }) => {
   const posterDetails = () => console.log('deets');
 
   const direction = avatarPosition === 'right' ? 'row-reverse' : 'row';
-  const container = {
+  const flexDirection = {
     flexDirection: direction,
-    alignItems: 'center',
   };
 
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={posterDetails}>
-      <View style={container}>
-        <Avatar.Image size={30} />
-        <View style={styles.textContainer}>
+      <View style={[styles.container, flexDirection]}>
+        <Avatar.Image size={30} style={styles.avatar} />
+        <View>
           <Text style={styles.posterName}>Pekka Pekkarinen</Text>
           <Text style={styles.posterRole}>Junior Test Engineer</Text>
         </View>
@@ -26,7 +25,8 @@ const PosterDetails = ({ avatarPosition = 'row' }) => {
 };
 
 const styles = StyleSheet.create({
-  textContainer: { marginHorizontal: 8 },
+  container: { alignItems: 'center' },
+  avatar: { marginHorizontal: 8 },
   posterName: { fontSize: 12 },
   posterRole: { fontSize: 9 },
 });

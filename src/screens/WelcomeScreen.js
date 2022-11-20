@@ -7,8 +7,8 @@ import { PreferencesContext } from '../contexts/PreferencesContext';
 import WelcomeBG from '../../assets/svg/welcome-screen-bg.svg';
 
 const WelcomeScreen = ({ navigation }) => {
-  const registerScreen = () => navigation.navigate('Sign Up');
-  const signInScreen = () => navigation.navigate('Sign In');
+  const _registerScreen = () => navigation.navigate('Sign Up');
+  const _signInScreen = () => navigation.navigate('Sign In');
 
   const { isThemeDark } = useContext(PreferencesContext);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
@@ -17,15 +17,14 @@ const WelcomeScreen = ({ navigation }) => {
     borderColor: theme.colors.primary,
   };
 
-  const contentStyle = {
+  const contentColor = {
     backgroundColor: theme.colors.background,
-    padding: 20,
   };
 
   return (
     <View style={styles.container}>
       <WelcomeBG />
-      <View style={contentStyle}>
+      <View style={[styles.content, contentColor]}>
         <Text variant="headlineMedium">Welcome</Text>
         <Text variant="bodySmall" style={{ marginBottom: 29 }}>
           IdeaBarrel allows you to share your work related ideas amongst your
@@ -35,7 +34,7 @@ const WelcomeScreen = ({ navigation }) => {
           testID="sign_in"
           style={buttonStyle}
           mode="outlined"
-          onPress={signInScreen}
+          onPress={_signInScreen}
         >
           Sign In
         </Button>
@@ -46,7 +45,7 @@ const WelcomeScreen = ({ navigation }) => {
           </View>
           <Divider bold style={{ flex: 1 }} />
         </View>
-        <Button testID="sign_up" mode="contained" onPress={registerScreen}>
+        <Button testID="sign_up" mode="contained" onPress={_registerScreen}>
           Sign Up
         </Button>
       </View>
@@ -58,6 +57,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#345BAC',
     justifyContent: 'flex-end',
+  },
+  content: {
+    padding: 20,
   },
   divider: {
     flexDirection: 'row',

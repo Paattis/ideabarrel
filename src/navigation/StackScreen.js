@@ -4,8 +4,8 @@ import PaperNavigationBar from './NavigationBar';
 import {
   WelcomeScreen,
   MainScreen,
-  RegisterScreen,
-  NewPost,
+  SignUpScreen,
+  NewPostScreen,
   SignInScreen,
 } from '../screens/';
 
@@ -25,7 +25,11 @@ const StackScreen = () => {
       {signedIn ? (
         <>
           <Stack.Screen name="Main" component={MainScreen} />
-          <Stack.Screen name="New Post" component={NewPost} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="New Post"
+            component={NewPostScreen}
+          />
         </>
       ) : (
         <>
@@ -34,7 +38,7 @@ const StackScreen = () => {
             component={WelcomeScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Sign Up" component={RegisterScreen} />
+          <Stack.Screen name="Sign Up" component={SignUpScreen} />
           <Stack.Screen name="Sign In" component={SignInScreen} />
         </>
       )}

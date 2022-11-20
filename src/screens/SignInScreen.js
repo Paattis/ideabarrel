@@ -1,10 +1,10 @@
 import React from 'react';
-import { CustomInput, ScreenWrapper } from '../components';
-import CustomCard from '../components/CustomCard';
+import { FormInput, ScreenWrapper } from '../components';
+import FormCard from '../components/FormCard';
 import { Button } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
-import SignInBG from '../../assets/svg/sign-in-bg.svg';
+import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const SingInScreen = () => {
   const { control, handleSubmit } = useForm({ mode: 'onBlur' });
@@ -15,9 +15,9 @@ const SingInScreen = () => {
       withScrollView
       keyboardShouldPersistTaps="handled"
     >
-      <SignInBG style={styles.bgShape} />
-      <CustomCard title="Sign in to your account">
-        <CustomInput
+      <BgSVG style={styles.bgShape} />
+      <FormCard title="Sign in to your account">
+        <FormInput
           testID="username_email_input"
           leftIcon="account-circle"
           fieldName="email_username"
@@ -27,7 +27,7 @@ const SingInScreen = () => {
             required: 'Please insert your email or username',
           }}
         />
-        <CustomInput
+        <FormInput
           passwordField
           testID="password"
           leftIcon="lock"
@@ -52,7 +52,7 @@ const SingInScreen = () => {
         >
           Sign In
         </Button>
-      </CustomCard>
+      </FormCard>
     </ScreenWrapper>
   );
 };

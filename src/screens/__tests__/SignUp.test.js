@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
-import RegisterScreen from '../RegisterScreen';
+import SignUpScreen from '../SignUpScreen';
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 
 describe('<RegisterScreen />', () => {
@@ -8,9 +8,7 @@ describe('<RegisterScreen />', () => {
     it('should navigate to sign in screen with valid inputs', async () => {
       const navigation = { navigate: () => {} };
       jest.spyOn(navigation, 'navigate');
-      const { getByTestId } = render(
-        <RegisterScreen navigation={navigation} />
-      );
+      const { getByTestId } = render(<SignUpScreen navigation={navigation} />);
 
       fireEvent.changeText(getByTestId('email_input'), 'some@test.com');
       fireEvent.changeText(getByTestId('full_name_input'), 'test name');
@@ -30,9 +28,7 @@ describe('<RegisterScreen />', () => {
     it('should not navigate to sign in screen with invalid email', async () => {
       const navigation = { navigate: () => {} };
       jest.spyOn(navigation, 'navigate');
-      const { getByTestId } = render(
-        <RegisterScreen navigation={navigation} />
-      );
+      const { getByTestId } = render(<SignUpScreen navigation={navigation} />);
 
       fireEvent.changeText(getByTestId('email_input'), 'invalid email');
 
@@ -53,9 +49,7 @@ describe('<RegisterScreen />', () => {
     it('should not navigate to sign in screen with invalid full name', async () => {
       const navigation = { navigate: () => {} };
       jest.spyOn(navigation, 'navigate');
-      const { getByTestId } = render(
-        <RegisterScreen navigation={navigation} />
-      );
+      const { getByTestId } = render(<SignUpScreen navigation={navigation} />);
 
       fireEvent.changeText(getByTestId('full_name_input'), 'x');
 
@@ -76,9 +70,7 @@ describe('<RegisterScreen />', () => {
     it('should not navigate to sign in screen with invalid username', async () => {
       const navigation = { navigate: () => {} };
       jest.spyOn(navigation, 'navigate');
-      const { getByTestId } = render(
-        <RegisterScreen navigation={navigation} />
-      );
+      const { getByTestId } = render(<SignUpScreen navigation={navigation} />);
 
       fireEvent.changeText(
         getByTestId('username_input'),
@@ -102,9 +94,7 @@ describe('<RegisterScreen />', () => {
     it('should not navigate to sign in screen with invalid password', async () => {
       const navigation = { navigate: () => {} };
       jest.spyOn(navigation, 'navigate');
-      const { getByTestId } = render(
-        <RegisterScreen navigation={navigation} />
-      );
+      const { getByTestId } = render(<SignUpScreen navigation={navigation} />);
 
       fireEvent.changeText(getByTestId('password_input'), 'password');
 
@@ -125,9 +115,7 @@ describe('<RegisterScreen />', () => {
     it('should not navigate to sign in screen with mismatching passwords', async () => {
       const navigation = { navigate: () => {} };
       jest.spyOn(navigation, 'navigate');
-      const { getByTestId } = render(
-        <RegisterScreen navigation={navigation} />
-      );
+      const { getByTestId } = render(<SignUpScreen navigation={navigation} />);
 
       fireEvent.changeText(getByTestId('confirm_password_input'), 'QWEqwe12');
 
