@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { CustomInput, ScreenWrapper } from '../components';
-import CustomCard from '../components/CustomCard';
+import { FormInput, ScreenWrapper } from '../components';
+import FormCard from '../components/FormCard';
 import { PropTypes } from 'prop-types';
 import { Button } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
-import SignUpBG from '../../assets/svg/sign-up-bg.svg';
+import BgSVG from '../../assets/svg/top-left-bg.svg';
 
 import {
   EMAIL_REGEX,
@@ -13,23 +13,23 @@ import {
   PASSWORD_REGEX,
 } from '../utils/variables';
 
-const RegisterScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
 
-  const signInScreen = () => navigation.navigate('Sign In');
+  const _signInScreen = () => navigation.navigate('Sign In');
 
   const password = watch('password');
 
   return (
     <ScreenWrapper
-      contentContainerStyle={styles.container}
       withScrollView
+      contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
-      <SignUpBG style={styles.bgShape} />
+      <BgSVG style={styles.bgShape} />
 
-      <CustomCard title="Create your new account">
-        <CustomInput
+      <FormCard title="Create your new account">
+        <FormInput
           testID="email_input"
           leftIcon="email"
           fieldName="email"
@@ -43,7 +43,7 @@ const RegisterScreen = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+        <FormInput
           testID="full_name_input"
           leftIcon="account-circle"
           fieldName="full_name"
@@ -61,7 +61,7 @@ const RegisterScreen = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+        <FormInput
           testID="username_input"
           leftIcon="account-circle"
           fieldName="username"
@@ -75,7 +75,7 @@ const RegisterScreen = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+        <FormInput
           testID="password_input"
           leftIcon="lock"
           passwordField
@@ -91,7 +91,7 @@ const RegisterScreen = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+        <FormInput
           testID="confirm_password_input"
           leftIcon="lock"
           passwordField
@@ -108,11 +108,11 @@ const RegisterScreen = ({ navigation }) => {
         <Button
           testID="register_button"
           mode="contained"
-          onPress={handleSubmit(signInScreen)}
+          onPress={handleSubmit(_signInScreen)}
         >
           Sign Up
         </Button>
-      </CustomCard>
+      </FormCard>
     </ScreenWrapper>
   );
 };
@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
   },
 });
 
-RegisterScreen.propTypes = {
+SignUpScreen.propTypes = {
   navigation: PropTypes.object,
 };
 
-export default RegisterScreen;
+export default SignUpScreen;

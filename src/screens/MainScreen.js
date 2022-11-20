@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { FAB, Post } from '../components';
-import MainBG from '../../assets/svg/main-bg.svg';
+import BgSVG from '../../assets/svg/top-bottom-bg.svg';
 
 // mock data
 const data = [
@@ -26,22 +26,22 @@ const data = [
 ];
 
 const MainScreen = ({ navigation }) => {
-  const [isExtended, setIsExtended] = useState(true);
+  const [isFabExtended, setIsFabExtended] = useState(true);
 
-  const onScroll = ({ nativeEvent }) => {
+  const _onScroll = ({ nativeEvent }) => {
     const currentScrollPosition =
       Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
-    setIsExtended(currentScrollPosition <= 0);
+    setIsFabExtended(currentScrollPosition <= 0);
   };
 
-  const newPost = () => navigation.navigate('New Post');
+  const _newPost = () => navigation.navigate('New Post');
 
   return (
     <>
       <SafeAreaView>
-        <MainBG style={styles.bgShape} />
+        <BgSVG style={styles.bgShape} />
         <FlatList
-          onScroll={onScroll}
+          onScroll={_onScroll}
           showsVerticalScrollIndicator={false}
           data={data}
           renderItem={({ item }) => (
@@ -52,8 +52,8 @@ const MainScreen = ({ navigation }) => {
       <FAB
         testID="main_fab"
         label="New Post"
-        extended={isExtended}
-        onPress={newPost}
+        extended={isFabExtended}
+        onPress={_newPost}
       />
     </>
   );
