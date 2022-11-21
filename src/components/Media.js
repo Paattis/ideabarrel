@@ -6,9 +6,8 @@ import Like from '../components/Like';
 import Comments from '../components/Comments';
 import PosterDetails from './PosterDetails';
 
-const Post = ({ navigation, post }) => {
-  // extended post screen will be added later
-  const extendedPost = () => navigation.navigate('New Post');
+const Media = ({ navigation, post }) => {
+  const extendedPost = () => console.warn('not available yet');
 
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
@@ -75,9 +74,9 @@ const styles = StyleSheet.create({
   },
 });
 
-Post.propTypes = {
+Media.propTypes = {
   navigation: PropTypes.object,
   post: PropTypes.object,
 };
 
-export default Post;
+export default Media;

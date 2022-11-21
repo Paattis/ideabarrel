@@ -11,7 +11,7 @@ import {
   EMAIL_REGEX,
   USERNAME_REGEX,
   PASSWORD_REGEX,
-} from '../utils/variables';
+} from '../utils/constants';
 
 const SignUpScreen = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });

@@ -3,7 +3,7 @@ import { render, fireEvent, act } from '@testing-library/react-native';
 import SignUpScreen from '../SignUpScreen';
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 
-describe('<RegisterScreen />', () => {
+describe('<SignUpScreen />', () => {
   describe('with valid inputs', () => {
     it('should navigate to sign in screen with valid inputs', async () => {
       const navigation = { navigate: () => {} };

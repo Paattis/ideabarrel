@@ -1,19 +1,19 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PaperNavigationBar from './NavigationBar';
+import { MainContext } from '../contexts/MainContext';
 import {
   WelcomeScreen,
   MainScreen,
   SignUpScreen,
-  NewPostScreen,
+  UploadScreen,
   SignInScreen,
 } from '../screens/';
 
 const Stack = createNativeStackNavigator();
 
 const StackScreen = () => {
-  const signedIn = true;
-
+  const { signedIn } = useContext(MainContext);
   return (
     <Stack.Navigator
       initialRouteName="Main"
@@ -28,7 +28,7 @@ const StackScreen = () => {
           <Stack.Screen
             options={{ headerShown: false }}
             name="New Post"
-            component={NewPostScreen}
+            component={UploadScreen}
           />
         </>
       ) : (
