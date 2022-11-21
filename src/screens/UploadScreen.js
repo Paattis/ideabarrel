@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import {
   Button,
@@ -13,22 +13,40 @@ import BgSVG from '../../assets/svg/top-right-bg.svg';
 import { FormInput } from '../components';
 import { useForm } from 'react-hook-form';
 
-const NewPostScreen = ({ navigation }) => {
+const UploadScreen = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
 
   const title = watch('idea_title');
   const desc = watch('idea_description');
 
-  const [visible, setVisible] = React.useState(false);
-  const showDialog = () => setVisible(true);
-  const hideDialog = () => setVisible(false);
+  const [visible, setVisible] = useState(false);
+  const _showDialog = () => setVisible(true);
+  const _hideDialog = () => setVisible(false);
 
   const _goBack = () => navigation.pop();
-  const _post = () => console.log('post');
+  const _post = () => console.warn('not available yet');
 
-  const dialog = () => (
+  const _header = () => (
+    <View style={styles.header}>
+      <IconButton
+        size={32}
+        icon="close"
+        onPress={title || desc ? _showDialog : _goBack}
+      />
+      <Button
+        disabled={!title}
+        mode="contained"
+        style={styles.postButton}
+        onPress={handleSubmit(_post)}
+      >
+        Post
+      </Button>
+    </View>
+  );
+
+  const _dialog = () => (
     <Portal>
-      <Dialog visible={visible} onDismiss={hideDialog}>
+      <Dialog visible={visible} onDismiss={_hideDialog}>
         <Dialog.Title>Discard changes?</Dialog.Title>
         <Dialog.Content>
           <Paragraph>
@@ -36,8 +54,8 @@ const NewPostScreen = ({ navigation }) => {
           </Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={hideDialog && _goBack}>Discard</Button>
-          <Button onPress={hideDialog}>Stay</Button>
+          <Button onPress={_hideDialog && _goBack}>Discard</Button>
+          <Button onPress={_hideDialog}>Stay</Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>
@@ -46,22 +64,8 @@ const NewPostScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <BgSVG style={styles.bgShape} />
-      {dialog()}
-      <View style={styles.header}>
-        <IconButton
-          size={32}
-          icon="close"
-          onPress={title || desc ? showDialog : _goBack}
-        />
-        <Button
-          disabled={!title}
-          mode="contained"
-          style={styles.postButton}
-          onPress={handleSubmit(_post)}
-        >
-          Post
-        </Button>
-      </View>
+      {_dialog()}
+      {_header()}
       <View style={styles.inputContainer}>
         <FormInput
           placeholderTextColor="#ababab"
@@ -86,7 +90,7 @@ const NewPostScreen = ({ navigation }) => {
             outlineStyle={styles.descriptionOutline}
             rules={{
               maxLength: {
-                value: 10,
+                value: 1000,
                 message: 'Description maximum length is 1000 characters',
               },
             }}
@@ -133,8 +137,8 @@ const styles = StyleSheet.create({
   },
 });
 
-NewPostScreen.propTypes = {
+UploadScreen.propTypes = {
   navigation: PropTypes.object,
 };
 
-export default NewPostScreen;
+export default UploadScreen;
