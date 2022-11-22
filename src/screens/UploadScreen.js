@@ -9,9 +9,9 @@ import {
   Portal,
 } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
-import BgSVG from '../../assets/svg/top-right-bg.svg';
 import { FormInput } from '../components';
 import { useForm } from 'react-hook-form';
+import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const UploadScreen = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });

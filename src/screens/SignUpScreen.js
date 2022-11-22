@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { FormInput, ScreenWrapper } from '../components';
 import FormCard from '../components/FormCard';
 import { PropTypes } from 'prop-types';
 import { Button } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
+import { useUser } from '../hooks/useUser';
 import BgSVG from '../../assets/svg/top-left-bg.svg';
-
 import {
   EMAIL_REGEX,
   USERNAME_REGEX,
@@ -14,11 +14,27 @@ import {
 } from '../utils/constants';
 
 const SignUpScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
+  const { postUser } = useUser();
 
   const _signInScreen = () => navigation.navigate('Sign In');
 
   const password = watch('password');
+
+  const _signUp = async (data) => {
+    try {
+      setLoading(true);
+      delete data.confirm_password;
+      const user = await postUser(data);
+      if (user) {
+        setLoading(false);
+        _signInScreen();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <ScreenWrapper
@@ -106,9 +122,10 @@ const SignUpScreen = ({ navigation }) => {
         />
 
         <Button
+          loading={loading}
           testID="register_button"
           mode="contained"
-          onPress={handleSubmit(_signInScreen)}
+          onPress={handleSubmit(_signUp)}
         >
           Sign Up
         </Button>
