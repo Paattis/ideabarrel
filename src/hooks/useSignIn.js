@@ -8,7 +8,7 @@ export const useSignIn = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     };
-    return await customFetch(BASE_URL + 'login', options);
+    return await customFetch(BASE_URL + 'auth/login', options);
   };
   return { postSignIn };
 };
