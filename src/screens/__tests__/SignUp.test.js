@@ -1,29 +1,9 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import SignUpScreen from '../SignUpScreen';
-import SignInScreen from '../SignInScreen';
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 
 describe('<SignUpScreen />', () => {
-  describe('with valid inputs', () => {
-    it('should not display navigate yo SignInScreen', async () => {
-      const { getByTestId } = render(<SignUpScreen />);
-      const { queryAllByText } = render(<SignInScreen />);
-
-      fireEvent.changeText(getByTestId('email_input'), 'some@test.com');
-      fireEvent.changeText(getByTestId('full_name_input'), 'test name');
-      fireEvent.changeText(getByTestId('username_input'), 'username');
-      fireEvent.changeText(getByTestId('password_input'), 'QWEqwe123');
-      fireEvent.changeText(getByTestId('confirm_password_input'), 'QWEqwe123');
-
-      await act(async () => {
-        fireEvent.press(getByTestId('register_button'));
-      });
-
-      expect(queryAllByText('Sign in to your account').length).toBe(1);
-    });
-  });
-
   describe('with invalid email address', () => {
     it('should display invalid email error message', async () => {
       const { getByTestId, queryAllByText } = render(<SignUpScreen />);
