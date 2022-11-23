@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal, Portal, Text } from 'react-native-paper';
+import { Button, Modal, Portal, Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { useContext } from 'react';
@@ -8,6 +8,7 @@ import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 const ProfileModal = ({
   visible,
   hideModal,
+  navigation,
   name,
   role,
   groups = null,
@@ -15,6 +16,7 @@ const ProfileModal = ({
 }) => {
   const { isThemeDark } = useContext(PreferencesContext);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+  const extendedPost = () => navigation.navigate('New Post');
   const backGroundStyle = {
     backgroundColor: theme.colors.background,
   };
@@ -28,6 +30,21 @@ const ProfileModal = ({
         onDismiss={hideModal}
         contentContainerStyle={[styles.containerStyle, backGroundStyle]}
       >
+        <View style={styles.buttonLayout}>
+          <Button
+            icon="account-edit"
+            mode="contained"
+            onPress={() => {
+              {
+                /* placeholder when going to edit profile */
+              }
+              extendedPost();
+              hideModal();
+            }}
+          >
+            Edit
+          </Button>
+        </View>
         <View style={styles.contentContainerStyleColumn}>
           {children}
           <Text style={styles.nameText}>{name}</Text>
@@ -93,11 +110,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '90%',
   },
+  buttonLayout: { alignItems: 'flex-end' },
 });
 
 ProfileModal.propTypes = {
   visible: PropTypes.bool,
   hideModal: PropTypes.func,
+  navigation: PropTypes.object,
   name: PropTypes.string,
   role: PropTypes.string,
   groups: PropTypes.string,

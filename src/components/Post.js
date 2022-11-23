@@ -36,7 +36,11 @@ const Post = ({ navigation, post }) => {
           {post.description}
         </Text>
         <View style={styles.profile}>
-          <PosterDetails avatarPosition="left" post={post} />
+          <PosterDetails
+            avatarPosition="left"
+            post={post}
+            navigation={navigation}
+          />
         </View>
       </Card.Content>
     </Card>
