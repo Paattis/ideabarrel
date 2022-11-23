@@ -16,7 +16,7 @@ import {
 import pickAvatarImg from '../../assets/pick-avatar.png';
 
 const SignUpScreen = ({ navigation }) => {
-  const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg).uri;
+  const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
 
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState(pickAvatarUri);
