@@ -4,7 +4,7 @@ import { Avatar, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import ProfileModal from './ProfileModal';
 
-const PosterDetails = ({ avatarPosition = 'row' }) => {
+const PosterDetails = ({ avatarPosition = 'row', post }) => {
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -20,16 +20,16 @@ const PosterDetails = ({ avatarPosition = 'row' }) => {
       <ProfileModal
         visible={visible}
         hideModal={hideModal}
-        name={'Pekka Pekkarinen'}
-        role={'Junior Test Engineer'}
+        name={post.name}
+        role={post.role}
       >
         <Avatar.Image size={80} />
       </ProfileModal>
       <View style={container}>
         <Avatar.Image size={30} />
         <View style={styles.textContainer}>
-          <Text style={styles.posterName}>Pekka Pekkarinen</Text>
-          <Text style={styles.posterRole}>Junior Test Engineer</Text>
+          <Text style={styles.posterName}>{post.name}</Text>
+          <Text style={styles.posterRole}>{post.role}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
 
 PosterDetails.propTypes = {
   avatarPosition: PropTypes.string,
+  post: PropTypes.object,
 };
 
 export default PosterDetails;

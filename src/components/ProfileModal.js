@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Divider, Modal, Portal, Text } from 'react-native-paper';
+import { Modal, Portal, Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { useContext } from 'react';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
-
 const ProfileModal = ({
   visible,
   hideModal,
@@ -19,7 +18,9 @@ const ProfileModal = ({
   const backGroundStyle = {
     backgroundColor: theme.colors.background,
   };
-
+  const boxBackGroundStyle = {
+    backgroundColor: theme.colors.inversePrimary,
+  };
   return (
     <Portal>
       <Modal
@@ -27,13 +28,18 @@ const ProfileModal = ({
         onDismiss={hideModal}
         contentContainerStyle={[styles.containerStyle, backGroundStyle]}
       >
-        <Text style={styles.titleText}>{name}</Text>
-        <View style={styles.contentContainerStyle}>
+        <View style={styles.contentContainerStyleColumn}>
           {children}
-
-          <View style={{ flexDirection: 'column' }}>
-            <Text style={styles.text}>{role}</Text>
-            <Text style={styles.text}>TEst</Text>
+          <Text style={styles.nameText}>{name}</Text>
+          <Text style={styles.roleText}>{role}</Text>
+          <View style={[styles.boxStyle, boxBackGroundStyle]}>
+            <Text style={styles.titleText}>Profile tags</Text>
+            <View style={styles.tagContainerStyle}>
+              {/* placeholder for tags*/}
+              <View style={styles.tagsStyle}>
+                <Text style={styles.tagsText}>ana bochi</Text>
+              </View>
+            </View>
           </View>
         </View>
       </Modal>
@@ -42,19 +48,51 @@ const ProfileModal = ({
 };
 
 const styles = StyleSheet.create({
-  containerStyle: {
+  contentContainerStyleColumn: {
     flexGrow: 1,
+    flexDirection: 'column',
+    marginHorizontal: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  containerStyle: {
+    justifyContent: 'center',
+    alignContent: 'center',
     marginHorizontal: 20,
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     elevation: 5,
   },
-  titleText: {
+  nameText: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 10,
+    marginTop: 10,
   },
-  contentContainerStyle: { flexDirection: 'row' },
+  titleText: {
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  tagsText: { fontSize: 15 },
+  roleText: { fontSize: 15, marginBottom: 10 },
+  tagsStyle: {
+    alignItems: 'center',
+    backgroundColor: 'grey',
+    borderRadius: 5,
+    padding: 4,
+    marginRight: 10,
+    marginTop: 10,
+  },
+  tagContainerStyle: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+  boxStyle: {
+    padding: 10,
+    borderRadius: 10,
+    width: '90%',
+  },
 });
 
 ProfileModal.propTypes = {
