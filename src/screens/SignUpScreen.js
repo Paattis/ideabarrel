@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FormInput, ScreenWrapper } from '../components';
 import FormCard from '../components/FormCard';
 import { PropTypes } from 'prop-types';
-import { Button } from 'react-native-paper';
+import { Button, Avatar } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { useUser } from '../hooks/useUser';
 import BgSVG from '../../assets/svg/top-left-bg.svg';
+import * as ImagePicker from 'expo-image-picker';
 import {
   EMAIL_REGEX,
   USERNAME_REGEX,
   PASSWORD_REGEX,
 } from '../utils/constants';
+import pickAvatarImg from '../../assets/pick-avatar.png';
 
 const SignUpScreen = ({ navigation }) => {
+  const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg).uri;
+
   const [loading, setLoading] = useState(false);
+  const [avatar, setAvatar] = useState(pickAvatarUri);
+
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postUser } = useUser();
 
@@ -22,11 +28,32 @@ const SignUpScreen = ({ navigation }) => {
 
   const password = watch('password');
 
+  const _pickImage = async () => {
+    const options = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.5,
+    };
+    const result = await ImagePicker.launchImageLibraryAsync(options);
+
+    if (!result.cancelled) setAvatar(result.uri);
+  };
+
   const _signUp = async (data) => {
+    const formData = new FormData();
+    formData.append(data);
+    const imageName = avatar.split('/').pop();
+
+    formData.append('profile_img', {
+      uri: avatar,
+      name: imageName,
+      type: 'image/jpg',
+    });
+
     try {
       setLoading(true);
       delete data.confirm_password;
-      const user = await postUser(data);
+      const user = await postUser(formData);
       if (user) {
         setLoading(false);
         _signInScreen();
@@ -43,8 +70,10 @@ const SignUpScreen = ({ navigation }) => {
       keyboardShouldPersistTaps="handled"
     >
       <BgSVG style={styles.bgShape} />
-
       <FormCard title="Create your new account">
+        <TouchableOpacity onPress={_pickImage}>
+          <Avatar.Image size={90} source={{ uri: avatar }} />
+        </TouchableOpacity>
         <FormInput
           testID="email_input"
           leftIcon="email"
@@ -77,6 +106,7 @@ const SignUpScreen = ({ navigation }) => {
             },
           }}
         />
+
         <FormInput
           testID="username_input"
           leftIcon="account-circle"
