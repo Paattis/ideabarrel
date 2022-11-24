@@ -32,7 +32,11 @@ const Media = ({ navigation, post, expanded }) => {
           {post.description}
         </Text>
         <View style={styles.profile}>
-          <PosterDetails avatarPosition="left" />
+          <PosterDetails
+            avatarPosition="left"
+            post={post}
+            navigation={navigation}
+          />
         </View>
       </Card.Content>
     </Card>
