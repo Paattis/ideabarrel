@@ -17,6 +17,7 @@ const FormInput = ({
   rightIcon,
   passwordField = false,
   placeholder,
+  autoFocus,
 }) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
 
@@ -48,6 +49,7 @@ const FormInput = ({
         <>
           <TextInput
             dense
+            autoFocus={autoFocus}
             multiline={multiline}
             placeholderTextColor={placeholderTextColor}
             style={style}
@@ -88,6 +90,7 @@ FormInput.propTypes = {
   rightIcon: PropTypes.string,
   passwordField: PropTypes.bool,
   placeholder: PropTypes.string,
+  autoFocus: PropTypes.bool,
 };
 
 export default FormInput;

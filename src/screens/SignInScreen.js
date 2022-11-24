@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FormInput, ScreenWrapper } from '../components';
 import FormCard from '../components/FormCard';
 import { Button } from 'react-native-paper';
@@ -9,16 +9,22 @@ import { useSignIn } from '../hooks';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const SingInScreen = () => {
+  const [loading, setLoading] = useState(false);
+
   const { control, handleSubmit } = useForm({ mode: 'onBlur' });
-  const { setSignedIn } = useContext(MainContext);
+  const { setSignedIn, setUser } = useContext(MainContext);
   const { postSignIn } = useSignIn();
 
   const _signIn = async (data) => {
     try {
-      await postSignIn(data);
+      setLoading(true);
+      const user = await postSignIn(data);
+      setUser(user);
       setSignedIn(true);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,6 +68,8 @@ const SingInScreen = () => {
           style={styles.signInBtn}
           mode="contained"
           onPress={handleSubmit(_signIn)}
+          loading={loading}
+          disabled={loading}
         >
           Sign In
         </Button>

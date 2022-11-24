@@ -3,25 +3,22 @@ import { StyleSheet, View } from 'react-native';
 import { Card, Divider, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import Like from '../components/Like';
-import Comments from '../components/Comments';
+import CommentCount from '../components/CommentCount';
 import PosterDetails from './PosterDetails';
 
-const Media = ({ navigation, post }) => {
-  const extendedPost = () => console.warn('not available yet');
+const Media = ({ navigation, post, expanded }) => {
+  const params = { postId: post.postId };
+  const _ideaScreen = () => navigation.navigate('Idea', params);
 
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
       <Like />
-      <Comments onPress={extendedPost} />
+      <CommentCount />
     </View>
   );
 
-  return (
-    <Card
-      mode="elevated"
-      style={styles.card}
-      onPress={() => console.log('card')}
-    >
+  return !expanded ? (
+    <Card mode="elevated" style={styles.card} onPress={_ideaScreen}>
       <Card.Title
         titleStyle={styles.title}
         title={post.title}
@@ -37,6 +34,24 @@ const Media = ({ navigation, post }) => {
         <View style={styles.profile}>
           <PosterDetails avatarPosition="left" />
         </View>
+      </Card.Content>
+    </Card>
+  ) : (
+    <Card style={expandedStyle.card}>
+      <Card.Title
+        titleNumberOfLines={2}
+        titleStyle={styles.title}
+        title={post.title}
+        style={expandedStyle.header}
+        right={rightButtons}
+      />
+      <Card.Content style={expandedStyle.content}>
+        <Text>*tags*</Text>
+        <Divider bold style={styles.divider} />
+        <View style={expandedStyle.profile}>
+          <PosterDetails avatarPosition="left" />
+        </View>
+        <Text>{post.description}</Text>
       </Card.Content>
     </Card>
   );
@@ -74,9 +89,22 @@ const styles = StyleSheet.create({
   },
 });
 
+const expandedStyle = StyleSheet.create({
+  card: {
+    borderRadius: 0,
+  },
+  header: {
+    backgroundColor: '#152F65',
+  },
+  profile: {
+    marginVertical: 8,
+  },
+});
+
 Media.propTypes = {
   navigation: PropTypes.object,
   post: PropTypes.object,
+  expanded: PropTypes.bool,
 };
 
 export default Media;

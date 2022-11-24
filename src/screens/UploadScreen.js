@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import {
-  Button,
-  Dialog,
-  Divider,
-  IconButton,
-  Paragraph,
-  Portal,
-} from 'react-native-paper';
+import { Button, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
-import { FormInput } from '../components';
+import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
@@ -25,24 +18,6 @@ const UploadScreen = ({ navigation }) => {
 
   const _goBack = () => navigation.pop();
   const _post = () => console.warn('not available yet');
-
-  const _header = () => (
-    <View style={styles.header}>
-      <IconButton
-        size={32}
-        icon="close"
-        onPress={title || desc ? _showDialog : _goBack}
-      />
-      <Button
-        disabled={!title}
-        mode="contained"
-        style={styles.postButton}
-        onPress={handleSubmit(_post)}
-      >
-        Post
-      </Button>
-    </View>
-  );
 
   const _dialog = () => (
     <Portal>
@@ -65,7 +40,11 @@ const UploadScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <BgSVG style={styles.bgShape} />
       {_dialog()}
-      {_header()}
+      <NavigationHeader
+        onPressCancel={title || desc ? _showDialog : _goBack}
+        onPressPost={handleSubmit(_post)}
+        disableButton={!title}
+      />
       <View style={styles.inputContainer}>
         <FormInput
           placeholderTextColor="#ababab"
@@ -76,6 +55,10 @@ const UploadScreen = ({ navigation }) => {
           outlineStyle={styles.titleOutLine}
           rules={{
             required: 'idea title is mandatory',
+            maxLength: {
+              value: 40,
+              message: 'exceeding character limit (40)',
+            },
           }}
         />
         <Divider style={{ marginHorizontal: 15 }} />

@@ -8,6 +8,8 @@ import {
   SignUpScreen,
   UploadScreen,
   SignInScreen,
+  IdeaScreen,
+  AddCommentScreen,
 } from '../screens/';
 
 const Stack = createNativeStackNavigator();
@@ -27,9 +29,15 @@ const StackScreen = () => {
           <Stack.Screen name="Main" component={MainScreen} />
           <Stack.Screen
             options={{ headerShown: false }}
-            name="New Post"
+            name="New Idea"
             component={UploadScreen}
           />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Add Comment"
+            component={AddCommentScreen}
+          />
+          <Stack.Screen name="Idea" component={IdeaScreen} />
         </>
       ) : (
         <>

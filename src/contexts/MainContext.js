@@ -6,8 +6,10 @@ const MainContext = createContext({});
 const MainProvider = ({ children }) => {
   const [signedIn, setSignedIn] = useState(false);
 
+  const [user, setUser] = useState({});
+
   return (
-    <MainContext.Provider value={{ signedIn, setSignedIn }}>
+    <MainContext.Provider value={{ signedIn, setSignedIn, user, setUser }}>
       {children}
     </MainContext.Provider>
   );
