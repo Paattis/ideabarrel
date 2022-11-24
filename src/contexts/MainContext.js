@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 const MainContext = createContext({});
 
 const MainProvider = ({ children }) => {
-  const [signedIn, setSignedIn] = useState(true);
+  const [signedIn, setSignedIn] = useState(false);
 
   return (
     <MainContext.Provider value={{ signedIn, setSignedIn }}>
