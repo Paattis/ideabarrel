@@ -4,5 +4,7 @@ export { default as FormInput } from './FormInput';
 export { default as Media } from './Media';
 export { default as FAB } from './FAB';
 export { default as Like } from './Like';
-export { default as Comments } from './Comments';
+export { default as CommentCount } from './CommentCount';
 export { default as PosterDetails } from './PosterDetails';
+export { default as Comment } from './Comment';
+export { default as NavigationHeader } from './NavigationHeader';

@@ -11,6 +11,6 @@ describe('<MainScreen />', () => {
 
     fireEvent.press(getByTestId('main_fab'));
 
-    expect(navigation.navigate).toHaveBeenCalledWith('New Post');
+    expect(navigation.navigate).toHaveBeenCalledWith('New Idea');
   });
 });

@@ -7,13 +7,13 @@ import { Button, Avatar } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { useUser } from '../hooks/useUser';
 import BgSVG from '../../assets/svg/top-left-bg.svg';
+import pickAvatarImg from '../../assets/pick-avatar.png';
 import * as ImagePicker from 'expo-image-picker';
 import {
   EMAIL_REGEX,
   USERNAME_REGEX,
   PASSWORD_REGEX,
 } from '../utils/constants';
-import pickAvatarImg from '../../assets/pick-avatar.png';
 
 const SignUpScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
@@ -54,12 +54,11 @@ const SignUpScreen = ({ navigation }) => {
       setLoading(true);
       delete data.confirm_password;
       const user = await postUser(formData);
-      if (user) {
-        setLoading(false);
-        _signInScreen();
-      }
+      if (user) _signInScreen();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -152,6 +151,7 @@ const SignUpScreen = ({ navigation }) => {
         />
 
         <Button
+          disabled={loading}
           loading={loading}
           testID="register_button"
           mode="contained"
