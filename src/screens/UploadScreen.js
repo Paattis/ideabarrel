@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Keyboard,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { Button, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
+import { useMedia } from '../hooks';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const UploadScreen = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
+  const { postMedia, loading } = useMedia();
 
   const title = watch('idea_title');
   const desc = watch('idea_description');
@@ -17,7 +25,16 @@ const UploadScreen = ({ navigation }) => {
   const _hideDialog = () => setVisible(false);
 
   const _goBack = () => navigation.pop();
-  const _post = () => console.warn('not available yet');
+
+  const _post = async (data) => {
+    Keyboard.dismiss();
+    try {
+      await postMedia(data);
+      _goBack();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const _dialog = () => (
     <Portal>
@@ -44,6 +61,7 @@ const UploadScreen = ({ navigation }) => {
         onPressCancel={title || desc ? _showDialog : _goBack}
         onPressPost={handleSubmit(_post)}
         disableButton={!title}
+        loading={loading}
       />
       <View style={styles.inputContainer}>
         <FormInput

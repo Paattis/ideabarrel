@@ -17,9 +17,21 @@ export const useMedia = () => {
     return await customFetch(BASE_URL + 'posts/' + mediaId);
   };
 
+  const postMedia = async (data) => {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    };
+    setLoading(true);
+    const res = await customFetch(BASE_URL + 'posts/', options);
+    if (res) setLoading(false);
+    return res;
+  };
+
   useEffect(() => {
     getMedia();
   }, []);
 
-  return { media, getMedia, getMediaById, loading };
+  return { media, getMedia, getMediaById, postMedia, loading };
 };
