@@ -3,12 +3,7 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Comment, Media } from '../components';
 import { useMedia, useComment } from '../hooks';
 import { PropTypes } from 'prop-types';
-import {
-  ActivityIndicator,
-  Divider,
-  IconButton,
-  Text,
-} from 'react-native-paper';
+import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 
 const IdeaScreen = ({ route: { params }, navigation }) => {
   const [media, setMedia] = useState({});
@@ -62,7 +57,6 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
             <Text>no comments</Text>
           )}
         </ScrollView>
-        <Divider />
 
         <View style={styles.commentContainer}>
           <TouchableOpacity
@@ -72,7 +66,7 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
             <Text style={styles.commentInputText}>Add a comment</Text>
           </TouchableOpacity>
           <IconButton
-            size={35}
+            size={40}
             icon="chevron-up-circle"
             onPress={_onScrollUp}
           />
@@ -91,13 +85,15 @@ const styles = StyleSheet.create({
   },
   commentInput: {
     width: '75%',
-    margin: 10,
-    padding: 8,
+    padding: 9,
     borderColor: '#B4B4B4',
     borderWidth: 0.7,
-    borderRadius: 10,
+    borderRadius: 5,
   },
-  commentInputText: { borderRadius: 1 },
+  commentInputText: {
+    borderRadius: 1,
+    marginHorizontal: 10,
+  },
   activityIndicator: { marginTop: 10 },
 });
 

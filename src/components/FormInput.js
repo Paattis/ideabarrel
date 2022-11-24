@@ -68,7 +68,7 @@ const FormInput = ({
             secureTextEntry={passwordField && passwordVisible}
           />
           <HelperText type="error" visible={error ? true : false}>
-            {error?.message || 'Please insert the correct info'}
+            {error?.message}
           </HelperText>
         </>
       )}
