@@ -1,13 +1,26 @@
-import React from 'react';
-import { CustomInput, ScreenWrapper } from '../components';
-import CustomCard from '../components/CustomCard';
+import React, { useContext } from 'react';
+import { FormInput, ScreenWrapper } from '../components';
+import FormCard from '../components/FormCard';
 import { Button } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
-import SignInBG from '../../assets/svg/sign-in-bg.svg';
+import { MainContext } from '../contexts/MainContext';
+import { useSignIn } from '../hooks';
+import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const SingInScreen = () => {
   const { control, handleSubmit } = useForm({ mode: 'onBlur' });
+  const { setSignedIn } = useContext(MainContext);
+  const { postSignIn } = useSignIn();
+
+  const _signIn = async (data) => {
+    try {
+      await postSignIn(data);
+      setSignedIn(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <ScreenWrapper
@@ -15,9 +28,9 @@ const SingInScreen = () => {
       withScrollView
       keyboardShouldPersistTaps="handled"
     >
-      <SignInBG style={styles.bgShape} />
-      <CustomCard title="Sign in to your account">
-        <CustomInput
+      <BgSVG style={styles.bgShape} />
+      <FormCard title="Sign in to your account">
+        <FormInput
           testID="username_email_input"
           leftIcon="account-circle"
           fieldName="email_username"
@@ -27,7 +40,7 @@ const SingInScreen = () => {
             required: 'Please insert your email or username',
           }}
         />
-        <CustomInput
+        <FormInput
           passwordField
           testID="password"
           leftIcon="lock"
@@ -41,18 +54,18 @@ const SingInScreen = () => {
         <Button
           style={styles.passwordBtn}
           mode="text"
-          onPress={() => console.warn('test')}
+          onPress={() => console.warn('not available yet')}
         >
           Forgot password?
         </Button>
         <Button
           style={styles.signInBtn}
           mode="contained"
-          onPress={handleSubmit()}
+          onPress={handleSubmit(_signIn)}
         >
           Sign In
         </Button>
-      </CustomCard>
+      </FormCard>
     </ScreenWrapper>
   );
 };

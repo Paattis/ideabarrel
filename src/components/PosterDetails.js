@@ -10,9 +10,8 @@ const PosterDetails = ({ avatarPosition = 'row', post, navigation }) => {
   const hideModal = () => setVisible(false);
 
   const direction = avatarPosition === 'right' ? 'row-reverse' : 'row';
-  const container = {
+  const flexDirection = {
     flexDirection: direction,
-    alignItems: 'center',
   };
 
   return (
@@ -26,11 +25,11 @@ const PosterDetails = ({ avatarPosition = 'row', post, navigation }) => {
       >
         <Avatar.Image size={80} />
       </ProfileModal>
-      <View style={container}>
-        <Avatar.Image size={30} />
-        <View style={styles.textContainer}>
-          <Text style={styles.posterName}>{post.name}</Text>
-          <Text style={styles.posterRole}>{post.role}</Text>
+      <View style={[styles.container, flexDirection]}>
+        <Avatar.Image size={30} style={styles.avatar} />
+        <View>
+          <Text style={styles.posterName}>Pekka Pekkarinen</Text>
+          <Text style={styles.posterRole}>Junior Test Engineer</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -38,7 +37,8 @@ const PosterDetails = ({ avatarPosition = 'row', post, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  textContainer: { marginHorizontal: 8 },
+  container: { alignItems: 'center' },
+  avatar: { marginHorizontal: 8 },
   posterName: { fontSize: 12 },
   posterRole: { fontSize: 9 },
 });

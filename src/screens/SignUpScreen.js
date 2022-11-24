@@ -1,35 +1,80 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { CustomInput, ScreenWrapper } from '../components';
-import CustomCard from '../components/CustomCard';
+import React, { useState } from 'react';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { FormInput, ScreenWrapper } from '../components';
+import FormCard from '../components/FormCard';
 import { PropTypes } from 'prop-types';
-import { Button } from 'react-native-paper';
+import { Button, Avatar } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
-import SignUpBG from '../../assets/svg/sign-up-bg.svg';
-
+import { useUser } from '../hooks/useUser';
+import BgSVG from '../../assets/svg/top-left-bg.svg';
+import * as ImagePicker from 'expo-image-picker';
 import {
   EMAIL_REGEX,
   USERNAME_REGEX,
   PASSWORD_REGEX,
-} from '../utils/variables';
+} from '../utils/constants';
+import pickAvatarImg from '../../assets/pick-avatar.png';
 
-const RegisterScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
+  const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
+
+  const [loading, setLoading] = useState(false);
+  const [avatar, setAvatar] = useState(pickAvatarUri);
+
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
+  const { postUser } = useUser();
 
-  const signInScreen = () => navigation.navigate('Sign In');
+  const _signInScreen = () => navigation.navigate('Sign In');
 
   const password = watch('password');
 
+  const _pickImage = async () => {
+    const options = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.5,
+    };
+    const result = await ImagePicker.launchImageLibraryAsync(options);
+
+    if (!result.cancelled) setAvatar(result.uri);
+  };
+
+  const _signUp = async (data) => {
+    const formData = new FormData();
+    formData.append(data);
+    const imageName = avatar.split('/').pop();
+
+    formData.append('profile_img', {
+      uri: avatar,
+      name: imageName,
+      type: 'image/jpg',
+    });
+
+    try {
+      setLoading(true);
+      delete data.confirm_password;
+      const user = await postUser(formData);
+      if (user) {
+        setLoading(false);
+        _signInScreen();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <ScreenWrapper
-      contentContainerStyle={styles.container}
       withScrollView
+      contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
-      <SignUpBG style={styles.bgShape} />
-
-      <CustomCard title="Create your new account">
-        <CustomInput
+      <BgSVG style={styles.bgShape} />
+      <FormCard title="Create your new account">
+        <TouchableOpacity onPress={_pickImage}>
+          <Avatar.Image size={90} source={{ uri: avatar }} />
+        </TouchableOpacity>
+        <FormInput
           testID="email_input"
           leftIcon="email"
           fieldName="email"
@@ -43,7 +88,7 @@ const RegisterScreen = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+        <FormInput
           testID="full_name_input"
           leftIcon="account-circle"
           fieldName="full_name"
@@ -61,7 +106,8 @@ const RegisterScreen = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+
+        <FormInput
           testID="username_input"
           leftIcon="account-circle"
           fieldName="username"
@@ -75,7 +121,7 @@ const RegisterScreen = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+        <FormInput
           testID="password_input"
           leftIcon="lock"
           passwordField
@@ -91,7 +137,7 @@ const RegisterScreen = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+        <FormInput
           testID="confirm_password_input"
           leftIcon="lock"
           passwordField
@@ -106,13 +152,14 @@ const RegisterScreen = ({ navigation }) => {
         />
 
         <Button
+          loading={loading}
           testID="register_button"
           mode="contained"
-          onPress={handleSubmit(signInScreen)}
+          onPress={handleSubmit(_signUp)}
         >
           Sign Up
         </Button>
-      </CustomCard>
+      </FormCard>
     </ScreenWrapper>
   );
 };
@@ -127,8 +174,8 @@ const styles = StyleSheet.create({
   },
 });
 
-RegisterScreen.propTypes = {
+SignUpScreen.propTypes = {
   navigation: PropTypes.object,
 };
 
-export default RegisterScreen;
+export default SignUpScreen;

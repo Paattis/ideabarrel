@@ -3,7 +3,11 @@ import { HelperText, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { Controller } from 'react-hook-form';
 
-const CustomInput = ({
+const FormInput = ({
+  style,
+  multiline,
+  outlineStyle,
+  placeholderTextColor,
   testID,
   control,
   rules = {},
@@ -12,8 +16,9 @@ const CustomInput = ({
   leftIcon,
   rightIcon,
   passwordField = false,
+  placeholder,
 }) => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(true);
 
   const iconLeft = leftIcon ? (
     <TextInput.Icon icon={leftIcon} iconColor="#B4B4B4" />
@@ -43,6 +48,11 @@ const CustomInput = ({
         <>
           <TextInput
             dense
+            multiline={multiline}
+            placeholderTextColor={placeholderTextColor}
+            style={style}
+            outlineStyle={outlineStyle}
+            placeholder={placeholder}
             outlineColor="#B4B4B4"
             mode="outlined"
             testID={testID}
@@ -53,7 +63,7 @@ const CustomInput = ({
             onBlur={onBlur}
             label={label}
             error={error}
-            secureTextEntry={passwordVisible}
+            secureTextEntry={passwordField && passwordVisible}
           />
           <HelperText type="error" visible={error ? true : false}>
             {error?.message || 'Please insert the correct info'}
@@ -64,15 +74,20 @@ const CustomInput = ({
   );
 };
 
-CustomInput.propTypes = {
+FormInput.propTypes = {
+  style: PropTypes.object,
+  multiline: PropTypes.bool,
+  outlineStyle: PropTypes.object,
+  placeholderTextColor: PropTypes.string,
   testID: PropTypes.string,
-  control: PropTypes.object,
+  control: PropTypes.object.isRequired,
   rules: PropTypes.object,
   fieldName: PropTypes.string,
   label: PropTypes.string,
   leftIcon: PropTypes.string,
   rightIcon: PropTypes.string,
   passwordField: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
-export default CustomInput;
+export default FormInput;

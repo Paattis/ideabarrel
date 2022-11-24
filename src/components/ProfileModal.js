@@ -16,7 +16,6 @@ const ProfileModal = ({
 }) => {
   const { isThemeDark } = useContext(PreferencesContext);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
-  const extendedPost = () => navigation.navigate('New Post');
   const backGroundStyle = {
     backgroundColor: theme.colors.background,
   };
@@ -38,7 +37,7 @@ const ProfileModal = ({
               {
                 /* placeholder when going to edit profile */
               }
-              extendedPost();
+              console.log('edit profile');
               hideModal();
             }}
           >
