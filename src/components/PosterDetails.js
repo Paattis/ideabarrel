@@ -4,10 +4,11 @@ import { Avatar, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import ProfileModal from './ProfileModal';
 
-const PosterDetails = ({ avatarPosition = 'row', post, navigation }) => {
+const PosterDetails = ({ avatarPosition = 'row', navigation }) => {
   const [visible, setVisible] = React.useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+
+  const _showModal = () => setVisible(true);
+  const _hideModal = () => setVisible(false);
 
   const direction = avatarPosition === 'right' ? 'row-reverse' : 'row';
   const flexDirection = {
@@ -15,13 +16,11 @@ const PosterDetails = ({ avatarPosition = 'row', post, navigation }) => {
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={showModal}>
+    <TouchableOpacity activeOpacity={0.5} onPress={_showModal}>
       <ProfileModal
         visible={visible}
-        hideModal={hideModal}
+        hideModal={_hideModal}
         navigation={navigation}
-        name={post.name}
-        role={post.role}
       >
         <Avatar.Image size={80} />
       </ProfileModal>

@@ -1,27 +1,28 @@
 import * as React from 'react';
-import { Button, Modal, Portal, Text } from 'react-native-paper';
-import PropTypes from 'prop-types';
-import { StyleSheet, View } from 'react-native';
 import { useContext } from 'react';
+import { Button, Modal, Portal, Text } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
+import PropTypes from 'prop-types';
+
 const ProfileModal = ({
   visible,
   hideModal,
   navigation,
-  name,
-  role,
   groups = null,
   children,
 }) => {
   const { isThemeDark } = useContext(PreferencesContext);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+
   const backGroundStyle = {
     backgroundColor: theme.colors.background,
   };
   const boxBackGroundStyle = {
     backgroundColor: theme.colors.inversePrimary,
   };
+
   return (
     <Portal>
       <Modal
@@ -46,8 +47,8 @@ const ProfileModal = ({
         </View>
         <View style={styles.contentContainerStyleColumn}>
           {children}
-          <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.roleText}>{role}</Text>
+          <Text style={styles.nameText}>placeholder</Text>
+          <Text style={styles.roleText}>placeholder</Text>
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
             <Text style={styles.titleText}>Profile tags</Text>
             <View style={styles.tagContainerStyle}>
