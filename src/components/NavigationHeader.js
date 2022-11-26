@@ -8,6 +8,7 @@ const NavigationHeader = ({
   onPressPost,
   disableButton,
   loading,
+  buttonText,
 }) => {
   return (
     <View style={styles.header}>
@@ -19,7 +20,7 @@ const NavigationHeader = ({
         onPress={onPressPost}
         loading={loading}
       >
-        Post
+        {buttonText}
       </Button>
     </View>
   );
@@ -43,6 +44,7 @@ NavigationHeader.propTypes = {
   onPressPost: PropTypes.func,
   disableButton: PropTypes.bool,
   loading: PropTypes.bool,
+  buttonText: PropTypes.string,
 };
 
 export default NavigationHeader;

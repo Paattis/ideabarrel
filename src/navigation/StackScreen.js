@@ -10,6 +10,7 @@ import {
   SignInScreen,
   IdeaScreen,
   AddCommentScreen,
+  EditIdeaScreen,
 } from '../screens/';
 
 const Stack = createNativeStackNavigator();
@@ -38,6 +39,11 @@ const StackScreen = () => {
             component={AddCommentScreen}
           />
           <Stack.Screen name="Idea" component={IdeaScreen} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Edit"
+            component={EditIdeaScreen}
+          />
         </>
       ) : (
         <>

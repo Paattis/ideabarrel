@@ -35,6 +35,7 @@ const AddCommentScreen = ({ navigation, postId }) => {
         onPressPost={handleSubmit(_addComment)}
         disableButton={!comment}
         loading={loading}
+        buttonText="Post"
       />
       <FormInput
         multiline

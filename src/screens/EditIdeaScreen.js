@@ -11,25 +11,32 @@ import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
 import { useMedia } from '../hooks';
-import BgSVG from '../../assets/svg/top-right-bg.svg';
 
-const UploadScreen = ({ navigation }) => {
-  const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postMedia, loading } = useMedia();
+const EditIdeaScreen = ({ route: { params }, navigation }) => {
+  const [showDialog, setShowDialog] = useState(false);
+
+  const { putMedia, loading } = useMedia();
+  const { postTitle, postDescription } = params;
+
+  const { control, handleSubmit, watch } = useForm({
+    defaultValues: {
+      idea_title: postTitle,
+      idea_description: postDescription,
+    },
+  });
 
   const title = watch('idea_title');
   const desc = watch('idea_description');
 
-  const [visible, setVisible] = useState(false);
-  const _showDialog = () => setVisible(true);
-  const _hideDialog = () => setVisible(false);
+  const _showDialog = () => setShowDialog(true);
+  const _hideDialog = () => setShowDialog(false);
 
   const _goBack = () => navigation.pop();
 
-  const _post = async (data) => {
+  const _edit = async (data) => {
     Keyboard.dismiss();
     try {
-      await postMedia(data);
+      await putMedia(data);
       _goBack();
     } catch (error) {
       console.error(error);
@@ -38,7 +45,7 @@ const UploadScreen = ({ navigation }) => {
 
   const _dialog = () => (
     <Portal>
-      <Dialog visible={visible} onDismiss={_hideDialog}>
+      <Dialog visible={showDialog} onDismiss={_hideDialog}>
         <Dialog.Title>Discard changes?</Dialog.Title>
         <Dialog.Content>
           <Paragraph>
@@ -55,14 +62,13 @@ const UploadScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BgSVG style={styles.bgShape} />
       {_dialog()}
       <NavigationHeader
         onPressCancel={title || desc ? _showDialog : _goBack}
-        onPressPost={handleSubmit(_post)}
+        onPressPost={handleSubmit(_edit)}
         disableButton={!title}
         loading={loading}
-        buttonText="Post"
+        buttonText="Edit"
       />
       <View style={styles.inputContainer}>
         <FormInput
@@ -132,15 +138,11 @@ const styles = StyleSheet.create({
   descriptionOutline: {
     borderColor: 'transparent',
   },
-  bgShape: {
-    position: 'absolute',
-    marginTop: 35,
-    transform: [{ rotate: '180deg' }],
-  },
 });
 
-UploadScreen.propTypes = {
+EditIdeaScreen.propTypes = {
+  route: PropTypes.object,
   navigation: PropTypes.object,
 };
 
-export default UploadScreen;
+export default EditIdeaScreen;
