@@ -43,9 +43,24 @@ export const useMedia = () => {
     return res;
   };
 
+  const deleteMedia = async (postId) => {
+    const options = {
+      method: 'DELETE',
+    };
+    return await customFetch(`${BASE_URL}/posts/${postId}`, options);
+  };
+
   useEffect(() => {
     getMedia();
   }, []);
 
-  return { loading, media, getMedia, getMediaById, postMedia, putMedia };
+  return {
+    loading,
+    media,
+    getMedia,
+    getMediaById,
+    postMedia,
+    putMedia,
+    deleteMedia,
+  };
 };

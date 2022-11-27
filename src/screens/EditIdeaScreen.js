@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Keyboard,
   SafeAreaView,
@@ -6,15 +6,13 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Button, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
+import { Divider } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
 import { useMedia } from '../hooks';
 
 const EditIdeaScreen = ({ route: { params }, navigation }) => {
-  const [showDialog, setShowDialog] = useState(false);
-
   const { putMedia, loading } = useMedia();
   const { postTitle, postDescription } = params;
 
@@ -26,10 +24,6 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
   });
 
   const title = watch('idea_title');
-  const desc = watch('idea_description');
-
-  const _showDialog = () => setShowDialog(true);
-  const _hideDialog = () => setShowDialog(false);
 
   const _goBack = () => navigation.pop();
 
@@ -43,28 +37,10 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
     }
   };
 
-  const _dialog = () => (
-    <Portal>
-      <Dialog visible={showDialog} onDismiss={_hideDialog}>
-        <Dialog.Title>Discard changes?</Dialog.Title>
-        <Dialog.Content>
-          <Paragraph>
-            Closing this screen will discard any changes you made.
-          </Paragraph>
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={_hideDialog && _goBack}>Discard</Button>
-          <Button onPress={_hideDialog}>Stay</Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
-      {_dialog()}
       <NavigationHeader
-        onPressCancel={title || desc ? _showDialog : _goBack}
+        onPressCancel={_goBack}
         onPressPost={handleSubmit(_edit)}
         disableButton={!title}
         loading={loading}

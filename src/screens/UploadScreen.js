@@ -14,15 +14,16 @@ import { useMedia } from '../hooks';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const UploadScreen = ({ navigation }) => {
+  const [showDialog, setDialog] = useState(false);
+
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postMedia, loading } = useMedia();
 
   const title = watch('idea_title');
   const desc = watch('idea_description');
 
-  const [visible, setVisible] = useState(false);
-  const _showDialog = () => setVisible(true);
-  const _hideDialog = () => setVisible(false);
+  const _showDialog = () => setDialog(true);
+  const _hideDialog = () => setDialog(false);
 
   const _goBack = () => navigation.pop();
 
@@ -38,7 +39,7 @@ const UploadScreen = ({ navigation }) => {
 
   const _dialog = () => (
     <Portal>
-      <Dialog visible={visible} onDismiss={_hideDialog}>
+      <Dialog visible={showDialog} onDismiss={_hideDialog}>
         <Dialog.Title>Discard changes?</Dialog.Title>
         <Dialog.Content>
           <Paragraph>

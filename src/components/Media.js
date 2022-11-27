@@ -1,6 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Card, Divider, IconButton, Menu, Text } from 'react-native-paper';
+import {
+  Button,
+  Card,
+  Dialog,
+  Divider,
+  IconButton,
+  Menu,
+  Paragraph,
+  Portal,
+  Text,
+} from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import Like from '../components/Like';
 import CommentCount from '../components/CommentCount';
@@ -10,9 +20,10 @@ import { MainContext } from '../contexts/MainContext';
 
 const Media = ({ navigation, post, expanded }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [showDialog, setDialog] = useState(false);
 
   const { user } = useContext(MainContext);
-  // const { deleteMedia } = useMedia();
+  const { deleteMedia } = useMedia();
 
   const postIdParam = { postId: post.postId };
   const postContentParams = {
@@ -21,6 +32,12 @@ const Media = ({ navigation, post, expanded }) => {
   };
 
   const isUserIdea = post.userId === user.result.id;
+
+  const _showDialog = () => {
+    _closeMenu();
+    setDialog(true);
+  };
+  const _hideDialog = () => setDialog(false);
 
   const _ideaScreen = () => navigation.navigate('Idea', postIdParam);
 
@@ -31,8 +48,8 @@ const Media = ({ navigation, post, expanded }) => {
 
   const _removeIdea = async () => {
     try {
-      // await deleteMedia(post.postId);
-      _closeMenu();
+      await deleteMedia(post.postId);
+      _hideDialog();
     } catch (error) {
       console.error(error);
     }
@@ -48,6 +65,21 @@ const Media = ({ navigation, post, expanded }) => {
   const _openMenu = () => setShowMenu(true);
   const _closeMenu = () => setShowMenu(false);
 
+  const _dialog = () => (
+    <Portal>
+      <Dialog visible={showDialog} onDismiss={_hideDialog}>
+        <Dialog.Title>Remove Idea?</Dialog.Title>
+        <Dialog.Content>
+          <Paragraph>Are you sure you want to remove it?</Paragraph>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={_removeIdea}>Remove</Button>
+          <Button onPress={_hideDialog}>Cancel</Button>
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
+  );
+
   const _menu = () => (
     <Menu
       visible={showMenu}
@@ -61,7 +93,7 @@ const Media = ({ navigation, post, expanded }) => {
       />
       <Divider />
       <Menu.Item
-        onPress={_removeIdea}
+        onPress={_showDialog}
         title="Remove"
         leadingIcon="selection-remove"
       />
@@ -69,31 +101,34 @@ const Media = ({ navigation, post, expanded }) => {
   );
 
   return !expanded ? (
-    <Card mode="elevated" style={styles.card} onPress={_ideaScreen}>
-      <Card.Title
-        titleStyle={styles.title}
-        title={post.title}
-        style={styles.header}
-        right={rightButtons}
-      />
-      <Card.Content style={styles.content}>
-        <Text>*tags*</Text>
-        <Divider bold style={styles.divider} />
-        <Text numberOfLines={5} style={styles.description}>
-          {post.description}
-        </Text>
-        <View>
-          <View style={styles.bottomContainer}>
-            <PosterDetails
-              avatarPosition="left"
-              post={post}
-              navigation={navigation}
-            />
-            {isUserIdea && _menu()}
+    <>
+      {_dialog()}
+      <Card mode="elevated" style={styles.card} onPress={_ideaScreen}>
+        <Card.Title
+          titleStyle={styles.title}
+          title={post.title}
+          style={styles.header}
+          right={rightButtons}
+        />
+        <Card.Content style={styles.content}>
+          <Text>*tags*</Text>
+          <Divider bold style={styles.divider} />
+          <Text numberOfLines={5} style={styles.description}>
+            {post.description}
+          </Text>
+          <View>
+            <View style={styles.bottomContainer}>
+              <PosterDetails
+                avatarPosition="left"
+                post={post}
+                navigation={navigation}
+              />
+              {isUserIdea && _menu()}
+            </View>
           </View>
-        </View>
-      </Card.Content>
-    </Card>
+        </Card.Content>
+      </Card>
+    </>
   ) : (
     <Card style={expandedStyle.card}>
       <Card.Title
