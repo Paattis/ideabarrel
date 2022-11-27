@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import PropTypes from 'prop-types';
+import { MainContext } from '../contexts/MainContext';
 
 const ProfileModal = ({
   visible,
@@ -12,9 +13,12 @@ const ProfileModal = ({
   navigation,
   groups = null,
   children,
+  posterInfo,
 }) => {
   const { isThemeDark } = useContext(PreferencesContext);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+
+  const { user } = useContext(MainContext);
 
   const backGroundStyle = {
     backgroundColor: theme.colors.background,
@@ -22,6 +26,10 @@ const ProfileModal = ({
   const boxBackGroundStyle = {
     backgroundColor: theme.colors.inversePrimary,
   };
+
+  const isUserProfile = posterInfo.id === user.result.id;
+
+  const _editProfileScreen = () => navigation.navigate('Edit Profile');
 
   return (
     <Portal>
@@ -31,30 +39,28 @@ const ProfileModal = ({
         contentContainerStyle={[styles.containerStyle, backGroundStyle]}
       >
         <View style={styles.buttonLayout}>
-          <Button
-            icon="account-edit"
-            mode="contained"
-            onPress={() => {
-              {
-                /* placeholder when going to edit profile */
-              }
-              console.log('edit profile');
-              hideModal();
-            }}
-          >
-            Edit
-          </Button>
+          {isUserProfile && (
+            <Button
+              icon="account-edit"
+              mode="contained"
+              onPress={() => {
+                _editProfileScreen();
+                hideModal();
+              }}
+            >
+              Edit
+            </Button>
+          )}
         </View>
         <View style={styles.contentContainerStyleColumn}>
           {children}
-          <Text style={styles.nameText}>placeholder</Text>
-          <Text style={styles.roleText}>placeholder</Text>
+          <Text style={styles.nameText}>{posterInfo?.name}</Text>
+          <Text style={styles.roleText}>{posterInfo?.role?.name}</Text>
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
             <Text style={styles.titleText}>Profile tags</Text>
             <View style={styles.tagContainerStyle}>
-              {/* placeholder for tags*/}
               <View style={styles.tagsStyle}>
-                <Text style={styles.tagsText}>ana bochi</Text>
+                <Text style={styles.tagsText}>tags</Text>
               </View>
             </View>
           </View>
@@ -121,5 +127,6 @@ ProfileModal.propTypes = {
   role: PropTypes.string,
   groups: PropTypes.string,
   children: PropTypes.node,
+  posterInfo: PropTypes.object,
 };
 export default ProfileModal;

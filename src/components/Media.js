@@ -120,7 +120,7 @@ const Media = ({ navigation, post, expanded }) => {
             <View style={styles.bottomContainer}>
               <PosterDetails
                 avatarPosition="left"
-                post={post}
+                posterId={post.userId}
                 navigation={navigation}
               />
               {isUserIdea && _menu()}
