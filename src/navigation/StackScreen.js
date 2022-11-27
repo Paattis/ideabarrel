@@ -11,6 +11,7 @@ import {
   IdeaScreen,
   AddCommentScreen,
   EditIdeaScreen,
+  EditProfileScreen,
 } from '../screens/';
 
 const Stack = createNativeStackNavigator();
@@ -44,6 +45,7 @@ const StackScreen = () => {
             name="Edit"
             component={EditIdeaScreen}
           />
+          <Stack.Screen name="Edit Profile" component={EditProfileScreen} />
         </>
       ) : (
         <>
