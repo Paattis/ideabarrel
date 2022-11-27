@@ -8,9 +8,8 @@ import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 const IdeaScreen = ({ route: { params }, navigation }) => {
   const [media, setMedia] = useState({});
   const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const { getMediaById } = useMedia();
+  const { getMediaById, loading } = useMedia();
   const { getCommentByPost } = useComment();
   const { postId } = params;
 
@@ -28,7 +27,6 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
 
   const getMedia = async () => {
     const media = await getMediaById(postId);
-    setLoading(false);
     setMedia(media);
   };
 
@@ -38,7 +36,6 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
     getMedia();
     getComments();
   }, []);

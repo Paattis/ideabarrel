@@ -16,11 +16,11 @@ const Comment = ({ comment }) => {
 
 const style = StyleSheet.create({
   container: {
-    margin: 10,
+    marginHorizontal: 10,
   },
   comment: {
     marginHorizontal: 8,
-    marginVertical: 10,
+    marginBottom: 10,
   },
   divider: {
     marginHorizontal: 8,

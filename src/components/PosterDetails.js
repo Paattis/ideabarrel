@@ -36,7 +36,7 @@ const PosterDetails = ({ avatarPosition = 'row', navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { alignItems: 'center' },
+  container: { alignItems: 'center', margin: 10 },
   avatar: { marginHorizontal: 8 },
   posterName: { fontSize: 12 },
   posterRole: { fontSize: 9 },

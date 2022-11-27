@@ -5,3 +5,4 @@ export { default as MainScreen } from './MainScreen';
 export { default as UploadScreen } from './UploadScreen';
 export { default as IdeaScreen } from './IdeaScreen';
 export { default as AddCommentScreen } from './AddCommentScreen';
+export { default as EditIdeaScreen } from './EditIdeaScreen';

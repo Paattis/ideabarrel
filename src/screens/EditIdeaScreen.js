@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Keyboard,
   SafeAreaView,
@@ -6,64 +6,45 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Button, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
+import { Divider } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
 import { useMedia } from '../hooks';
-import BgSVG from '../../assets/svg/top-right-bg.svg';
 
-const UploadScreen = ({ navigation }) => {
-  const [showDialog, setDialog] = useState(false);
+const EditIdeaScreen = ({ route: { params }, navigation }) => {
+  const { putMedia, loading } = useMedia();
+  const { postTitle, postDescription } = params;
 
-  const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postMedia, loading } = useMedia();
+  const { control, handleSubmit, watch } = useForm({
+    defaultValues: {
+      idea_title: postTitle,
+      idea_description: postDescription,
+    },
+  });
 
   const title = watch('idea_title');
-  const desc = watch('idea_description');
-
-  const _showDialog = () => setDialog(true);
-  const _hideDialog = () => setDialog(false);
 
   const _goBack = () => navigation.pop();
 
-  const _post = async (data) => {
+  const _edit = async (data) => {
     Keyboard.dismiss();
     try {
-      await postMedia(data);
+      await putMedia(data);
       _goBack();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const _dialog = () => (
-    <Portal>
-      <Dialog visible={showDialog} onDismiss={_hideDialog}>
-        <Dialog.Title>Discard changes?</Dialog.Title>
-        <Dialog.Content>
-          <Paragraph>
-            Closing this screen will discard any changes you made.
-          </Paragraph>
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={_hideDialog && _goBack}>Discard</Button>
-          <Button onPress={_hideDialog}>Stay</Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
-      <BgSVG style={styles.bgShape} />
-      {_dialog()}
       <NavigationHeader
-        onPressCancel={title || desc ? _showDialog : _goBack}
-        onPressPost={handleSubmit(_post)}
+        onPressCancel={_goBack}
+        onPressPost={handleSubmit(_edit)}
         disableButton={!title}
         loading={loading}
-        buttonText="Post"
+        buttonText="Edit"
       />
       <View style={styles.inputContainer}>
         <FormInput
@@ -133,15 +114,11 @@ const styles = StyleSheet.create({
   descriptionOutline: {
     borderColor: 'transparent',
   },
-  bgShape: {
-    position: 'absolute',
-    marginTop: 35,
-    transform: [{ rotate: '180deg' }],
-  },
 });
 
-UploadScreen.propTypes = {
+EditIdeaScreen.propTypes = {
+  route: PropTypes.object,
   navigation: PropTypes.object,
 };
 
-export default UploadScreen;
+export default EditIdeaScreen;

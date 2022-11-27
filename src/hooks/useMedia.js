@@ -13,8 +13,8 @@ export const useMedia = () => {
     setLoading(false);
   };
 
-  const getMediaById = async (mediaId) => {
-    return await customFetch(BASE_URL + 'posts/' + mediaId);
+  const getMediaById = async (postId) => {
+    return await customFetch(BASE_URL + 'posts/' + postId);
   };
 
   const postMedia = async (data) => {
@@ -29,9 +29,38 @@ export const useMedia = () => {
     return res;
   };
 
+  const putMedia = async (data, postId) => {
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    setLoading(true);
+    const res = await customFetch(`${BASE_URL}posts/${postId}`, options);
+    if (res) setLoading(false);
+    return res;
+  };
+
+  const deleteMedia = async (postId) => {
+    const options = {
+      method: 'DELETE',
+    };
+    return await customFetch(`${BASE_URL}/posts/${postId}`, options);
+  };
+
   useEffect(() => {
     getMedia();
   }, []);
 
-  return { media, getMedia, getMediaById, postMedia, loading };
+  return {
+    loading,
+    media,
+    getMedia,
+    getMediaById,
+    postMedia,
+    putMedia,
+    deleteMedia,
+  };
 };
