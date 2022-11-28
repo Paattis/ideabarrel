@@ -12,11 +12,12 @@ import {
   Text,
 } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
+import { useMedia } from '../hooks';
+import { MainContext } from '../contexts/MainContext';
 import Like from '../components/Like';
 import CommentCount from '../components/CommentCount';
 import PosterDetails from './PosterDetails';
-import { useMedia } from '../hooks';
-import { MainContext } from '../contexts/MainContext';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 const Media = ({ navigation, post, expanded }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -32,6 +33,11 @@ const Media = ({ navigation, post, expanded }) => {
   };
 
   const isUserIdea = post.userId === user.result.id;
+  const postCreatedAt = post.created_at
+    ? formatDistanceToNow(new Date(post.created_at), {
+        addSuffix: true,
+      })
+    : 'posted at: unavailable';
 
   const _showDialog = () => {
     _closeMenu();
@@ -111,7 +117,10 @@ const Media = ({ navigation, post, expanded }) => {
           right={rightButtons}
         />
         <Card.Content style={styles.content}>
-          <Text>*tags*</Text>
+          <View style={styles.topContainer}>
+            <Text>*tags*</Text>
+            <Text>{postCreatedAt}</Text>
+          </View>
           <Divider bold style={styles.divider} />
           <Text numberOfLines={5} style={styles.description}>
             {post.description}
@@ -139,7 +148,10 @@ const Media = ({ navigation, post, expanded }) => {
         right={rightButtons}
       />
       <Card.Content style={expandedStyle.content}>
-        <Text>*tags*</Text>
+        <View style={styles.topContainer}>
+          <Text>*tags*</Text>
+          <Text>{postCreatedAt}</Text>
+        </View>
         <Divider bold style={styles.divider} />
         <View style={expandedStyle.userContainer}>
           <PosterDetails avatarPosition="left" />
@@ -162,6 +174,11 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 4,
     backgroundColor: '#152F65',
   },
+  topContainer: {
+    marginTop: 5,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
   title: {
     paddingTop: 4,
     color: '#fff',
@@ -170,7 +187,7 @@ const styles = StyleSheet.create({
     height: 180,
   },
   divider: {
-    marginTop: 15,
+    marginTop: 10,
     marginBottom: 5,
   },
   description: {
