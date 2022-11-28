@@ -48,8 +48,8 @@ const AddCommentScreen = ({ navigation, postId }) => {
         outlineStyle={styles.descriptionOutline}
         rules={{
           maxLength: {
-            value: 1000,
-            message: 'Comment maximum length is 1000 characters',
+            value: 500,
+            message: 'Comment maximum length is 500 characters',
           },
         }}
       />

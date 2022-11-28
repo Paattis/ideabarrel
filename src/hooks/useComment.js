@@ -10,7 +10,7 @@ export const useComment = () => {
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ comment: data.comment, post_id: postId }),
+      body: JSON.stringify({ content: data.comment, post_id: postId }),
     };
     return await customFetch(BASE_URL + 'comments', options);
   };
