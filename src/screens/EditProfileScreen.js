@@ -18,13 +18,12 @@ const EditProfileScreen = ({ navigation }) => {
   const [avatar, setAvatar] = useState(pickAvatarUri);
 
   const { user, setUser } = useContext(MainContext);
-  const { putUser } = useUser();
+  const { putUser, checkEmail } = useUser();
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      username: user.result.name,
       email: user.result.email,
-      full_name: user.full_name,
+      name: user.name,
       password: '',
       confirm_password: '',
     },
@@ -97,12 +96,22 @@ const EditProfileScreen = ({ navigation }) => {
               value: EMAIL_REGEX,
               message: 'Email has to be valid.',
             },
+            validate: async (value) => {
+              try {
+                const res = await checkEmail(value);
+                if (!res.free) {
+                  return 'This email is already taken';
+                }
+              } catch (error) {
+                return true;
+              }
+            },
           }}
         />
         <FormInput
           testID="full_name_input"
           leftIcon="account-circle"
-          fieldName="full_name"
+          fieldName="name"
           label="Name"
           control={control}
           rules={{

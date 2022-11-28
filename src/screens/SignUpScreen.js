@@ -18,7 +18,7 @@ const SignUpScreen = ({ navigation }) => {
   const [avatar, setAvatar] = useState(pickAvatarUri);
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postUser } = useUser();
+  const { postUser, checkEmail } = useUser();
 
   const _signInScreen = () => navigation.navigate('Sign In');
 
@@ -81,12 +81,22 @@ const SignUpScreen = ({ navigation }) => {
               value: EMAIL_REGEX,
               message: 'Email has to be valid.',
             },
+            validate: async (value) => {
+              try {
+                const res = await checkEmail(value);
+                if (!res.free) {
+                  return 'This email is already taken';
+                }
+              } catch (error) {
+                return true;
+              }
+            },
           }}
         />
         <FormInput
           testID="full_name_input"
           leftIcon="account-circle"
-          fieldName="full_name"
+          fieldName="name"
           label="Name"
           control={control}
           rules={{
