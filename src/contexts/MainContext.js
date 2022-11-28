@@ -5,11 +5,21 @@ const MainContext = createContext({});
 
 const MainProvider = ({ children }) => {
   const [signedIn, setSignedIn] = useState(false);
+  const [likeUpdate, setLikeUpdate] = useState(0);
 
   const [user, setUser] = useState({});
 
   return (
-    <MainContext.Provider value={{ signedIn, setSignedIn, user, setUser }}>
+    <MainContext.Provider
+      value={{
+        signedIn,
+        setSignedIn,
+        user,
+        setUser,
+        setLikeUpdate,
+        likeUpdate,
+      }}
+    >
       {children}
     </MainContext.Provider>
   );

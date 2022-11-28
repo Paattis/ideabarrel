@@ -57,7 +57,7 @@ const Media = ({ navigation, post, expanded }) => {
 
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
-      <Like />
+      <Like postId={post.postId} />
       <CommentCount />
     </View>
   );
