@@ -58,7 +58,7 @@ const Media = ({ navigation, post, expanded }) => {
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
       <Like postId={post.postId} />
-      <CommentCount />
+      <CommentCount postId={post.postId} />
     </View>
   );
 
@@ -117,7 +117,7 @@ const Media = ({ navigation, post, expanded }) => {
             {post.description}
           </Text>
           <View>
-            <View style={styles.bottomContainer}>
+            <View style={styles.userContainer}>
               <PosterDetails
                 avatarPosition="left"
                 posterId={post.userId}
@@ -141,7 +141,7 @@ const Media = ({ navigation, post, expanded }) => {
       <Card.Content style={expandedStyle.content}>
         <Text>*tags*</Text>
         <Divider bold style={styles.divider} />
-        <View style={expandedStyle.bottomContainer}>
+        <View style={expandedStyle.userContainer}>
           <PosterDetails avatarPosition="left" />
         </View>
         <Text>{post.description}</Text>
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   description: {
     height: 90,
   },
-  bottomContainer: {
+  userContainer: {
     alignItems: 'center',
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
@@ -190,9 +190,10 @@ const expandedStyle = StyleSheet.create({
   header: {
     backgroundColor: '#152F65',
   },
-  bottomContainer: {
+  userContainer: {
     alignItems: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 

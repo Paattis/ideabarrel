@@ -31,8 +31,12 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
   };
 
   const getComments = async () => {
-    const comments = await getCommentByPost(postId);
-    setComments(comments);
+    try {
+      const comments = await getCommentByPost(postId);
+      setComments(comments);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {

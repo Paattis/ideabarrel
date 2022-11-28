@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { customFetch } from '../api';
+import { MainContext } from '../contexts/MainContext';
 import { BASE_URL } from '../utils/constants';
 
 export const useMedia = () => {
   const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const { updateMedia } = useContext(MainContext);
 
   const getMedia = async () => {
     setLoading(true);
@@ -52,7 +55,7 @@ export const useMedia = () => {
 
   useEffect(() => {
     getMedia();
-  }, []);
+  }, [updateMedia]);
 
   return {
     loading,
