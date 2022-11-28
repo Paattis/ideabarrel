@@ -9,11 +9,7 @@ import { useUser } from '../hooks/useUser';
 import BgSVG from '../../assets/svg/top-left-bg.svg';
 import pickAvatarImg from '../../assets/pick-avatar.png';
 import * as ImagePicker from 'expo-image-picker';
-import {
-  EMAIL_REGEX,
-  USERNAME_REGEX,
-  PASSWORD_REGEX,
-} from '../utils/constants';
+import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '../utils/constants';
 
 const SignUpScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
@@ -77,7 +73,7 @@ const SignUpScreen = ({ navigation }) => {
           testID="email_input"
           leftIcon="email"
           fieldName="email"
-          label="Email*"
+          label="Email"
           control={control}
           rules={{
             required: 'Email required',
@@ -91,32 +87,21 @@ const SignUpScreen = ({ navigation }) => {
           testID="full_name_input"
           leftIcon="account-circle"
           fieldName="full_name"
-          label="Full name*"
+          label="Name"
           control={control}
           rules={{
-            required: 'Full name required',
+            required: 'Name required',
             minLength: {
               value: 3,
-              message: 'Full name must be at least 3 characters long',
+              message: 'Name must be at least 3 characters long',
             },
             maxLength: {
               value: 20,
-              message: 'Full name can be maximum of 20 characters long',
+              message: 'Name can be maximum of 20 characters long',
             },
-          }}
-        />
-
-        <FormInput
-          testID="username_input"
-          leftIcon="account-circle"
-          fieldName="username"
-          label="Username*"
-          control={control}
-          rules={{
-            required: 'Username required',
             pattern: {
-              value: USERNAME_REGEX,
-              message: 'Username must be 2 - 15 characters long with no spaces',
+              value: NAME_REGEX,
+              message: 'Name must not contain special characters',
             },
           }}
         />
@@ -125,7 +110,7 @@ const SignUpScreen = ({ navigation }) => {
           leftIcon="lock"
           passwordField
           fieldName="password"
-          label="Password*"
+          label="Password"
           control={control}
           rules={{
             required: 'Password required',
@@ -141,7 +126,7 @@ const SignUpScreen = ({ navigation }) => {
           leftIcon="lock"
           passwordField
           fieldName="confirm_password"
-          label="Confirm password*"
+          label="Confirm password"
           control={control}
           rules={{
             required: 'Please confirm password',

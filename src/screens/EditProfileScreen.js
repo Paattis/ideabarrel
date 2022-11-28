@@ -8,11 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useUser } from '../hooks/useUser';
 import pickAvatarImg from '../../assets/pick-avatar.png';
 import * as ImagePicker from 'expo-image-picker';
-import {
-  EMAIL_REGEX,
-  USERNAME_REGEX,
-  PASSWORD_REGEX,
-} from '../utils/constants';
+import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '../utils/constants';
 import { MainContext } from '../contexts/MainContext';
 
 const EditProfileScreen = ({ navigation }) => {
@@ -93,7 +89,7 @@ const EditProfileScreen = ({ navigation }) => {
           testID="email_input"
           leftIcon="email"
           fieldName="email"
-          label="Email*"
+          label="Email"
           control={control}
           rules={{
             required: 'Email required',
@@ -107,32 +103,21 @@ const EditProfileScreen = ({ navigation }) => {
           testID="full_name_input"
           leftIcon="account-circle"
           fieldName="full_name"
-          label="Full name*"
+          label="Name"
           control={control}
           rules={{
-            required: 'Full name required',
+            required: 'Name is required',
             minLength: {
               value: 3,
-              message: 'Full name must be at least 3 characters long',
+              message: 'Name must be at least 3 characters long',
             },
             maxLength: {
               value: 20,
-              message: 'Full name can be maximum of 20 characters long',
+              message: 'Name can be maximum of 20 characters long',
             },
-          }}
-        />
-
-        <FormInput
-          testID="username_input"
-          leftIcon="account-circle"
-          fieldName="username"
-          label="Username*"
-          control={control}
-          rules={{
-            required: 'Username required',
             pattern: {
-              value: USERNAME_REGEX,
-              message: 'Username must be 2 - 15 characters long with no spaces',
+              value: NAME_REGEX,
+              message: 'Name must not contain special characters',
             },
           }}
         />
@@ -141,7 +126,7 @@ const EditProfileScreen = ({ navigation }) => {
           leftIcon="lock"
           passwordField
           fieldName="password"
-          label="Change password*"
+          label="Change password"
           control={control}
           rules={{
             pattern: {
@@ -156,7 +141,7 @@ const EditProfileScreen = ({ navigation }) => {
           leftIcon="lock"
           passwordField
           fieldName="confirm_password"
-          label="Confirm password*"
+          label="Confirm password"
           control={control}
           rules={{
             validate: (value) =>
