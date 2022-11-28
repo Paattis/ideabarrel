@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Keyboard,
   SafeAreaView,
@@ -11,6 +11,7 @@ import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
 import { useMedia } from '../hooks';
+import { MainContext } from '../contexts/MainContext';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const UploadScreen = ({ navigation }) => {
@@ -18,6 +19,7 @@ const UploadScreen = ({ navigation }) => {
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postMedia, loading } = useMedia();
+  const { updateMedia, setUpdateMedia } = useContext(MainContext);
 
   const title = watch('idea_title');
   const desc = watch('idea_description');
@@ -31,6 +33,7 @@ const UploadScreen = ({ navigation }) => {
     Keyboard.dismiss();
     try {
       await postMedia(data);
+      setUpdateMedia(updateMedia + 1);
       _goBack();
     } catch (error) {
       console.error(error);

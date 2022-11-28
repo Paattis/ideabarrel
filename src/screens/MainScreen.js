@@ -1,15 +1,42 @@
-import React, { useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
+import React, { useCallback, useContext, useState } from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+} from 'react-native';
 import { PropTypes } from 'prop-types';
 import { FAB, Media } from '../components';
 import { useMedia } from '../hooks';
 import { ActivityIndicator } from 'react-native-paper';
+import { MainContext } from '../contexts/MainContext';
+import { PreferencesContext } from '../contexts/PreferencesContext';
+import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import BgSVG from '../../assets/svg/top-bottom-bg.svg';
 
 const MainScreen = ({ navigation }) => {
   const [isFabExtended, setIsFabExtended] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
+  const { updateMedia, setUpdateMedia } = useContext(MainContext);
   const { media, loading } = useMedia();
+  const { isThemeDark } = useContext(PreferencesContext);
+
+  const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+
+  const onRefresh = useCallback(() => {
+    setUpdateMedia(updateMedia + 1);
+    loading && setRefreshing(true);
+  });
+
+  const _refreshControl = () => (
+    <RefreshControl
+      colors={[theme.colors.primary]}
+      progressBackgroundColor={theme.colors.background}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
+  );
 
   const _onScroll = ({ nativeEvent }) => {
     const currentScrollPosition =
@@ -17,7 +44,7 @@ const MainScreen = ({ navigation }) => {
     setIsFabExtended(currentScrollPosition <= 0);
   };
 
-  const _newIdea = () => navigation.navigate('New Idea');
+  const _newIdeaScreen = () => navigation.navigate('New Idea');
 
   return (
     <>
@@ -25,6 +52,7 @@ const MainScreen = ({ navigation }) => {
         <BgSVG style={styles.bgShape} />
         {!loading ? (
           <FlatList
+            refreshControl={_refreshControl()}
             onScroll={_onScroll}
             showsVerticalScrollIndicator={false}
             data={media}
@@ -41,7 +69,7 @@ const MainScreen = ({ navigation }) => {
         testID="main_fab"
         label="New Idea"
         extended={isFabExtended}
-        onPress={_newIdea}
+        onPress={_newIdeaScreen}
       />
     </>
   );

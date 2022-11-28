@@ -20,9 +20,12 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
   };
 
   const _getPostOwner = async () => {
-    const user = await getUserById(posterId);
-    console.log(user);
-    setPostOwner(user);
+    try {
+      const user = await getUserById(posterId);
+      setPostOwner(user);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
