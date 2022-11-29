@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Comment, Media } from '../components';
-import { useMedia, useComment } from '../hooks';
+import { Comment, IdeaCard } from '../components';
+import { useIdea } from '../hooks';
 import { PropTypes } from 'prop-types';
 import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 
 const IdeaScreen = ({ route: { params }, navigation }) => {
-  const [media, setMedia] = useState({});
+  const [idea, setIdea] = useState({});
   const [comments, setComments] = useState([]);
 
-  const { getMediaById, loading } = useMedia();
-  const { getCommentByPost } = useComment();
-  const { postId } = params;
+  const { getIdeaById, loading } = useIdea();
+  const { ideaId } = params;
 
   const ref = useRef(null);
 
@@ -22,37 +21,27 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
     });
   };
 
-  const _addCommentScreen = () =>
-    navigation.push('Add Comment', { postId: postId });
+  const _addCommentScreen = () => navigation.push('Add Comment', { ideaId });
 
-  const getMedia = async () => {
-    const media = await getMediaById(postId);
-    setMedia(media);
-  };
-
-  const getComments = async () => {
-    try {
-      const comments = await getCommentByPost(postId);
-      setComments(comments);
-    } catch (error) {
-      console.error(error);
-    }
+  const _getIdea = async () => {
+    const idea = await getIdeaById(ideaId);
+    setComments(idea.comments);
+    setIdea(idea);
   };
 
   useEffect(() => {
-    getMedia();
-    getComments();
+    _getIdea();
   }, []);
 
   if (!loading)
     return (
       <>
         <ScrollView ref={ref}>
-          <Media post={media} expanded />
+          <IdeaCard idea={idea} ideaScreen />
           <Text style={styles.commentsHeader}>Comments:</Text>
           {comments.length ? (
             comments.map((comment) => (
-              <Comment key={comment.comment_id} comment={comment.comment} />
+              <Comment key={comment.id} comment={comment.content} />
             ))
           ) : (
             <Text>no comments</Text>

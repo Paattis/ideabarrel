@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
-import ProfileModal from './ProfileModal';
 import { useUser } from '../hooks';
+import ProfileModal from './ProfileModal';
 
 const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
+  const [avatar, setAvatar] = useState();
   const [showModal, setShowModal] = useState(false);
-  const [postOwner, setPostOwner] = useState({});
+  const [ideaOwner, setIdeaOwner] = useState({
+    name: 'Loading...',
+    role: { name: 'Loading...' },
+  });
 
   const { getUserById } = useUser();
 
@@ -19,10 +23,13 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
     flexDirection: direction,
   };
 
+  const userAvatarText = ideaOwner?.name[0].toUpperCase();
+
   const _getPostOwner = async () => {
     try {
       const user = await getUserById(posterId);
-      setPostOwner(user);
+      setIdeaOwner(user);
+      setAvatar(user.profile_img);
     } catch (error) {
       console.error(error);
     }
@@ -38,15 +45,24 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
         visible={showModal}
         hideModal={_hideModal}
         navigation={navigation}
-        posterInfo={postOwner}
+        posterInfo={ideaOwner}
       >
         <Avatar.Image size={80} />
       </ProfileModal>
       <View style={[styles.container, flexDirection]}>
-        <Avatar.Image size={30} style={styles.avatar} />
+        {avatar ? (
+          <Avatar.Image
+            source={{ uri: avatar }}
+            size={30}
+            style={styles.avatar}
+          />
+        ) : (
+          <Avatar.Text size={30} label={userAvatarText} style={styles.avatar} />
+        )}
+
         <View>
-          <Text style={styles.posterName}>{postOwner?.name}</Text>
-          <Text style={styles.posterRole}>{postOwner?.role?.name}</Text>
+          <Text style={styles.posterName}>{ideaOwner?.name}</Text>
+          <Text style={styles.posterRole}>{ideaOwner?.role?.name}</Text>
         </View>
       </View>
     </TouchableOpacity>

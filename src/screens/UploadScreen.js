@@ -10,7 +10,7 @@ import { Button, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
-import { useMedia } from '../hooks';
+import { useIdea } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
@@ -18,11 +18,11 @@ const UploadScreen = ({ navigation }) => {
   const [showDialog, setDialog] = useState(false);
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postMedia, loading } = useMedia();
-  const { updateMedia, setUpdateMedia } = useContext(MainContext);
+  const { postIdea, loading } = useIdea();
+  const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
 
-  const title = watch('idea_title');
-  const desc = watch('idea_description');
+  const title = watch('title');
+  const content = watch('content');
 
   const _showDialog = () => setDialog(true);
   const _hideDialog = () => setDialog(false);
@@ -30,10 +30,13 @@ const UploadScreen = ({ navigation }) => {
   const _goBack = () => navigation.pop();
 
   const _post = async (data) => {
+    // placeholder
+    const tags = [1];
+    data.tags = tags;
     Keyboard.dismiss();
     try {
-      await postMedia(data);
-      setUpdateMedia(updateMedia + 1);
+      await postIdea(data);
+      setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
       console.error(error);
@@ -62,7 +65,7 @@ const UploadScreen = ({ navigation }) => {
       <BgSVG style={styles.bgShape} />
       {_dialog()}
       <NavigationHeader
-        onPressCancel={title || desc ? _showDialog : _goBack}
+        onPressCancel={title || content ? _showDialog : _goBack}
         onPressPost={handleSubmit(_post)}
         disableButton={!title}
         loading={loading}
@@ -73,7 +76,7 @@ const UploadScreen = ({ navigation }) => {
           placeholderTextColor="#ababab"
           placeholder="Write your idea title"
           control={control}
-          fieldName="idea_title"
+          fieldName="title"
           style={styles.title}
           outlineStyle={styles.titleOutLine}
           rules={{
@@ -92,7 +95,7 @@ const UploadScreen = ({ navigation }) => {
             placeholderTextColor="#ababab"
             placeholder="Write a description (optional)"
             control={control}
-            fieldName="idea_description"
+            fieldName="content"
             outlineStyle={styles.descriptionOutline}
             rules={{
               maxLength: {

@@ -37,13 +37,13 @@ const SingInScreen = () => {
       <BgSVG style={styles.bgShape} />
       <FormCard title="Sign in to your account">
         <FormInput
-          testID="username_email_input"
+          testID="email_input"
           leftIcon="account-circle"
-          fieldName="email_username"
-          label="Email or username*"
+          fieldName="email"
+          label="Email"
           control={control}
           rules={{
-            required: 'Please insert your email or username',
+            required: 'Please insert your email',
           }}
         />
         <FormInput
@@ -51,7 +51,7 @@ const SingInScreen = () => {
           testID="password"
           leftIcon="lock"
           fieldName="password"
-          label="Password*"
+          label="Password"
           control={control}
           rules={{
             required: 'Please insert your password',

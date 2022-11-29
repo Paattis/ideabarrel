@@ -6,8 +6,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import { PropTypes } from 'prop-types';
-import { FAB, Media } from '../components';
-import { useMedia } from '../hooks';
+import { FAB, IdeaCard } from '../components';
+import { useIdea } from '../hooks';
 import { ActivityIndicator } from 'react-native-paper';
 import { MainContext } from '../contexts/MainContext';
 import { PreferencesContext } from '../contexts/PreferencesContext';
@@ -18,14 +18,14 @@ const MainScreen = ({ navigation }) => {
   const [isFabExtended, setIsFabExtended] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const { updateMedia, setUpdateMedia } = useContext(MainContext);
-  const { media, loading } = useMedia();
+  const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
+  const { ideas, loading } = useIdea();
   const { isThemeDark } = useContext(PreferencesContext);
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
 
   const onRefresh = useCallback(() => {
-    setUpdateMedia(updateMedia + 1);
+    setUpdateIdeas(updateIdeas + 1);
     loading && setRefreshing(true);
   });
 
@@ -55,11 +55,11 @@ const MainScreen = ({ navigation }) => {
             refreshControl={_refreshControl()}
             onScroll={_onScroll}
             showsVerticalScrollIndicator={false}
-            data={media}
+            data={ideas}
             renderItem={({ item }) => (
-              <Media post={item} navigation={navigation} />
+              <IdeaCard idea={item} navigation={navigation} />
             )}
-            keyExtractor={(item) => item.postId}
+            keyExtractor={(item) => item.id}
           />
         ) : (
           <ActivityIndicator color="#fff" style={styles.activityIndicator} />

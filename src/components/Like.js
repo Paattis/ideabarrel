@@ -5,7 +5,7 @@ import { useLike } from '../hooks';
 import { PropTypes } from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 
-const Like = ({ postId }) => {
+const Like = ({ ideaId }) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState([]);
 
@@ -14,7 +14,7 @@ const Like = ({ postId }) => {
 
   const _getLikes = async () => {
     try {
-      const likes = await getLikesByPostId(postId);
+      const likes = await getLikesByPostId(ideaId);
       setLikes(likes);
 
       likes.forEach((like) => {
@@ -29,7 +29,7 @@ const Like = ({ postId }) => {
 
   const _like = async () => {
     try {
-      const res = await postLike(postId);
+      const res = await postLike(ideaId);
       if (res) {
         setLiked(true);
         setLikeUpdate(likeUpdate + 1);
@@ -41,7 +41,7 @@ const Like = ({ postId }) => {
 
   const _unlike = async () => {
     try {
-      const res = await deleteLike(postId);
+      const res = await deleteLike(ideaId);
       if (res) {
         setLiked(false);
         setLikeUpdate(likeUpdate + 1);
@@ -52,7 +52,7 @@ const Like = ({ postId }) => {
   };
 
   useEffect(() => {
-    _getLikes();
+    // _getLikes();
   }, [likeUpdate]);
 
   const likesFormatted = numeral(likes.length).format('0a');
@@ -69,7 +69,7 @@ const Like = ({ postId }) => {
 };
 
 Like.propTypes = {
-  postId: PropTypes.number,
+  ideaId: PropTypes.number,
 };
 
 export default Like;

@@ -5,7 +5,7 @@ import { NavigationHeader, FormInput } from '../components';
 import { PropTypes } from 'prop-types';
 import { useComment } from '../hooks';
 
-const AddCommentScreen = ({ navigation, postId }) => {
+const AddCommentScreen = ({ navigation, ideaId }) => {
   const [loading, setLoading] = useState(false);
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
@@ -19,7 +19,7 @@ const AddCommentScreen = ({ navigation, postId }) => {
     try {
       Keyboard.dismiss();
       setLoading(true);
-      await postComment(data, postId);
+      await postComment(data, ideaId);
       _goBack();
     } catch (error) {
       console.error(error);
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
 
 AddCommentScreen.propTypes = {
   navigation: PropTypes.object,
-  postId: PropTypes.number,
+  ideaId: PropTypes.number,
 };
 
 export default AddCommentScreen;

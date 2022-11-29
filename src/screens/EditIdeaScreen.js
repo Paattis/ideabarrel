@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Keyboard,
   SafeAreaView,
@@ -10,27 +10,33 @@ import { Divider } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
-import { useMedia } from '../hooks';
+import { useIdea } from '../hooks';
+import { MainContext } from '../contexts/MainContext';
 
 const EditIdeaScreen = ({ route: { params }, navigation }) => {
-  const { putMedia, loading } = useMedia();
-  const { postTitle, postDescription } = params;
+  const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
+  const { putIdea, loading } = useIdea();
+  const { title, content, ideaId } = params;
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      idea_title: postTitle,
-      idea_description: postDescription,
+      title: title,
+      content: content,
     },
   });
 
-  const title = watch('idea_title');
+  const titleInput = watch('title');
 
   const _goBack = () => navigation.pop();
 
   const _edit = async (data) => {
+    // placeholder
+    const tags = [1];
+    data.tags = tags;
     Keyboard.dismiss();
     try {
-      await putMedia(data);
+      await putIdea(data, ideaId);
+      setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
       console.error(error);
@@ -42,7 +48,7 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
       <NavigationHeader
         onPressCancel={_goBack}
         onPressPost={handleSubmit(_edit)}
-        disableButton={!title}
+        disableButton={!titleInput}
         loading={loading}
         buttonText="Edit"
       />
@@ -51,7 +57,7 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
           placeholderTextColor="#ababab"
           placeholder="Write your idea title"
           control={control}
-          fieldName="idea_title"
+          fieldName="title"
           style={styles.title}
           outlineStyle={styles.titleOutLine}
           rules={{
@@ -70,7 +76,7 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
             placeholderTextColor="#ababab"
             placeholder="Write a description (optional)"
             control={control}
-            fieldName="idea_description"
+            fieldName="content"
             outlineStyle={styles.descriptionOutline}
             rules={{
               maxLength: {

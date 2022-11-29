@@ -1,7 +1,11 @@
+import { useContext } from 'react';
 import { BASE_URL } from '../utils/constants';
 import { customFetch } from '../api';
+import { MainContext } from '../contexts/MainContext';
 
 export const useUser = () => {
+  const { user } = useContext(MainContext);
+
   const postUser = async (data) => {
     const options = {
       method: 'POST',
@@ -12,7 +16,10 @@ export const useUser = () => {
   };
 
   const getUserById = async (userId) => {
-    return await customFetch(`${BASE_URL}users/${userId}`);
+    const options = {
+      headers: { Authorization: 'Bearer ' + user.token },
+    };
+    return await customFetch(`${BASE_URL}users/${userId}`, options);
   };
 
   const putUser = async (data) => {

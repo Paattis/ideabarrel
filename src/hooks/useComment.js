@@ -3,7 +3,7 @@ import { BASE_URL } from '../utils/constants';
 
 export const useComment = () => {
   const getCommentByPost = async (postId) => {
-    return await customFetch(`${BASE_URL}comments/post/${postId}`);
+    return await customFetch(`${BASE_URL}comments/${postId}`);
   };
 
   const postComment = async (data, postId) => {

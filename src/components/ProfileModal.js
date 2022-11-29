@@ -27,7 +27,7 @@ const ProfileModal = ({
     backgroundColor: theme.colors.inversePrimary,
   };
 
-  const isUserProfile = posterInfo.id === user.result.id;
+  const isUserProfile = posterInfo.id === user.id;
 
   const _editProfileScreen = () => navigation.navigate('Edit Profile');
 
