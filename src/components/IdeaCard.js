@@ -28,8 +28,9 @@ const Media = ({ navigation, idea, ideaScreen }) => {
 
   const isUserIdea = idea.user.id === user.id;
 
-  const ideaIdParam = { ideaId: idea.id };
-  const ideaParams = {
+  // const ideaIdParam = { ideaId: idea.id };
+  const ideaParam = { idea };
+  const ideaContentParams = {
     title: idea.title,
     content: idea.content,
     ideaId: idea.id,
@@ -47,11 +48,11 @@ const Media = ({ navigation, idea, ideaScreen }) => {
   };
   const _hideDialog = () => setDialog(false);
 
-  const _ideaScreen = () => navigation.navigate('Idea', ideaIdParam);
+  const _ideaScreen = () => navigation.navigate('Idea', ideaParam);
 
   const _editIdea = () => {
     _closeMenu();
-    navigation.navigate('Edit', ideaParams);
+    navigation.navigate('Edit', ideaContentParams);
   };
 
   const _removeIdea = async () => {
@@ -66,7 +67,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
 
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
-      <Like ideaId={idea.id} />
+      <Like ideaId={idea.id} likesArray={idea.likes} />
       <CommentCount comments={idea.comments} />
     </View>
   );

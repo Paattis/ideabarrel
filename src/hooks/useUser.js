@@ -6,6 +6,10 @@ import { MainContext } from '../contexts/MainContext';
 export const useUser = () => {
   const { user } = useContext(MainContext);
 
+  const authorizationHeaders = {
+    Authorization: 'Bearer ' + user.token,
+  };
+
   const postUser = async (data) => {
     const options = {
       method: 'POST',
@@ -26,7 +30,9 @@ export const useUser = () => {
     const options = {
       method: 'PUT',
       headers: {
+        Accept: 'multipart/form-data',
         'Content-Type': 'multipart/form-data',
+        ...authorizationHeaders,
       },
       body: data,
     };

@@ -1,16 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Comment, IdeaCard } from '../components';
 import { useIdea } from '../hooks';
 import { PropTypes } from 'prop-types';
 import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
+import { MainContext } from '../contexts/MainContext';
 
 const IdeaScreen = ({ route: { params }, navigation }) => {
-  const [idea, setIdea] = useState({});
-  const [comments, setComments] = useState([]);
+  // const [idea, setIdea] = useState({});
+  const [commentsArray, setCommentsArray] = useState([]);
 
   const { getIdeaById, loading } = useIdea();
-  const { ideaId } = params;
+  const { updateIdeas } = useContext(MainContext);
+  // const { ideaId } = params;
+  const { idea } = params;
+  const addCommentParams = { ideaId: idea.id };
 
   const ref = useRef(null);
 
@@ -21,16 +25,19 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
     });
   };
 
-  const _addCommentScreen = () => navigation.push('Add Comment', { ideaId });
-
-  const _getIdea = async () => {
-    const idea = await getIdeaById(ideaId);
-    setComments(idea.comments);
-    setIdea(idea);
+  const _addCommentScreen = () => {
+    navigation.navigate('Add Comment', addCommentParams);
   };
 
+  // const _getIdea = async () => {
+  //   const idea = await getIdeaById();
+  //   setComments(idea.comments);
+  //   setIdea(idea);
+  // };
+
   useEffect(() => {
-    _getIdea();
+    // _getIdea();
+    setCommentsArray(idea.comments);
   }, []);
 
   if (!loading)
@@ -39,16 +46,18 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
         <ScrollView ref={ref}>
           <IdeaCard idea={idea} ideaScreen />
           <Text style={styles.commentsHeader}>Comments:</Text>
-          {comments.length ? (
-            comments.map((comment) => (
-              <Comment key={comment.id} comment={comment.content} />
+          {commentsArray.length ? (
+            commentsArray.map((comment) => (
+              <Comment key={comment.id} comment={comment} />
             ))
           ) : (
-            <Text>no comments</Text>
+            <View style={styles.commentsContainer}>
+              <Text>no comments</Text>
+            </View>
           )}
         </ScrollView>
 
-        <View style={styles.commentContainer}>
+        <View style={styles.commentInputContainer}>
           <TouchableOpacity
             onPress={_addCommentScreen}
             style={styles.commentInput}
@@ -68,7 +77,12 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
 
 const styles = StyleSheet.create({
   commentsHeader: { margin: 20 },
-  commentContainer: {
+  commentsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  commentInputContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

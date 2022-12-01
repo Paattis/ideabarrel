@@ -29,6 +29,11 @@ const ProfileModal = ({
 
   const isUserProfile = posterInfo.id === user.id;
 
+  const _editProfile = () => {
+    _editProfileScreen();
+    hideModal();
+  };
+
   const _editProfileScreen = () => navigation.navigate('Edit Profile');
 
   return (
@@ -40,14 +45,7 @@ const ProfileModal = ({
       >
         <View style={styles.buttonLayout}>
           {isUserProfile && (
-            <Button
-              icon="account-edit"
-              mode="contained"
-              onPress={() => {
-                _editProfileScreen();
-                hideModal();
-              }}
-            >
+            <Button icon="account-edit" mode="contained" onPress={_editProfile}>
               Edit
             </Button>
           )}

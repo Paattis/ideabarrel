@@ -42,6 +42,7 @@ const SingInScreen = () => {
           fieldName="email"
           label="Email"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Please insert your email',
           }}
@@ -53,6 +54,7 @@ const SingInScreen = () => {
           fieldName="password"
           label="Password"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Please insert your password',
           }}
@@ -61,6 +63,7 @@ const SingInScreen = () => {
           style={styles.passwordBtn}
           mode="text"
           onPress={() => console.warn('not available yet')}
+          disabled={loading}
         >
           Forgot password?
         </Button>

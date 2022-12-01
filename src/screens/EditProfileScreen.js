@@ -26,9 +26,8 @@ const EditProfileScreen = ({ navigation }) => {
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      username: user.result.name,
-      email: user.result.email,
-      full_name: user.full_name,
+      name: user.name,
+      email: user.email,
       password: '',
       confirm_password: '',
     },
@@ -52,21 +51,23 @@ const EditProfileScreen = ({ navigation }) => {
 
   const _editProfile = async (data) => {
     const formData = new FormData();
-    formData.append(data);
-    const imageName = avatar.split('/').pop();
+    // const imageName = avatar.split('/').pop();
 
-    formData.append('profile_img', {
-      uri: avatar,
-      name: imageName,
-      type: 'image/jpg',
-    });
+    // formData.append('profile_img', {
+    //   uri: avatar,
+    //   name: imageName,
+    //   type: 'image/jpg',
+    // });
 
     try {
       setLoading(true);
+      data.role_id = 1;
       delete data.confirm_password;
       if (data.password === '') delete data.password;
+      formData.append(data);
+      console.log('PUT DATA: ', formData);
 
-      const user = await putUser(formData);
+      const user = await putUser(data);
       if (user) {
         delete data.password;
         setUser(data);
@@ -93,7 +94,7 @@ const EditProfileScreen = ({ navigation }) => {
           testID="email_input"
           leftIcon="email"
           fieldName="email"
-          label="Email*"
+          label="Email"
           control={control}
           rules={{
             required: 'Email required',
@@ -104,35 +105,16 @@ const EditProfileScreen = ({ navigation }) => {
           }}
         />
         <FormInput
-          testID="full_name_input"
+          testID="name_input"
           leftIcon="account-circle"
-          fieldName="full_name"
-          label="Full name*"
+          fieldName="name"
+          label="Name"
           control={control}
           rules={{
-            required: 'Full name required',
-            minLength: {
-              value: 3,
-              message: 'Full name must be at least 3 characters long',
-            },
-            maxLength: {
-              value: 20,
-              message: 'Full name can be maximum of 20 characters long',
-            },
-          }}
-        />
-
-        <FormInput
-          testID="username_input"
-          leftIcon="account-circle"
-          fieldName="username"
-          label="Username*"
-          control={control}
-          rules={{
-            required: 'Username required',
+            required: 'Name required',
             pattern: {
               value: USERNAME_REGEX,
-              message: 'Username must be 2 - 15 characters long with no spaces',
+              message: 'Name must be 2 - 15 characters long with no spaces',
             },
           }}
         />
@@ -141,7 +123,7 @@ const EditProfileScreen = ({ navigation }) => {
           leftIcon="lock"
           passwordField
           fieldName="password"
-          label="Change password*"
+          label="Change password"
           control={control}
           rules={{
             pattern: {
@@ -156,7 +138,7 @@ const EditProfileScreen = ({ navigation }) => {
           leftIcon="lock"
           passwordField
           fieldName="confirm_password"
-          label="Confirm password*"
+          label="Confirm password"
           control={control}
           rules={{
             validate: (value) =>

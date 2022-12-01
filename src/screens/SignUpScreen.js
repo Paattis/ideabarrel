@@ -41,18 +41,20 @@ const SignUpScreen = ({ navigation }) => {
 
   const _signUp = async (data) => {
     const formData = new FormData();
+    data.role_id = 1;
     formData.append(data);
-    const imageName = avatar.split('/').pop();
+    // const imageName = avatar.split('/').pop();
 
-    formData.append('profile_img', {
-      uri: avatar,
-      name: imageName,
-      type: 'image/jpg',
-    });
+    // formData.append('profile_img', {
+    //   uri: avatar,
+    //   name: imageName,
+    //   type: 'image/jpg',
+    // });
 
     try {
       setLoading(true);
       delete data.confirm_password;
+
       const user = await postUser(formData);
       if (user) _signInScreen();
     } catch (error) {
@@ -77,8 +79,9 @@ const SignUpScreen = ({ navigation }) => {
           testID="email_input"
           leftIcon="email"
           fieldName="email"
-          label="Email*"
+          label="Email"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Email required',
             pattern: {
@@ -87,33 +90,16 @@ const SignUpScreen = ({ navigation }) => {
             },
           }}
         />
-        <FormInput
-          testID="full_name_input"
-          leftIcon="account-circle"
-          fieldName="full_name"
-          label="Full name*"
-          control={control}
-          rules={{
-            required: 'Full name required',
-            minLength: {
-              value: 3,
-              message: 'Full name must be at least 3 characters long',
-            },
-            maxLength: {
-              value: 20,
-              message: 'Full name can be maximum of 20 characters long',
-            },
-          }}
-        />
 
         <FormInput
-          testID="username_input"
+          testID="name_input"
           leftIcon="account-circle"
-          fieldName="username"
-          label="Username*"
+          fieldName="name"
+          label="Name"
           control={control}
+          disabled={loading}
           rules={{
-            required: 'Username required',
+            required: 'Name required',
             pattern: {
               value: USERNAME_REGEX,
               message: 'Username must be 2 - 15 characters long with no spaces',
@@ -125,8 +111,9 @@ const SignUpScreen = ({ navigation }) => {
           leftIcon="lock"
           passwordField
           fieldName="password"
-          label="Password*"
+          label="Password"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Password required',
             pattern: {
@@ -141,8 +128,9 @@ const SignUpScreen = ({ navigation }) => {
           leftIcon="lock"
           passwordField
           fieldName="confirm_password"
-          label="Confirm password*"
+          label="Confirm password"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Please confirm password',
             validate: (value) =>

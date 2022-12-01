@@ -1,26 +1,25 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button } from 'react-native-paper';
-import numeral from 'numeral';
 import { useLike } from '../hooks';
 import { PropTypes } from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
+import numeral from 'numeral';
 
-const Like = ({ ideaId }) => {
+const Like = ({ ideaId, likesArray }) => {
   const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState([]);
+  const [likes, setLikes] = useState();
 
   const { user, likeUpdate, setLikeUpdate } = useContext(MainContext);
-  const { getLikesByPostId, postLike, deleteLike } = useLike();
+  const { getLikesByIdeaId, postLike, deleteLike } = useLike();
 
   const _getLikes = async () => {
     try {
-      const likes = await getLikesByPostId(ideaId);
-      setLikes(likes);
-
-      likes.forEach((like) => {
-        if (like.userId === user.result.id) {
-          setLiked(true);
-        }
+      const likes = await getLikesByIdeaId(ideaId);
+      console.log(likes);
+      setLiked(false);
+      setLikes(likes.count);
+      likes.likes.forEach((like) => {
+        if (like.user.id === user.id) setLiked(true);
       });
     } catch (error) {
       console.error(error);
@@ -31,8 +30,8 @@ const Like = ({ ideaId }) => {
     try {
       const res = await postLike(ideaId);
       if (res) {
-        setLiked(true);
         setLikeUpdate(likeUpdate + 1);
+        setLiked(true);
       }
     } catch (error) {
       console.error(error);
@@ -43,8 +42,8 @@ const Like = ({ ideaId }) => {
     try {
       const res = await deleteLike(ideaId);
       if (res) {
-        setLiked(false);
         setLikeUpdate(likeUpdate + 1);
+        setLiked(false);
       }
     } catch (error) {
       console.error(error);
@@ -52,10 +51,14 @@ const Like = ({ ideaId }) => {
   };
 
   useEffect(() => {
-    // _getLikes();
+    _getLikes();
+    // likesArray.forEach((like) => {
+    //   like.user_id === user.id ? setLiked(true) : setLiked(false);
+    // });
+    // setLikes(likesArray.length);
   }, [likeUpdate]);
 
-  const likesFormatted = numeral(likes.length).format('0a');
+  const likesFormatted = numeral(likes).format('0a');
 
   return (
     <Button
@@ -70,6 +73,7 @@ const Like = ({ ideaId }) => {
 
 Like.propTypes = {
   ideaId: PropTypes.number,
+  likesArray: PropTypes.array,
 };
 
 export default Like;

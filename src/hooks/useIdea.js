@@ -17,10 +17,9 @@ export const useIdea = () => {
     const options = {
       headers: { ...authorizationHeaders },
     };
-    console.log('here', user.token);
     setLoading(true);
-    const media = await customFetch(BASE_URL + 'ideas', options);
-    setIdeas(media);
+    const idea = await customFetch(BASE_URL + 'ideas', options);
+    setIdeas(idea.reverse());
     setLoading(false);
   };
 
@@ -67,7 +66,9 @@ export const useIdea = () => {
     const options = {
       method: 'DELETE',
       headers: {
-        Authorization: 'Bearer ' + user.token,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...authorizationHeaders,
       },
     };
     return await customFetch(`${BASE_URL}ideas/${ideaId}`, options);

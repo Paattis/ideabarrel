@@ -67,7 +67,7 @@ const UploadScreen = ({ navigation }) => {
       <NavigationHeader
         onPressCancel={title || content ? _showDialog : _goBack}
         onPressPost={handleSubmit(_post)}
-        disableButton={!title}
+        disableButton={!title || loading}
         loading={loading}
         buttonText="Post"
       />
@@ -79,6 +79,7 @@ const UploadScreen = ({ navigation }) => {
           fieldName="title"
           style={styles.title}
           outlineStyle={styles.titleOutLine}
+          disabled={loading}
           rules={{
             required: 'idea title is mandatory',
             maxLength: {
@@ -93,10 +94,11 @@ const UploadScreen = ({ navigation }) => {
             multiline
             style={styles.description}
             placeholderTextColor="#ababab"
-            placeholder="Write a description (optional)"
+            placeholder="Write a description"
             control={control}
             fieldName="content"
             outlineStyle={styles.descriptionOutline}
+            disabled={loading}
             rules={{
               maxLength: {
                 value: 1000,

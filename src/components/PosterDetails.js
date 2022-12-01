@@ -25,7 +25,7 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
 
   const userAvatarText = ideaOwner?.name[0].toUpperCase();
 
-  const _getPostOwner = async () => {
+  const _getIdeaOwner = async () => {
     try {
       const user = await getUserById(posterId);
       setIdeaOwner(user);
@@ -36,8 +36,15 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
   };
 
   useEffect(() => {
-    _getPostOwner();
+    if (posterId) _getIdeaOwner();
   }, []);
+
+  const userAvatar = (size) =>
+    avatar ? (
+      <Avatar.Image source={{ uri: avatar }} size={30} style={styles.avatar} />
+    ) : (
+      <Avatar.Text size={size} label={userAvatarText} style={styles.avatar} />
+    );
 
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={_showModal}>
@@ -47,19 +54,10 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
         navigation={navigation}
         posterInfo={ideaOwner}
       >
-        <Avatar.Image size={80} />
+        {userAvatar(80)}
       </ProfileModal>
       <View style={[styles.container, flexDirection]}>
-        {avatar ? (
-          <Avatar.Image
-            source={{ uri: avatar }}
-            size={30}
-            style={styles.avatar}
-          />
-        ) : (
-          <Avatar.Text size={30} label={userAvatarText} style={styles.avatar} />
-        )}
-
+        {userAvatar(30)}
         <View>
           <Text style={styles.posterName}>{ideaOwner?.name}</Text>
           <Text style={styles.posterRole}>{ideaOwner?.role?.name}</Text>

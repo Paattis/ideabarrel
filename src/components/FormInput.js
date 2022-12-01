@@ -18,6 +18,7 @@ const FormInput = ({
   passwordField = false,
   placeholder,
   autoFocus,
+  disabled,
 }) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
 
@@ -49,6 +50,7 @@ const FormInput = ({
         <>
           <TextInput
             dense
+            disabled={disabled}
             autoFocus={autoFocus}
             multiline={multiline}
             placeholderTextColor={placeholderTextColor}
@@ -91,6 +93,7 @@ FormInput.propTypes = {
   passwordField: PropTypes.bool,
   placeholder: PropTypes.string,
   autoFocus: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 export default FormInput;

@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Keyboard, SafeAreaView, StyleSheet } from 'react-native';
 import { NavigationHeader, FormInput } from '../components';
 import { PropTypes } from 'prop-types';
 import { useComment } from '../hooks';
+import { MainContext } from '../contexts/MainContext';
 
-const AddCommentScreen = ({ navigation, ideaId }) => {
+const AddCommentScreen = ({ route: { params }, navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postComment } = useComment();
+  const { ideaId } = params;
+  const { setUpdateIdeas, updateIdeas } = useContext(MainContext);
 
   const comment = watch('comment');
 
@@ -20,6 +23,7 @@ const AddCommentScreen = ({ navigation, ideaId }) => {
       Keyboard.dismiss();
       setLoading(true);
       await postComment(data, ideaId);
+      setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
       console.error(error);
@@ -33,7 +37,7 @@ const AddCommentScreen = ({ navigation, ideaId }) => {
       <NavigationHeader
         onPressCancel={_goBack}
         onPressPost={handleSubmit(_addComment)}
-        disableButton={!comment}
+        disableButton={!comment || loading}
         loading={loading}
         buttonText="Post"
       />
@@ -46,6 +50,7 @@ const AddCommentScreen = ({ navigation, ideaId }) => {
         control={control}
         fieldName="comment"
         outlineStyle={styles.descriptionOutline}
+        disabled={loading}
         rules={{
           maxLength: {
             value: 1000,
@@ -67,6 +72,7 @@ const styles = StyleSheet.create({
 });
 
 AddCommentScreen.propTypes = {
+  route: PropTypes.object,
   navigation: PropTypes.object,
   ideaId: PropTypes.number,
 };
