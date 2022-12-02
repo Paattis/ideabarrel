@@ -23,5 +23,29 @@ export const useComment = () => {
     return await customFetch(BASE_URL + 'comments', options);
   };
 
-  return { postComment };
+  // const editComment = async (data, commentId) => {
+  //   const options = {
+  //     method: 'PUT',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //       ...authorizationHeaders,
+  //     },
+  //     body: JSON.stringify(data),
+  //   };
+  // };
+
+  const deleteComment = async (commentId) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...authorizationHeaders,
+      },
+    };
+    return await customFetch(`${BASE_URL}/comments/${commentId}`, options);
+  };
+
+  return { postComment, deleteComment };
 };
