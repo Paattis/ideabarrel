@@ -6,17 +6,13 @@ import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import PropTypes from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
+import { useNavigation } from '@react-navigation/native';
 
-const ProfileModal = ({
-  visible,
-  hideModal,
-  navigation,
-  groups = null,
-  children,
-  posterInfo,
-}) => {
+const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const { isThemeDark } = useContext(PreferencesContext);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+
+  const nav = useNavigation();
 
   const { user } = useContext(MainContext);
 
@@ -34,7 +30,7 @@ const ProfileModal = ({
     hideModal();
   };
 
-  const _editProfileScreen = () => navigation.navigate('Edit Profile');
+  const _editProfileScreen = () => nav.navigate('Edit Profile');
 
   return (
     <Portal>
@@ -120,7 +116,6 @@ const styles = StyleSheet.create({
 ProfileModal.propTypes = {
   visible: PropTypes.bool,
   hideModal: PropTypes.func,
-  navigation: PropTypes.object,
   name: PropTypes.string,
   role: PropTypes.string,
   groups: PropTypes.string,

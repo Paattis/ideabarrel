@@ -19,7 +19,7 @@ const SignUpScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
 
   const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState(pickAvatarUri);
+  const [avatar, setAvatar] = useState();
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postUser } = useUser();
@@ -40,20 +40,30 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   const _signUp = async (data) => {
-    const formData = new FormData();
-    data.role_id = 1;
-    formData.append(data);
-    // const imageName = avatar.split('/').pop();
+    delete data.confirm_password;
 
-    // formData.append('profile_img', {
-    //   uri: avatar,
-    //   name: imageName,
-    //   type: 'image/jpg',
-    // });
+    const formData = new FormData();
+
+    const roleId = 1;
+    formData.append('role_id', roleId);
+
+    if (avatar) {
+      const imageName = avatar.split('/').pop();
+      formData.append('profile_img', {
+        uri: avatar,
+        name: imageName,
+        type: 'image/jpg',
+      });
+    }
+
+    for (const [name, value] of Object.entries(data)) {
+      formData.append(name, value);
+    }
+
+    console.log(formData);
 
     try {
       setLoading(true);
-      delete data.confirm_password;
 
       const user = await postUser(formData);
       if (user) _signInScreen();
@@ -73,7 +83,10 @@ const SignUpScreen = ({ navigation }) => {
       <BgSVG style={styles.bgShape} />
       <FormCard title="Create your new account">
         <TouchableOpacity onPress={_pickImage}>
-          <Avatar.Image size={90} source={{ uri: avatar }} />
+          <Avatar.Image
+            size={90}
+            source={{ uri: avatar ? avatar : pickAvatarUri }}
+          />
         </TouchableOpacity>
         <FormInput
           testID="email_input"

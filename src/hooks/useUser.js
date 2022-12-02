@@ -13,7 +13,11 @@ export const useUser = () => {
   const postUser = async (data) => {
     const options = {
       method: 'POST',
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: {
+        Accept: 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
+        ...authorizationHeaders,
+      },
       body: data,
     };
     return await customFetch(BASE_URL + 'users', options);

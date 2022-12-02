@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import { useUser } from '../hooks';
 import ProfileModal from './ProfileModal';
 
-const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
+const PosterDetails = ({ avatarPosition = 'row', posterId }) => {
   const [avatar, setAvatar] = useState();
   const [showModal, setShowModal] = useState(false);
   const [ideaOwner, setIdeaOwner] = useState({
@@ -27,17 +27,19 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
 
   const _getIdeaOwner = async () => {
     try {
-      const user = await getUserById(posterId);
-      setIdeaOwner(user);
-      setAvatar(user.profile_img);
+      if (posterId) {
+        const user = await getUserById(posterId);
+        setIdeaOwner(user);
+        setAvatar(user.profile_img);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    if (posterId) _getIdeaOwner();
-  }, []);
+    _getIdeaOwner();
+  }, [posterId]);
 
   const userAvatar = (size) =>
     avatar ? (
@@ -51,7 +53,6 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
       <ProfileModal
         visible={showModal}
         hideModal={_hideModal}
-        navigation={navigation}
         posterInfo={ideaOwner}
       >
         {userAvatar(80)}
@@ -77,7 +78,6 @@ const styles = StyleSheet.create({
 PosterDetails.propTypes = {
   avatarPosition: PropTypes.string,
   post: PropTypes.object,
-  navigation: PropTypes.object,
   posterId: PropTypes.number,
 };
 
