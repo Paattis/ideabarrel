@@ -4,6 +4,7 @@ import { Avatar, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { useUser } from '../hooks';
 import ProfileModal from './ProfileModal';
+import { PROFILE_IMG_URL } from '../utils/constants';
 
 const PosterDetails = ({ avatarPosition = 'row', posterId }) => {
   const [avatar, setAvatar] = useState();
@@ -30,7 +31,8 @@ const PosterDetails = ({ avatarPosition = 'row', posterId }) => {
       if (posterId) {
         const user = await getUserById(posterId);
         setIdeaOwner(user);
-        setAvatar(user.profile_img);
+        setAvatar(PROFILE_IMG_URL + user.profile_img);
+        console.log(avatar);
       }
     } catch (error) {
       console.error(error);
@@ -43,7 +45,11 @@ const PosterDetails = ({ avatarPosition = 'row', posterId }) => {
 
   const userAvatar = (size) =>
     avatar ? (
-      <Avatar.Image source={{ uri: avatar }} size={30} style={styles.avatar} />
+      <Avatar.Image
+        source={{ uri: avatar }}
+        size={size}
+        style={styles.avatar}
+      />
     ) : (
       <Avatar.Text size={size} label={userAvatarText} style={styles.avatar} />
     );

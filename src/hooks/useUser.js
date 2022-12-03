@@ -30,17 +30,18 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}`, options);
   };
 
-  const putUser = async (data) => {
+  const putUser = async (data, userId) => {
     const options = {
       method: 'PUT',
       headers: {
-        Accept: 'multipart/form-data',
-        'Content-Type': 'multipart/form-data',
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
         ...authorizationHeaders,
       },
-      body: data,
+      body: JSON.stringify(data),
     };
-    return await customFetch(BASE_URL + 'users', options);
+    console.log(data, userId);
+    return await customFetch(`${BASE_URL}users/${userId}`, options);
   };
 
   return { postUser, getUserById, putUser };

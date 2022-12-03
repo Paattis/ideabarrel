@@ -49,18 +49,14 @@ const SignUpScreen = ({ navigation }) => {
 
     if (avatar) {
       const imageName = avatar.split('/').pop();
-      formData.append('profile_img', {
-        uri: avatar,
-        name: imageName,
-        type: 'image/jpg',
-      });
+      formData.append('avatar', imageName);
     }
 
     for (const [name, value] of Object.entries(data)) {
       formData.append(name, value);
     }
 
-    console.log(formData);
+    console.log('Sign Up', formData);
 
     try {
       setLoading(true);

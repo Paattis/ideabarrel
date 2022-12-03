@@ -50,25 +50,13 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   const _editProfile = async (data) => {
-    const formData = new FormData();
-    // const imageName = avatar.split('/').pop();
-
-    // formData.append('profile_img', {
-    //   uri: avatar,
-    //   name: imageName,
-    //   type: 'image/jpg',
-    // });
-
+    delete data.confirm_password;
+    if (data.password === '') delete data.password;
+    data.role_id = 1;
     try {
       setLoading(true);
-      data.role_id = 1;
-      delete data.confirm_password;
-      if (data.password === '') delete data.password;
-      formData.append(data);
-      console.log('PUT DATA: ', formData);
-
-      const user = await putUser(data);
-      if (user) {
+      const res = await putUser(data, user.id);
+      if (res) {
         delete data.password;
         setUser(data);
         _goBack();
