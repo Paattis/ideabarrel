@@ -62,11 +62,8 @@ const SignUpScreen = ({ navigation }) => {
       formData.append(name, value);
     }
 
-    console.log('Sign Up', formData);
-
     try {
       setLoading(true);
-
       const user = await postUser(formData);
       if (user) _signInScreen();
     } catch (error) {
