@@ -32,7 +32,6 @@ const PosterDetails = ({ avatarPosition = 'row', posterId }) => {
         const user = await getUserById(posterId);
         setIdeaOwner(user);
         setAvatar(PROFILE_IMG_URL + user.profile_img);
-        console.log(avatar);
       }
     } catch (error) {
       console.error(error);

@@ -88,7 +88,7 @@ const UploadScreen = ({ navigation }) => {
             },
           }}
         />
-        <Divider style={{ marginHorizontal: 15 }} />
+        <Divider />
         <ScrollView>
           <FormInput
             multiline
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     margin: 12,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
   },
   titleOutLine: {
     borderColor: 'transparent',

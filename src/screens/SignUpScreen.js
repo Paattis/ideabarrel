@@ -49,7 +49,13 @@ const SignUpScreen = ({ navigation }) => {
 
     if (avatar) {
       const imageName = avatar.split('/').pop();
-      formData.append('avatar', imageName);
+      const imgExtension = imageName.split('.').pop();
+
+      formData.append('avatar', {
+        uri: avatar,
+        name: imageName,
+        type: 'image/' + imgExtension,
+      });
     }
 
     for (const [name, value] of Object.entries(data)) {
