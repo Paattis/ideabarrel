@@ -48,7 +48,7 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
       <NavigationHeader
         onPressCancel={_goBack}
         onPressPost={handleSubmit(_edit)}
-        disableButton={!titleInput}
+        disableButton={!titleInput || loading}
         loading={loading}
         buttonText="Edit"
       />
@@ -60,6 +60,7 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
           fieldName="title"
           style={styles.title}
           outlineStyle={styles.titleOutLine}
+          disabled={loading}
           rules={{
             required: 'idea title is mandatory',
             maxLength: {
@@ -78,6 +79,7 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
             control={control}
             fieldName="content"
             outlineStyle={styles.descriptionOutline}
+            disabled={loading}
             rules={{
               maxLength: {
                 value: 1000,

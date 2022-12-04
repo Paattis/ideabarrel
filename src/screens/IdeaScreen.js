@@ -7,13 +7,12 @@ import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 import { MainContext } from '../contexts/MainContext';
 
 const IdeaScreen = ({ route: { params }, navigation }) => {
-  // const [idea, setIdea] = useState({});
+  const [idea, setIdea] = useState({});
   const [commentsArray, setCommentsArray] = useState([]);
 
-  const { getIdeaById, loading } = useIdea();
   const { updateIdeas } = useContext(MainContext);
-  // const { ideaId } = params;
-  const { idea } = params;
+  const { getIdeaById, loading } = useIdea();
+  const { ideaId } = params;
   const addCommentParams = { ideaId: idea.id };
 
   const ref = useRef(null);
@@ -29,21 +28,24 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
     navigation.navigate('Add Comment', addCommentParams);
   };
 
-  // const _getIdea = async () => {
-  //   const idea = await getIdeaById();
-  //   setComments(idea.comments);
-  //   setIdea(idea);
-  // };
+  const _getIdea = async () => {
+    try {
+      const idea = await getIdeaById(ideaId);
+      setCommentsArray(idea.comments.reverse());
+      setIdea(idea);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    // _getIdea();
-    setCommentsArray(idea.comments);
-  }, []);
+    _getIdea();
+  }, [updateIdeas]);
 
   if (!loading)
     return (
       <>
-        <ScrollView ref={ref}>
+        <ScrollView showsVerticalScrollIndicator={false} ref={ref}>
           <IdeaCard idea={idea} ideaScreen />
           <Text style={styles.commentsHeader}>Comments:</Text>
           {commentsArray.length ? (
@@ -66,7 +68,7 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
           </TouchableOpacity>
           <IconButton
             size={40}
-            icon="chevron-up-circle"
+            icon="chevron-double-up"
             onPress={_onScrollUp}
           />
         </View>

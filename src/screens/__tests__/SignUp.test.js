@@ -10,8 +10,7 @@ describe('<SignUpScreen />', () => {
 
       fireEvent.changeText(getByTestId('email_input'), 'invalid email');
 
-      fireEvent.changeText(getByTestId('full_name_input'), 'test name');
-      fireEvent.changeText(getByTestId('username_input'), 'username');
+      fireEvent.changeText(getByTestId('name_input'), 'name');
       fireEvent.changeText(getByTestId('password_input'), 'QWEqwe123');
       fireEvent.changeText(getByTestId('confirm_password_input'), 'QWEqwe123');
 
@@ -23,38 +22,13 @@ describe('<SignUpScreen />', () => {
     });
   });
 
-  describe('with invalid full name', () => {
-    it('should display invalid full name error message', async () => {
-      const { getByTestId, queryAllByText } = render(<SignUpScreen />);
-
-      fireEvent.changeText(getByTestId('full_name_input'), 'x');
-
-      fireEvent.changeText(getByTestId('email_input'), 'some@test.com');
-      fireEvent.changeText(getByTestId('username_input'), 'username');
-      fireEvent.changeText(getByTestId('password_input'), 'QWEqwe123');
-      fireEvent.changeText(getByTestId('confirm_password_input'), 'QWEqwe123');
-
-      await act(async () => {
-        fireEvent.press(getByTestId('register_button'));
-      });
-
-      expect(
-        queryAllByText('Full name must be at least 3 characters long').length
-      ).toBe(1);
-    });
-  });
-
   describe('with invalid username', () => {
-    it('should display invalid username error message', async () => {
+    it('should display invalid name error message', async () => {
       const { getByTestId, queryAllByText } = render(<SignUpScreen />);
 
-      fireEvent.changeText(
-        getByTestId('username_input'),
-        'user name with spaces'
-      );
+      fireEvent.changeText(getByTestId('name_input'), 'user name with spaces');
 
       fireEvent.changeText(getByTestId('email_input'), 'some@test.com');
-      fireEvent.changeText(getByTestId('full_name_input'), 'test name');
       fireEvent.changeText(getByTestId('password_input'), 'QWEqwe123');
       fireEvent.changeText(getByTestId('confirm_password_input'), 'QWEqwe123');
 
@@ -76,8 +50,7 @@ describe('<SignUpScreen />', () => {
       fireEvent.changeText(getByTestId('password_input'), 'password');
 
       fireEvent.changeText(getByTestId('email_input'), 'some@test.com');
-      fireEvent.changeText(getByTestId('full_name_input'), 'test name');
-      fireEvent.changeText(getByTestId('username_input'), 'username');
+      fireEvent.changeText(getByTestId('name_input'), 'name');
       fireEvent.changeText(getByTestId('confirm_password_input'), 'QWEqwe123');
 
       await act(async () => {
@@ -99,8 +72,7 @@ describe('<SignUpScreen />', () => {
       fireEvent.changeText(getByTestId('confirm_password_input'), 'QWEqwe12');
 
       fireEvent.changeText(getByTestId('email_input'), 'some@test.com');
-      fireEvent.changeText(getByTestId('full_name_input'), 'test name');
-      fireEvent.changeText(getByTestId('username_input'), 'username');
+      fireEvent.changeText(getByTestId('name_input'), 'name');
       fireEvent.changeText(getByTestId('password_input'), 'QWEqwe123');
 
       await act(async () => {

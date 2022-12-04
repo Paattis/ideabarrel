@@ -26,10 +26,9 @@ const Media = ({ navigation, idea, ideaScreen }) => {
   const { user, setUpdateIdeas, updateIdeas } = useContext(MainContext);
   const { deleteIdea } = useIdea();
 
-  const isUserIdea = idea.user.id === user.id;
+  const isUserIdea = idea?.user?.id === user.id;
 
-  // const ideaIdParam = { ideaId: idea.id };
-  const ideaParam = { idea };
+  const ideaIdParam = { ideaId: idea.id };
   const ideaContentParams = {
     title: idea.title,
     content: idea.content,
@@ -48,7 +47,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
   };
   const _hideDialog = () => setDialog(false);
 
-  const _ideaScreen = () => navigation.navigate('Idea', ideaParam);
+  const _ideaScreen = () => navigation.navigate('Idea', ideaIdParam);
 
   const _editIdea = () => {
     _closeMenu();
@@ -67,7 +66,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
 
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
-      <Like ideaId={idea.id} likesArray={idea.likes} />
+      <Like ideaId={idea.id} />
       <CommentCount comments={idea.comments} />
     </View>
   );
@@ -154,7 +153,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
         </View>
         <Divider bold style={styles.divider} />
         <View style={expandedStyle.userContainer}>
-          <PosterDetails posterId={idea.user.id} />
+          <PosterDetails posterId={idea?.user?.id} />
         </View>
         <Text>{idea.content}</Text>
       </Card.Content>

@@ -10,15 +10,6 @@ export const useUser = () => {
     Authorization: 'Bearer ' + user.token,
   };
 
-  const postUser = async (data) => {
-    const options = {
-      method: 'POST',
-      headers: { 'Content-Type': 'multipart/form-data' },
-      body: data,
-    };
-    return await customFetch(BASE_URL + 'users', options);
-  };
-
   const getUserById = async (userId) => {
     const options = {
       headers: { Authorization: 'Bearer ' + user.token },
@@ -26,9 +17,9 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}`, options);
   };
 
-  const putUser = async (data) => {
+  const postUser = async (data) => {
     const options = {
-      method: 'PUT',
+      method: 'POST',
       headers: {
         Accept: 'multipart/form-data',
         'Content-Type': 'multipart/form-data',
@@ -39,5 +30,31 @@ export const useUser = () => {
     return await customFetch(BASE_URL + 'users', options);
   };
 
-  return { postUser, getUserById, putUser };
+  const putUser = async (data, userId) => {
+    const options = {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...authorizationHeaders,
+      },
+      body: JSON.stringify(data),
+    };
+    return await customFetch(`${BASE_URL}users/${userId}`, options);
+  };
+
+  const putUserProfileImg = async (data, userId) => {
+    const options = {
+      method: 'PUT',
+      headers: {
+        Accept: 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
+        ...authorizationHeaders,
+      },
+      body: data,
+    };
+    return await customFetch(`${BASE_URL}users/${userId}/img`, options);
+  };
+
+  return { postUser, getUserById, putUser, putUserProfileImg };
 };

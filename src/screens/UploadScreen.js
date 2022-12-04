@@ -88,7 +88,7 @@ const UploadScreen = ({ navigation }) => {
             },
           }}
         />
-        <Divider style={{ marginHorizontal: 15 }} />
+        <Divider />
         <ScrollView>
           <FormInput
             multiline
@@ -100,9 +100,10 @@ const UploadScreen = ({ navigation }) => {
             outlineStyle={styles.descriptionOutline}
             disabled={loading}
             rules={{
+              required: 'idea description is mandatory',
               maxLength: {
-                value: 1000,
-                message: 'Description maximum length is 1000 characters',
+                value: 500,
+                message: 'Description maximum length is 500 characters',
               },
             }}
           />
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     margin: 12,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
   },
   titleOutLine: {
     borderColor: 'transparent',

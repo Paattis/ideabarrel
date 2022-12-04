@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 import numeral from 'numeral';
 
-const Like = ({ ideaId, likesArray }) => {
+const Like = ({ ideaId }) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState();
 
@@ -14,13 +14,14 @@ const Like = ({ ideaId, likesArray }) => {
 
   const _getLikes = async () => {
     try {
-      const likes = await getLikesByIdeaId(ideaId);
-      console.log(likes);
-      setLiked(false);
-      setLikes(likes.count);
-      likes.likes.forEach((like) => {
-        if (like.user.id === user.id) setLiked(true);
-      });
+      if (ideaId) {
+        const likes = await getLikesByIdeaId(ideaId);
+        setLiked(false);
+        setLikes(likes.count);
+        likes.likes.forEach((like) => {
+          if (like.user.id === user.id) setLiked(true);
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -52,11 +53,7 @@ const Like = ({ ideaId, likesArray }) => {
 
   useEffect(() => {
     _getLikes();
-    // likesArray.forEach((like) => {
-    //   like.user_id === user.id ? setLiked(true) : setLiked(false);
-    // });
-    // setLikes(likesArray.length);
-  }, [likeUpdate]);
+  }, [ideaId, likeUpdate]);
 
   const likesFormatted = numeral(likes).format('0a');
 
