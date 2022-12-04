@@ -4,6 +4,7 @@ import { customFetch } from '../api';
 import { MainContext } from '../contexts/MainContext';
 
 export const useUser = () => {
+
   const { user } = useContext(MainContext);
 
   const authorizationHeaders = {
@@ -15,6 +16,24 @@ export const useUser = () => {
       headers: { Authorization: 'Bearer ' + user.token },
     };
     return await customFetch(`${BASE_URL}users/${userId}`, options);
+  };
+
+  const checkEmail = async (email) => {
+    const stump = async () => {
+      // This is stump request, replace with code
+      // thats commented out bellow, when ready.
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({ free: Math.random() > 0.5 }); // :)
+        }, 200);
+      });
+    };
+    return await stump();
+    // const options = {
+    //   method: 'POST',
+    //   body: { email }
+    // }
+    // return await customFetch(BASE_URL + 'users/email/free', options)
   };
 
   const postUser = async (data) => {
@@ -56,5 +75,5 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}/img`, options);
   };
 
-  return { postUser, getUserById, putUser, putUserProfileImg };
+  return { postUser, getUserById, putUser, putUserProfileImg, checkEmail };
 };
