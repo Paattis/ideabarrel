@@ -26,7 +26,7 @@ describe('<SignUpScreen />', () => {
     it('should display invalid name error message', async () => {
       const { getByTestId, queryAllByText } = render(<SignUpScreen />);
 
-      fireEvent.changeText(getByTestId('name_input'), 'user name with spaces');
+      fireEvent.changeText(getByTestId('name_input'), 'name!');
 
       fireEvent.changeText(getByTestId('email_input'), 'some@test.com');
       fireEvent.changeText(getByTestId('password_input'), 'QWEqwe123');
@@ -37,8 +37,7 @@ describe('<SignUpScreen />', () => {
       });
 
       expect(
-        queryAllByText('Username must be 2 - 15 characters long with no spaces')
-          .length
+        queryAllByText('Name must not contain special characters').length
       ).toBe(1);
     });
   });

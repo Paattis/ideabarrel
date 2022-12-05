@@ -7,7 +7,7 @@ export const useComment = () => {
   const { user } = useContext(MainContext);
 
   const authorizationHeaders = {
-    Authorization: 'Bearer ' + user.token,
+    Authorization: 'Bearer ' + user?.token,
   };
 
   const postComment = async (data, ideaId) => {

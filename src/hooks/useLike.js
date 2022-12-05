@@ -7,7 +7,7 @@ export const useLike = () => {
   const { user } = useContext(MainContext);
 
   const authorizationHeaders = {
-    Authorization: 'Bearer ' + user.token,
+    Authorization: 'Bearer ' + user?.token,
   };
 
   const getAllLikes = async () => {

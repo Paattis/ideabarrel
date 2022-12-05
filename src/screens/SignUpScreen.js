@@ -69,6 +69,17 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
+  // const _validateEmail = async (value) => {
+  //   try {
+  //     const res = await checkEmail(value);
+  //     if (!res.free) {
+  //       return 'This email is already taken';
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   return (
     <ScreenWrapper
       withScrollView
@@ -96,16 +107,7 @@ const SignUpScreen = ({ navigation }) => {
               value: EMAIL_REGEX,
               message: 'Email has to be valid.',
             },
-            validate: async (value) => {
-              try {
-                const res = await checkEmail(value);
-                if (!res.free) {
-                  return 'This email is already taken';
-                }
-              } catch (error) {
-                return true;
-              }
-            },
+            // validate: (value) => _validateEmail(value),
           }}
         />
         <FormInput
