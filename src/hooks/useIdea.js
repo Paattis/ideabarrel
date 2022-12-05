@@ -10,7 +10,7 @@ export const useIdea = () => {
   const { updateIdeas, user } = useContext(MainContext);
 
   const authorizationHeaders = {
-    Authorization: 'Bearer ' + user.token,
+    Authorization: 'Bearer ' + user?.token,
   };
 
   const getIdeas = async () => {
