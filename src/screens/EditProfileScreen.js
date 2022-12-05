@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FormInput, ScreenWrapper } from '../components';
 import FormCard from '../components/FormCard';
 import { PropTypes } from 'prop-types';
@@ -8,22 +8,28 @@ import { useForm } from 'react-hook-form';
 import { useUser } from '../hooks/useUser';
 import pickAvatarImg from '../../assets/pick-avatar.png';
 import * as ImagePicker from 'expo-image-picker';
-import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '../utils/constants';
 import { MainContext } from '../contexts/MainContext';
+import {
+  EMAIL_REGEX,
+  NAME_REGEX,
+  PASSWORD_REGEX,
+  PROFILE_IMG_URL,
+} from '../utils/constants';
 
 const EditProfileScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
 
   const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState(pickAvatarUri);
+  const [avatar, setAvatar] = useState();
 
-  const { user, setUser } = useContext(MainContext);
-  const { putUser, checkEmail } = useUser();
+  const { user, setUser, setUpdateIdeas, updateIdeas } =
+    useContext(MainContext);
+  const { putUser, putUserProfileImg, checkEmail } = useUser();
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      email: user.result.email,
       name: user.name,
+      email: user.email,
       password: '',
       confirm_password: '',
     },
@@ -45,26 +51,38 @@ const EditProfileScreen = ({ navigation }) => {
     if (!result.cancelled) setAvatar(result.uri);
   };
 
-  const _editProfile = async (data) => {
+  const _editProfileImg = async () => {
     const formData = new FormData();
-    formData.append(data);
-    const imageName = avatar.split('/').pop();
 
-    formData.append('profile_img', {
+    const imageName = avatar.split('/').pop();
+    const imgExtension = imageName.split('.').pop();
+
+    formData.append('avatar', {
       uri: avatar,
       name: imageName,
-      type: 'image/jpg',
+      type: 'image/' + imgExtension,
     });
+
+    await putUserProfileImg(formData, user.id);
+  };
+
+  const _editProfile = async (data) => {
+    delete data.confirm_password;
+    if (data.password === '') delete data.password;
+    data.role_id = 1;
 
     try {
       setLoading(true);
-      delete data.confirm_password;
-      if (data.password === '') delete data.password;
+      const res = await putUser(data, user.id);
+      if (avatar) {
+        _editProfileImg();
+      }
 
-      const user = await putUser(formData);
-      if (user) {
+      if (res) {
         delete data.password;
-        setUser(data);
+        res.token = user.token;
+        setUser(res);
+        setUpdateIdeas(updateIdeas + 1);
         _goBack();
       }
     } catch (error) {
@@ -74,6 +92,12 @@ const EditProfileScreen = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    user.profile_img
+      ? setAvatar(PROFILE_IMG_URL + user.profile_img)
+      : setAvatar(pickAvatarUri);
+  }, []);
+
   return (
     <ScreenWrapper
       withScrollView
@@ -81,15 +105,21 @@ const EditProfileScreen = ({ navigation }) => {
       keyboardShouldPersistTaps="handled"
     >
       <FormCard title="Edit your account info">
-        <TouchableOpacity onPress={_pickImage}>
-          <Avatar.Image size={90} source={{ uri: avatar }} />
-        </TouchableOpacity>
+        <View style={styles.pfp}>
+          <TouchableOpacity onPress={_pickImage} disabled={loading}>
+            <Avatar.Image
+              size={90}
+              source={{ uri: avatar ? avatar : pickAvatarUri }}
+            />
+          </TouchableOpacity>
+        </View>
         <FormInput
           testID="email_input"
           leftIcon="email"
           fieldName="email"
           label="Email"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Email required',
             pattern: {
@@ -109,13 +139,14 @@ const EditProfileScreen = ({ navigation }) => {
           }}
         />
         <FormInput
-          testID="full_name_input"
+          testID="name_input"
           leftIcon="account-circle"
           fieldName="name"
           label="Name"
           control={control}
+          disabled={loading}
           rules={{
-            required: 'Name is required',
+            required: 'Name required',
             minLength: {
               value: 3,
               message: 'Name must be at least 3 characters long',
@@ -127,6 +158,7 @@ const EditProfileScreen = ({ navigation }) => {
             pattern: {
               value: NAME_REGEX,
               message: 'Name must not contain special characters',
+
             },
           }}
         />
@@ -137,6 +169,7 @@ const EditProfileScreen = ({ navigation }) => {
           fieldName="password"
           label="Change password"
           control={control}
+          disabled={loading}
           rules={{
             pattern: {
               value: PASSWORD_REGEX,
@@ -152,6 +185,7 @@ const EditProfileScreen = ({ navigation }) => {
           fieldName="confirm_password"
           label="Confirm password"
           control={control}
+          disabled={loading}
           rules={{
             validate: (value) =>
               value === password || 'Password does not match',
@@ -176,6 +210,11 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
+  },
+  pfp: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5,
   },
   bgShape: {
     position: 'absolute',

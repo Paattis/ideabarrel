@@ -1,17 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Comment, Media } from '../components';
-import { useMedia, useComment } from '../hooks';
+import { Comment, IdeaCard } from '../components';
+import { useIdea } from '../hooks';
 import { PropTypes } from 'prop-types';
 import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
+import { MainContext } from '../contexts/MainContext';
 
 const IdeaScreen = ({ route: { params }, navigation }) => {
-  const [media, setMedia] = useState({});
-  const [comments, setComments] = useState([]);
+  const [idea, setIdea] = useState({});
+  const [commentsArray, setCommentsArray] = useState([]);
 
-  const { getMediaById, loading } = useMedia();
-  const { getCommentByPost } = useComment();
-  const { postId } = params;
+  const { updateIdeas } = useContext(MainContext);
+  const { getIdeaById, loading } = useIdea();
+  const { ideaId } = params;
+  const addCommentParams = { ideaId: idea.id };
 
   const ref = useRef(null);
 
@@ -22,44 +24,42 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
     });
   };
 
-  const _addCommentScreen = () =>
-    navigation.push('Add Comment', { postId: postId });
-
-  const getMedia = async () => {
-    const media = await getMediaById(postId);
-    setMedia(media);
+  const _addCommentScreen = () => {
+    navigation.navigate('Add Comment', addCommentParams);
   };
 
-  const getComments = async () => {
+  const _getIdea = async () => {
     try {
-      const comments = await getCommentByPost(postId);
-      setComments(comments);
+      const idea = await getIdeaById(ideaId);
+      setCommentsArray(idea.comments.reverse());
+      setIdea(idea);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    getMedia();
-    getComments();
-  }, []);
+    _getIdea();
+  }, [updateIdeas]);
 
   if (!loading)
     return (
       <>
-        <ScrollView ref={ref}>
-          <Media post={media} expanded />
+        <ScrollView showsVerticalScrollIndicator={false} ref={ref}>
+          <IdeaCard idea={idea} ideaScreen />
           <Text style={styles.commentsHeader}>Comments:</Text>
-          {comments.length ? (
-            comments.map((comment) => (
-              <Comment key={comment.comment_id} comment={comment.comment} />
+          {commentsArray.length ? (
+            commentsArray.map((comment) => (
+              <Comment key={comment.id} comment={comment} />
             ))
           ) : (
-            <Text>no comments</Text>
+            <View style={styles.commentsContainer}>
+              <Text>no comments</Text>
+            </View>
           )}
         </ScrollView>
 
-        <View style={styles.commentContainer}>
+        <View style={styles.commentInputContainer}>
           <TouchableOpacity
             onPress={_addCommentScreen}
             style={styles.commentInput}
@@ -68,7 +68,7 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
           </TouchableOpacity>
           <IconButton
             size={40}
-            icon="chevron-up-circle"
+            icon="chevron-double-up"
             onPress={_onScrollUp}
           />
         </View>
@@ -79,7 +79,12 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
 
 const styles = StyleSheet.create({
   commentsHeader: { margin: 20 },
-  commentContainer: {
+  commentsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  commentInputContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

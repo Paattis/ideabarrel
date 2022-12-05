@@ -10,7 +10,7 @@ import { Button, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
-import { useMedia } from '../hooks';
+import { useIdea } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
@@ -18,11 +18,11 @@ const UploadScreen = ({ navigation }) => {
   const [showDialog, setDialog] = useState(false);
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postMedia, loading } = useMedia();
-  const { updateMedia, setUpdateMedia } = useContext(MainContext);
+  const { postIdea, loading } = useIdea();
+  const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
 
-  const title = watch('idea_title');
-  const desc = watch('idea_description');
+  const title = watch('title');
+  const content = watch('content');
 
   const _showDialog = () => setDialog(true);
   const _hideDialog = () => setDialog(false);
@@ -30,10 +30,13 @@ const UploadScreen = ({ navigation }) => {
   const _goBack = () => navigation.pop();
 
   const _post = async (data) => {
+    // placeholder
+    const tags = [1];
+    data.tags = tags;
     Keyboard.dismiss();
     try {
-      await postMedia(data);
-      setUpdateMedia(updateMedia + 1);
+      await postIdea(data);
+      setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
       console.error(error);
@@ -62,9 +65,9 @@ const UploadScreen = ({ navigation }) => {
       <BgSVG style={styles.bgShape} />
       {_dialog()}
       <NavigationHeader
-        onPressCancel={title || desc ? _showDialog : _goBack}
+        onPressCancel={title || content ? _showDialog : _goBack}
         onPressPost={handleSubmit(_post)}
-        disableButton={!title}
+        disableButton={!title || loading}
         loading={loading}
         buttonText="Post"
       />
@@ -73,9 +76,10 @@ const UploadScreen = ({ navigation }) => {
           placeholderTextColor="#ababab"
           placeholder="Write your idea title"
           control={control}
-          fieldName="idea_title"
+          fieldName="title"
           style={styles.title}
           outlineStyle={styles.titleOutLine}
+          disabled={loading}
           rules={{
             required: 'idea title is mandatory',
             maxLength: {
@@ -84,20 +88,22 @@ const UploadScreen = ({ navigation }) => {
             },
           }}
         />
-        <Divider style={{ marginHorizontal: 15 }} />
+        <Divider />
         <ScrollView>
           <FormInput
             multiline
             style={styles.description}
             placeholderTextColor="#ababab"
-            placeholder="Write a description (optional)"
+            placeholder="Write a description"
             control={control}
-            fieldName="idea_description"
+            fieldName="content"
             outlineStyle={styles.descriptionOutline}
+            disabled={loading}
             rules={{
+              required: 'idea description is mandatory',
               maxLength: {
-                value: 1000,
-                message: 'Description maximum length is 1000 characters',
+                value: 500,
+                message: 'Description maximum length is 500 characters',
               },
             }}
           />
@@ -125,7 +131,7 @@ const styles = StyleSheet.create({
     margin: 12,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
   },
   titleOutLine: {
     borderColor: 'transparent',

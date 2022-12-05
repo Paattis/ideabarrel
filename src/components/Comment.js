@@ -7,8 +7,8 @@ import { PropTypes } from 'prop-types';
 const Comment = ({ comment }) => {
   return (
     <View style={style.container}>
-      <PosterDetails />
-      <Text style={style.comment}>{comment}</Text>
+      <PosterDetails posterId={comment.user.id} />
+      <Text style={style.comment}>{comment.content}</Text>
       <Divider bold style={style.divider} />
     </View>
   );
@@ -28,7 +28,7 @@ const style = StyleSheet.create({
 });
 
 Comment.propTypes = {
-  comment: PropTypes.string,
+  comment: PropTypes.object,
 };
 
 export default Comment;

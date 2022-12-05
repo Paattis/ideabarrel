@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
-import ProfileModal from './ProfileModal';
 import { useUser } from '../hooks';
+import ProfileModal from './ProfileModal';
+import { PROFILE_IMG_URL } from '../utils/constants';
 
-const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
+const PosterDetails = ({ avatarPosition = 'row', posterId }) => {
+  const [avatar, setAvatar] = useState();
   const [showModal, setShowModal] = useState(false);
-  const [postOwner, setPostOwner] = useState({});
+  const [ideaOwner, setIdeaOwner] = useState({
+    name: 'Loading...',
+    role: { name: 'Loading...' },
+  });
 
   const { getUserById } = useUser();
 
@@ -19,34 +24,49 @@ const PosterDetails = ({ avatarPosition = 'row', navigation, posterId }) => {
     flexDirection: direction,
   };
 
-  const _getPostOwner = async () => {
+  const userAvatarText = ideaOwner?.name[0].toUpperCase();
+
+  const _getIdeaOwner = async () => {
     try {
-      const user = await getUserById(posterId);
-      setPostOwner(user);
+      if (posterId) {
+        const user = await getUserById(posterId);
+        setIdeaOwner(user);
+        user.profile_img && setAvatar(PROFILE_IMG_URL + user.profile_img);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    _getPostOwner();
-  }, []);
+    _getIdeaOwner();
+  }, [posterId]);
+
+  const userAvatar = (size) =>
+    avatar ? (
+      <Avatar.Image
+        source={{ uri: avatar }}
+        size={size}
+        style={styles.avatar}
+      />
+    ) : (
+      <Avatar.Text size={size} label={userAvatarText} style={styles.avatar} />
+    );
 
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={_showModal}>
       <ProfileModal
         visible={showModal}
         hideModal={_hideModal}
-        navigation={navigation}
-        posterInfo={postOwner}
+        posterInfo={ideaOwner}
       >
-        <Avatar.Image size={80} />
+        {userAvatar(80)}
       </ProfileModal>
       <View style={[styles.container, flexDirection]}>
-        <Avatar.Image size={30} style={styles.avatar} />
+        {userAvatar(30)}
         <View>
-          <Text style={styles.posterName}>{postOwner?.name}</Text>
-          <Text style={styles.posterRole}>{postOwner?.role?.name}</Text>
+          <Text style={styles.posterName}>{ideaOwner?.name}</Text>
+          <Text style={styles.posterRole}>{ideaOwner?.role?.name}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -63,7 +83,6 @@ const styles = StyleSheet.create({
 PosterDetails.propTypes = {
   avatarPosition: PropTypes.string,
   post: PropTypes.object,
-  navigation: PropTypes.object,
   posterId: PropTypes.number,
 };
 

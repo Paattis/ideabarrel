@@ -1,27 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button } from 'react-native-paper';
-import numeral from 'numeral';
 import { useLike } from '../hooks';
 import { PropTypes } from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
+import numeral from 'numeral';
 
-const Like = ({ postId }) => {
+const Like = ({ ideaId }) => {
   const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState([]);
+  const [likes, setLikes] = useState();
 
   const { user, likeUpdate, setLikeUpdate } = useContext(MainContext);
-  const { getLikesByPostId, postLike, deleteLike } = useLike();
+  const { getLikesByIdeaId, postLike, deleteLike } = useLike();
 
   const _getLikes = async () => {
     try {
-      const likes = await getLikesByPostId(postId);
-      setLikes(likes);
-
-      likes.forEach((like) => {
-        if (like.userId === user.result.id) {
-          setLiked(true);
-        }
-      });
+      if (ideaId) {
+        const likes = await getLikesByIdeaId(ideaId);
+        setLiked(false);
+        setLikes(likes.count);
+        likes.likes.forEach((like) => {
+          if (like.user.id === user.id) setLiked(true);
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -29,10 +29,10 @@ const Like = ({ postId }) => {
 
   const _like = async () => {
     try {
-      const res = await postLike(postId);
+      const res = await postLike(ideaId);
       if (res) {
-        setLiked(true);
         setLikeUpdate(likeUpdate + 1);
+        setLiked(true);
       }
     } catch (error) {
       console.error(error);
@@ -41,10 +41,10 @@ const Like = ({ postId }) => {
 
   const _unlike = async () => {
     try {
-      const res = await deleteLike(postId);
+      const res = await deleteLike(ideaId);
       if (res) {
-        setLiked(false);
         setLikeUpdate(likeUpdate + 1);
+        setLiked(false);
       }
     } catch (error) {
       console.error(error);
@@ -53,9 +53,9 @@ const Like = ({ postId }) => {
 
   useEffect(() => {
     _getLikes();
-  }, [likeUpdate]);
+  }, [ideaId, likeUpdate]);
 
-  const likesFormatted = numeral(likes.length).format('0a');
+  const likesFormatted = numeral(likes).format('0a');
 
   return (
     <Button
@@ -69,7 +69,8 @@ const Like = ({ postId }) => {
 };
 
 Like.propTypes = {
-  postId: PropTypes.number,
+  ideaId: PropTypes.number,
+  likesArray: PropTypes.array,
 };
 
 export default Like;

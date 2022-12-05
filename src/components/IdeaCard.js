@@ -12,32 +12,34 @@ import {
   Text,
 } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
-import { useMedia } from '../hooks';
+import { useIdea } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 import Like from '../components/Like';
 import CommentCount from '../components/CommentCount';
 import PosterDetails from './PosterDetails';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
-const Media = ({ navigation, post, expanded }) => {
+const Media = ({ navigation, idea, ideaScreen }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
 
-  const { user } = useContext(MainContext);
-  const { deleteMedia } = useMedia();
+  const { user, setUpdateIdeas, updateIdeas } = useContext(MainContext);
+  const { deleteIdea } = useIdea();
 
-  const postIdParam = { postId: post.postId };
-  const postContentParams = {
-    postTitle: post.title,
-    postDescription: post.description,
+  const isUserIdea = idea?.user?.id === user.id;
+
+  const ideaIdParam = { ideaId: idea.id };
+  const ideaContentParams = {
+    title: idea.title,
+    content: idea.content,
+    ideaId: idea.id,
   };
 
-  const isUserIdea = post.userId === user.result.id;
-  const postCreatedAt = post.created_at
-    ? formatDistanceToNow(new Date(post.created_at), {
+  const ideaDate = idea.created_at
+    ? formatDistanceToNow(new Date(idea.created_at), {
         addSuffix: true,
       })
-    : 'posted at: unavailable';
+    : 'date unavailable';
 
   const _showDialog = () => {
     _closeMenu();
@@ -45,16 +47,17 @@ const Media = ({ navigation, post, expanded }) => {
   };
   const _hideDialog = () => setDialog(false);
 
-  const _ideaScreen = () => navigation.navigate('Idea', postIdParam);
+  const _ideaScreen = () => navigation.navigate('Idea', ideaIdParam);
 
   const _editIdea = () => {
     _closeMenu();
-    navigation.navigate('Edit', postContentParams);
+    navigation.navigate('Edit', ideaContentParams);
   };
 
   const _removeIdea = async () => {
     try {
-      await deleteMedia(post.postId);
+      await deleteIdea(idea.id);
+      setUpdateIdeas(updateIdeas + 1);
       _hideDialog();
     } catch (error) {
       console.error(error);
@@ -63,8 +66,8 @@ const Media = ({ navigation, post, expanded }) => {
 
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
-      <Like postId={post.postId} />
-      <CommentCount postId={post.postId} />
+      <Like ideaId={idea.id} />
+      <CommentCount comments={idea.comments} />
     </View>
   );
 
@@ -106,32 +109,28 @@ const Media = ({ navigation, post, expanded }) => {
     </Menu>
   );
 
-  return !expanded ? (
+  return !ideaScreen ? (
     <>
       {_dialog()}
       <Card mode="elevated" style={styles.card} onPress={_ideaScreen}>
         <Card.Title
           titleStyle={styles.title}
-          title={post.title}
+          title={idea.title}
           style={styles.header}
           right={rightButtons}
         />
         <Card.Content style={styles.content}>
           <View style={styles.topContainer}>
             <Text>*tags*</Text>
-            <Text>{postCreatedAt}</Text>
+            <Text>{ideaDate}</Text>
           </View>
           <Divider bold style={styles.divider} />
           <Text numberOfLines={5} style={styles.description}>
-            {post.description}
+            {idea.content}
           </Text>
           <View>
             <View style={styles.userContainer}>
-              <PosterDetails
-                avatarPosition="left"
-                posterId={post.userId}
-                navigation={navigation}
-              />
+              <PosterDetails posterId={idea.user.id} navigation={navigation} />
               {isUserIdea && _menu()}
             </View>
           </View>
@@ -143,20 +142,20 @@ const Media = ({ navigation, post, expanded }) => {
       <Card.Title
         titleNumberOfLines={2}
         titleStyle={styles.title}
-        title={post.title}
+        title={idea.title}
         style={expandedStyle.header}
         right={rightButtons}
       />
       <Card.Content style={expandedStyle.content}>
         <View style={styles.topContainer}>
           <Text>*tags*</Text>
-          <Text>{postCreatedAt}</Text>
+          <Text>{ideaDate}</Text>
         </View>
         <Divider bold style={styles.divider} />
         <View style={expandedStyle.userContainer}>
-          <PosterDetails avatarPosition="left" />
+          <PosterDetails posterId={idea?.user?.id} />
         </View>
-        <Text>{post.description}</Text>
+        <Text>{idea.content}</Text>
       </Card.Content>
     </Card>
   );
@@ -216,8 +215,8 @@ const expandedStyle = StyleSheet.create({
 
 Media.propTypes = {
   navigation: PropTypes.object,
-  post: PropTypes.object,
-  expanded: PropTypes.bool,
+  idea: PropTypes.object,
+  ideaScreen: PropTypes.bool,
 };
 
 export default Media;

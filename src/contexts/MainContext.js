@@ -7,7 +7,7 @@ const MainProvider = ({ children }) => {
   const [signedIn, setSignedIn] = useState(false);
   const [user, setUser] = useState({});
 
-  const [updateMedia, setUpdateMedia] = useState(0);
+  const [updateIdeas, setUpdateIdeas] = useState(0);
   const [likeUpdate, setLikeUpdate] = useState(0);
 
   return (
@@ -17,8 +17,8 @@ const MainProvider = ({ children }) => {
         setSignedIn,
         user,
         setUser,
-        updateMedia,
-        setUpdateMedia,
+        updateIdeas,
+        setUpdateIdeas,
         setLikeUpdate,
         likeUpdate,
       }}

@@ -15,7 +15,7 @@ const SignUpScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
 
   const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState(pickAvatarUri);
+  const [avatar, setAvatar] = useState();
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postUser, checkEmail } = useUser();
@@ -36,19 +36,30 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   const _signUp = async (data) => {
-    const formData = new FormData();
-    formData.append(data);
-    const imageName = avatar.split('/').pop();
+    delete data.confirm_password;
 
-    formData.append('profile_img', {
-      uri: avatar,
-      name: imageName,
-      type: 'image/jpg',
-    });
+    const formData = new FormData();
+
+    const roleId = 1;
+    formData.append('role_id', roleId);
+
+    if (avatar) {
+      const imageName = avatar.split('/').pop();
+      const imgExtension = imageName.split('.').pop();
+
+      formData.append('avatar', {
+        uri: avatar,
+        name: imageName,
+        type: 'image/' + imgExtension,
+      });
+    }
+
+    for (const [name, value] of Object.entries(data)) {
+      formData.append(name, value);
+    }
 
     try {
       setLoading(true);
-      delete data.confirm_password;
       const user = await postUser(formData);
       if (user) _signInScreen();
     } catch (error) {
@@ -67,7 +78,10 @@ const SignUpScreen = ({ navigation }) => {
       <BgSVG style={styles.bgShape} />
       <FormCard title="Create your new account">
         <TouchableOpacity onPress={_pickImage}>
-          <Avatar.Image size={90} source={{ uri: avatar }} />
+          <Avatar.Image
+            size={90}
+            source={{ uri: avatar ? avatar : pickAvatarUri }}
+          />
         </TouchableOpacity>
         <FormInput
           testID="email_input"
@@ -75,6 +89,7 @@ const SignUpScreen = ({ navigation }) => {
           fieldName="email"
           label="Email"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Email required',
             pattern: {
@@ -94,11 +109,12 @@ const SignUpScreen = ({ navigation }) => {
           }}
         />
         <FormInput
-          testID="full_name_input"
+          testID="name_input"
           leftIcon="account-circle"
           fieldName="name"
           label="Name"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Name required',
             minLength: {
@@ -122,6 +138,7 @@ const SignUpScreen = ({ navigation }) => {
           fieldName="password"
           label="Password"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Password required',
             pattern: {
@@ -138,6 +155,7 @@ const SignUpScreen = ({ navigation }) => {
           fieldName="confirm_password"
           label="Confirm password"
           control={control}
+          disabled={loading}
           rules={{
             required: 'Please confirm password',
             validate: (value) =>
