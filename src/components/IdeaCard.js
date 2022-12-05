@@ -79,7 +79,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       <Dialog visible={showDialog} onDismiss={_hideDialog}>
         <Dialog.Title>Remove Idea?</Dialog.Title>
         <Dialog.Content>
-          <Paragraph>Are you sure you want to remove it?</Paragraph>
+          <Paragraph>Are you sure you want to remove your idea?</Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
           <Button onPress={_removeIdea}>Remove</Button>
