@@ -4,11 +4,10 @@ import { customFetch } from '../api';
 import { MainContext } from '../contexts/MainContext';
 
 export const useUser = () => {
-
   const { user } = useContext(MainContext);
 
   const authorizationHeaders = {
-    Authorization: 'Bearer ' + user.token,
+    Authorization: 'Bearer ' + user?.token,
   };
 
   const getUserById = async (userId) => {

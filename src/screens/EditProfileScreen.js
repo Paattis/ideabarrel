@@ -74,9 +74,7 @@ const EditProfileScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const res = await putUser(data, user.id);
-      if (avatar) {
-        _editProfileImg();
-      }
+      if (avatar) _editProfileImg();
 
       if (res) {
         delete data.password;
@@ -91,6 +89,17 @@ const EditProfileScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
+
+  // const _validateEmail = async (value) => {
+  //   try {
+  //     const res = await checkEmail(value);
+  //     if (!res.free) {
+  //       return 'This email is already taken';
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   useEffect(() => {
     user.profile_img
@@ -126,16 +135,7 @@ const EditProfileScreen = ({ navigation }) => {
               value: EMAIL_REGEX,
               message: 'Email has to be valid.',
             },
-            validate: async (value) => {
-              try {
-                const res = await checkEmail(value);
-                if (!res.free) {
-                  return 'This email is already taken';
-                }
-              } catch (error) {
-                return true;
-              }
-            },
+            // validate: (value) => _validateEmail(value),
           }}
         />
         <FormInput
@@ -158,7 +158,6 @@ const EditProfileScreen = ({ navigation }) => {
             pattern: {
               value: NAME_REGEX,
               message: 'Name must not contain special characters',
-
             },
           }}
         />
