@@ -11,7 +11,10 @@ import BgSVG from '../../assets/svg/top-right-bg.svg';
 const SingInScreen = () => {
   const [loading, setLoading] = useState(false);
 
-  const { control, handleSubmit } = useForm({ mode: 'onBlur' });
+  const { control, handleSubmit } = useForm({
+    defaultValues: { email: 'admin@nokia.com', password: 'admin' },
+    mode: 'onBlur',
+  });
   const { setSignedIn, setUser } = useContext(MainContext);
   const { postSignIn } = useSignIn();
 
@@ -38,7 +41,7 @@ const SingInScreen = () => {
       <FormCard title="Sign in to your account">
         <FormInput
           testID="email_input"
-          leftIcon="account-circle"
+          leftIcon="email"
           fieldName="email"
           label="Email"
           control={control}
@@ -59,14 +62,7 @@ const SingInScreen = () => {
             required: 'Please insert your password',
           }}
         />
-        <Button
-          style={styles.passwordBtn}
-          mode="text"
-          onPress={() => console.warn('not available yet')}
-          disabled={loading}
-        >
-          Forgot password?
-        </Button>
+
         <Button
           style={styles.signInBtn}
           mode="contained"
@@ -85,9 +81,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
-  },
-  passwordBtn: {
-    alignItems: 'flex-end',
   },
   signInBtn: {
     marginTop: 20,

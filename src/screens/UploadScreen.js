@@ -66,7 +66,7 @@ const UploadScreen = ({ navigation }) => {
       {_dialog()}
       <NavigationHeader
         onPressCancel={title || content ? _showDialog : _goBack}
-        onPressPost={handleSubmit(_post)}
+        onSubmit={handleSubmit(_post)}
         disableButton={!title || loading}
         loading={loading}
         buttonText="Post"

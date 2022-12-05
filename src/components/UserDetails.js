@@ -6,7 +6,7 @@ import { useUser } from '../hooks';
 import ProfileModal from './ProfileModal';
 import { PROFILE_IMG_URL } from '../utils/constants';
 
-const PosterDetails = ({ avatarPosition = 'row', posterId }) => {
+const UserDetails = ({ avatarPosition = 'row', posterId }) => {
   const [avatar, setAvatar] = useState();
   const [showModal, setShowModal] = useState(false);
   const [ideaOwner, setIdeaOwner] = useState({
@@ -80,10 +80,10 @@ const styles = StyleSheet.create({
   posterRole: { fontSize: 9 },
 });
 
-PosterDetails.propTypes = {
+UserDetails.propTypes = {
   avatarPosition: PropTypes.string,
   post: PropTypes.object,
   posterId: PropTypes.number,
 };
 
-export default PosterDetails;
+export default UserDetails;

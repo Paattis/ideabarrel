@@ -47,7 +47,7 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
     <SafeAreaView style={styles.container}>
       <NavigationHeader
         onPressCancel={_goBack}
-        onPressPost={handleSubmit(_edit)}
+        onSubmit={handleSubmit(_edit)}
         disableButton={!titleInput || loading}
         loading={loading}
         buttonText="Edit"
@@ -55,7 +55,6 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
       <View style={styles.inputContainer}>
         <FormInput
           placeholderTextColor="#ababab"
-          placeholder="Write your idea title"
           control={control}
           fieldName="title"
           style={styles.title}

@@ -6,23 +6,26 @@ import { PropTypes } from 'prop-types';
 import { useComment } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 
-const AddCommentScreen = ({ route: { params }, navigation }) => {
+const EditCommentScreen = ({ route: { params }, navigation }) => {
   const [loading, setLoading] = useState(false);
 
-  const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postComment } = useComment();
-  const { ideaId } = params;
+  const { commentId, content } = params;
+  const { putComment } = useComment();
   const { setUpdateIdeas, updateIdeas } = useContext(MainContext);
+  const { control, handleSubmit, watch } = useForm({
+    defaultValues: { comment: content },
+    mode: 'onBlur',
+  });
 
   const comment = watch('comment');
 
   const _goBack = () => navigation.pop();
 
-  const _addComment = async (data) => {
+  const _editComment = async (data) => {
     try {
       Keyboard.dismiss();
       setLoading(true);
-      await postComment(data, ideaId);
+      await putComment(data, commentId);
       setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
@@ -36,17 +39,16 @@ const AddCommentScreen = ({ route: { params }, navigation }) => {
     <SafeAreaView>
       <NavigationHeader
         onPressCancel={_goBack}
-        onSubmit={handleSubmit(_addComment)}
+        onSubmit={handleSubmit(_editComment)}
         disableButton={!comment || loading}
         loading={loading}
-        buttonText="Post"
+        buttonText="Edit"
       />
       <FormInput
         multiline
         autoFocus
         style={styles.description}
         placeholderTextColor="#ababab"
-        placeholder="Write a comment"
         control={control}
         fieldName="comment"
         outlineStyle={styles.descriptionOutline}
@@ -71,10 +73,10 @@ const styles = StyleSheet.create({
   },
 });
 
-AddCommentScreen.propTypes = {
+EditCommentScreen.propTypes = {
   route: PropTypes.object,
   navigation: PropTypes.object,
   ideaId: PropTypes.number,
 };
 
-export default AddCommentScreen;
+export default EditCommentScreen;

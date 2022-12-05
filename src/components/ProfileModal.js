@@ -7,6 +7,7 @@ import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import PropTypes from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 import { useNavigation } from '@react-navigation/native';
+import ThemeToggle from './ThemeToggle';
 
 const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const { isThemeDark } = useContext(PreferencesContext);
@@ -39,11 +40,19 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         onDismiss={hideModal}
         contentContainerStyle={[styles.containerStyle, backGroundStyle]}
       >
-        <View style={styles.buttonLayout}>
+        <View style={styles.profileFunctions}>
           {isUserProfile && (
-            <Button icon="account-edit" mode="contained" onPress={_editProfile}>
-              Edit
-            </Button>
+            <>
+              <ThemeToggle />
+              <Button
+                style={styles.editBtn}
+                icon="account-edit"
+                mode="contained"
+                onPress={_editProfile}
+              >
+                Edit
+              </Button>
+            </>
           )}
         </View>
         <View style={styles.contentContainerStyleColumn}>
@@ -80,6 +89,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 5,
   },
+  editBtn: { borderRadius: 100 },
   nameText: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -110,7 +120,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '90%',
   },
-  buttonLayout: { alignItems: 'flex-end' },
+  profileFunctions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 });
 
 ProfileModal.propTypes = {
