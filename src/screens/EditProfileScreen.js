@@ -8,13 +8,13 @@ import { useForm } from 'react-hook-form';
 import { useUser } from '../hooks/useUser';
 import pickAvatarImg from '../../assets/pick-avatar.png';
 import * as ImagePicker from 'expo-image-picker';
+import { MainContext } from '../contexts/MainContext';
 import {
   EMAIL_REGEX,
-  USERNAME_REGEX,
+  NAME_REGEX,
   PASSWORD_REGEX,
   PROFILE_IMG_URL,
 } from '../utils/constants';
-import { MainContext } from '../contexts/MainContext';
 
 const EditProfileScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
@@ -24,7 +24,7 @@ const EditProfileScreen = ({ navigation }) => {
 
   const { user, setUser, setUpdateIdeas, updateIdeas } =
     useContext(MainContext);
-  const { putUser, putUserProfileImg } = useUser();
+  const { putUser, putUserProfileImg, checkEmail } = useUser();
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -126,6 +126,16 @@ const EditProfileScreen = ({ navigation }) => {
               value: EMAIL_REGEX,
               message: 'Email has to be valid.',
             },
+            validate: async (value) => {
+              try {
+                const res = await checkEmail(value);
+                if (!res.free) {
+                  return 'This email is already taken';
+                }
+              } catch (error) {
+                return true;
+              }
+            },
           }}
         />
         <FormInput
@@ -137,9 +147,18 @@ const EditProfileScreen = ({ navigation }) => {
           disabled={loading}
           rules={{
             required: 'Name required',
+            minLength: {
+              value: 3,
+              message: 'Name must be at least 3 characters long',
+            },
+            maxLength: {
+              value: 20,
+              message: 'Name can be maximum of 20 characters long',
+            },
             pattern: {
-              value: USERNAME_REGEX,
-              message: 'Name must be 2 - 15 characters long with no spaces',
+              value: NAME_REGEX,
+              message: 'Name must not contain special characters',
+
             },
           }}
         />

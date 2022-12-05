@@ -9,11 +9,7 @@ import { useUser } from '../hooks/useUser';
 import BgSVG from '../../assets/svg/top-left-bg.svg';
 import pickAvatarImg from '../../assets/pick-avatar.png';
 import * as ImagePicker from 'expo-image-picker';
-import {
-  EMAIL_REGEX,
-  USERNAME_REGEX,
-  PASSWORD_REGEX,
-} from '../utils/constants';
+import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '../utils/constants';
 
 const SignUpScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
@@ -22,7 +18,7 @@ const SignUpScreen = ({ navigation }) => {
   const [avatar, setAvatar] = useState();
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postUser } = useUser();
+  const { postUser, checkEmail } = useUser();
 
   const _signInScreen = () => navigation.navigate('Sign In');
 
@@ -100,9 +96,18 @@ const SignUpScreen = ({ navigation }) => {
               value: EMAIL_REGEX,
               message: 'Email has to be valid.',
             },
+            validate: async (value) => {
+              try {
+                const res = await checkEmail(value);
+                if (!res.free) {
+                  return 'This email is already taken';
+                }
+              } catch (error) {
+                return true;
+              }
+            },
           }}
         />
-
         <FormInput
           testID="name_input"
           leftIcon="account-circle"
@@ -112,9 +117,17 @@ const SignUpScreen = ({ navigation }) => {
           disabled={loading}
           rules={{
             required: 'Name required',
+            minLength: {
+              value: 3,
+              message: 'Name must be at least 3 characters long',
+            },
+            maxLength: {
+              value: 20,
+              message: 'Name can be maximum of 20 characters long',
+            },
             pattern: {
-              value: USERNAME_REGEX,
-              message: 'Username must be 2 - 15 characters long with no spaces',
+              value: NAME_REGEX,
+              message: 'Name must not contain special characters',
             },
           }}
         />
