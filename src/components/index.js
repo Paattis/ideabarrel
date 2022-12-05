@@ -5,6 +5,6 @@ export { default as IdeaCard } from './IdeaCard';
 export { default as FAB } from './FAB';
 export { default as Like } from './Like';
 export { default as CommentCount } from './CommentCount';
-export { default as PosterDetails } from './PosterDetails';
+export { default as UserDetails } from './UserDetails';
 export { default as Comment } from './Comment';
 export { default as NavigationHeader } from './NavigationHeader';

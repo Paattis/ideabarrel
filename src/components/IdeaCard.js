@@ -16,7 +16,7 @@ import { useIdea } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 import Like from '../components/Like';
 import CommentCount from '../components/CommentCount';
-import PosterDetails from './PosterDetails';
+import UserDetails from './UserDetails';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 const Media = ({ navigation, idea, ideaScreen }) => {
@@ -79,7 +79,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       <Dialog visible={showDialog} onDismiss={_hideDialog}>
         <Dialog.Title>Remove Idea?</Dialog.Title>
         <Dialog.Content>
-          <Paragraph>Are you sure you want to remove it?</Paragraph>
+          <Paragraph>Are you sure you want to remove your idea?</Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
           <Button onPress={_removeIdea}>Remove</Button>
@@ -104,7 +104,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       <Menu.Item
         onPress={_showDialog}
         title="Remove"
-        leadingIcon="selection-remove"
+        leadingIcon="close-circle"
       />
     </Menu>
   );
@@ -130,7 +130,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
           </Text>
           <View>
             <View style={styles.userContainer}>
-              <PosterDetails posterId={idea.user.id} navigation={navigation} />
+              <UserDetails posterId={idea.user.id} navigation={navigation} />
               {isUserIdea && _menu()}
             </View>
           </View>
@@ -153,7 +153,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
         </View>
         <Divider bold style={styles.divider} />
         <View style={expandedStyle.userContainer}>
-          <PosterDetails posterId={idea?.user?.id} />
+          <UserDetails posterId={idea?.user?.id} />
         </View>
         <Text>{idea.content}</Text>
       </Card.Content>

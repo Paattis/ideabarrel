@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 
 const NavigationHeader = ({
   onPressCancel,
-  onPressPost,
+  onSubmit,
   disableButton,
   loading,
   buttonText,
@@ -17,7 +17,7 @@ const NavigationHeader = ({
         disabled={disableButton}
         mode="contained"
         style={styles.postButton}
-        onPress={onPressPost}
+        onPress={onSubmit}
         loading={loading}
       >
         {buttonText}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 
 NavigationHeader.propTypes = {
   onPressCancel: PropTypes.func,
-  onPressPost: PropTypes.func,
+  onSubmit: PropTypes.func,
   disableButton: PropTypes.bool,
   loading: PropTypes.bool,
   buttonText: PropTypes.string,

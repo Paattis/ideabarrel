@@ -12,6 +12,7 @@ import {
   AddCommentScreen,
   EditIdeaScreen,
   EditProfileScreen,
+  EditCommentScreen,
 } from '../screens/';
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +47,11 @@ const StackScreen = () => {
             component={EditIdeaScreen}
           />
           <Stack.Screen name="Edit Profile" component={EditProfileScreen} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Edit Comment"
+            component={EditCommentScreen}
+          />
         </>
       ) : (
         <>
