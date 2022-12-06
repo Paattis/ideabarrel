@@ -8,7 +8,8 @@ const MainProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
   const [updateIdeas, setUpdateIdeas] = useState(0);
-  const [likeUpdate, setLikeUpdate] = useState(0);
+  const [updateLikes, setUpdateLikes] = useState(0);
+  const [updateProfile, setUpdateProfile] = useState(0);
 
   return (
     <MainContext.Provider
@@ -19,8 +20,10 @@ const MainProvider = ({ children }) => {
         setUser,
         updateIdeas,
         setUpdateIdeas,
-        setLikeUpdate,
-        likeUpdate,
+        updateLikes,
+        setUpdateLikes,
+        updateProfile,
+        setUpdateProfile,
       }}
     >
       {children}

@@ -22,7 +22,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState();
 
-  const { user, setUser, setUpdateIdeas, updateIdeas } =
+  const { user, setUser, updateProfile, setUpdateProfile } =
     useContext(MainContext);
   const { putUser, putUserProfileImg, checkEmail } = useUser();
 
@@ -80,7 +80,7 @@ const EditProfileScreen = ({ navigation }) => {
         delete data.password;
         res.token = user.token;
         setUser(res);
-        setUpdateIdeas(updateIdeas + 1);
+        setUpdateProfile(updateProfile + 1);
         _goBack();
       }
     } catch (error) {

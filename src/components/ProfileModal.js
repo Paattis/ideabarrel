@@ -1,6 +1,16 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useContext } from 'react';
-import { Button, Modal, Portal, Text } from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  Divider,
+  IconButton,
+  Menu,
+  Modal,
+  Paragraph,
+  Portal,
+  Text,
+} from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
@@ -8,14 +18,19 @@ import PropTypes from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 import { useNavigation } from '@react-navigation/native';
 import ThemeToggle from './ThemeToggle';
+import { useUser } from '../hooks';
 
 const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const [showDialog, setDialog] = useState(false);
+
   const { isThemeDark } = useContext(PreferencesContext);
-  const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
-
-  const nav = useNavigation();
-
+  const { setSignedIn } = useContext(MainContext);
   const { user } = useContext(MainContext);
+  const { deleteUser } = useUser();
+
+  const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+  const nav = useNavigation();
 
   const backGroundStyle = {
     backgroundColor: theme.colors.background,
@@ -31,7 +46,61 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     hideModal();
   };
 
+  const _deleteUser = async () => {
+    try {
+      await deleteUser(user.id);
+      setSignedIn(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const _editProfileScreen = () => nav.navigate('Edit Profile');
+
+  const _openMenu = () => setShowMenu(true);
+  const _closeMenu = () => setShowMenu(false);
+
+  const _showDialog = () => {
+    _closeMenu();
+    setDialog(true);
+  };
+  const _hideDialog = () => setDialog(false);
+
+  const _dialog = () => (
+    <Dialog visible={showDialog} onDismiss={_hideDialog}>
+      <Dialog.Title>Delete Account?</Dialog.Title>
+      <Dialog.Content>
+        <Paragraph>
+          Are you sure you want to permanently delete your account? This action
+          is irreversible.
+        </Paragraph>
+      </Dialog.Content>
+      <Dialog.Actions>
+        <Button onPress={_deleteUser}>Delete</Button>
+        <Button onPress={_hideDialog}>Cancel</Button>
+      </Dialog.Actions>
+    </Dialog>
+  );
+
+  const _menu = () => (
+    <Menu
+      visible={showMenu}
+      onDismiss={_closeMenu}
+      anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
+    >
+      <Menu.Item
+        onPress={_editProfile}
+        title="Edit"
+        leadingIcon="square-edit-outline"
+      />
+      <Divider />
+      <Menu.Item
+        onPress={_showDialog}
+        title="Remove"
+        leadingIcon="close-circle"
+      />
+    </Menu>
+  );
 
   return (
     <Portal>
@@ -41,19 +110,8 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         contentContainerStyle={[styles.containerStyle, backGroundStyle]}
       >
         <View style={styles.profileFunctions}>
-          {isUserProfile && (
-            <>
-              <ThemeToggle />
-              <Button
-                style={styles.editBtn}
-                icon="account-edit"
-                mode="contained"
-                onPress={_editProfile}
-              >
-                Edit
-              </Button>
-            </>
-          )}
+          <ThemeToggle />
+          {isUserProfile && _menu()}
         </View>
         <View style={styles.contentContainerStyleColumn}>
           {children}
@@ -69,6 +127,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           </View>
         </View>
       </Modal>
+      {_dialog()}
     </Portal>
   );
 };

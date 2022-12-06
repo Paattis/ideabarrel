@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { MainContext } from '../contexts/MainContext';
 import { PropTypes } from 'prop-types';
 import UserDetails from './UserDetails';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 const Comment = ({ comment }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -26,6 +27,12 @@ const Comment = ({ comment }) => {
   const nav = useNavigation();
 
   const isUserComment = user.id === comment.user.id;
+
+  const ideaDate = comment.created_at
+    ? formatDistanceToNow(new Date(comment.created_at), {
+        addSuffix: true,
+      })
+    : 'date unavailable';
 
   const _removeComment = async () => {
     try {
@@ -99,6 +106,7 @@ const Comment = ({ comment }) => {
           {isUserComment && _menu()}
         </View>
         <Text style={styles.comment}>{comment.content}</Text>
+        <Text style={styles.commentDate}>{ideaDate}</Text>
         <Divider bold style={styles.divider} />
       </View>
     </>
@@ -115,6 +123,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   comment: {
+    marginHorizontal: 8,
+    marginBottom: 10,
+  },
+  commentDate: {
+    alignItems: 'flex-start',
     marginHorizontal: 8,
     marginBottom: 10,
   },
