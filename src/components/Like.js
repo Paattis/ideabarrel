@@ -9,7 +9,7 @@ const Like = ({ ideaId }) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState();
 
-  const { user, likeUpdate, setLikeUpdate } = useContext(MainContext);
+  const { user, updateLikes, setUpdateLikes } = useContext(MainContext);
   const { getLikesByIdeaId, postLike, deleteLike } = useLike();
 
   const _getLikes = async () => {
@@ -31,7 +31,7 @@ const Like = ({ ideaId }) => {
     try {
       const res = await postLike(ideaId);
       if (res) {
-        setLikeUpdate(likeUpdate + 1);
+        setUpdateLikes(updateLikes + 1);
         setLiked(true);
       }
     } catch (error) {
@@ -43,7 +43,7 @@ const Like = ({ ideaId }) => {
     try {
       const res = await deleteLike(ideaId);
       if (res) {
-        setLikeUpdate(likeUpdate + 1);
+        setUpdateLikes(updateLikes + 1);
         setLiked(false);
       }
     } catch (error) {
@@ -53,7 +53,7 @@ const Like = ({ ideaId }) => {
 
   useEffect(() => {
     _getLikes();
-  }, [ideaId, likeUpdate]);
+  }, [ideaId, updateLikes]);
 
   const likesFormatted = numeral(likes).format('0a');
 

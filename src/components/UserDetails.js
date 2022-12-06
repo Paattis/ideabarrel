@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { useUser } from '../hooks';
 import ProfileModal from './ProfileModal';
 import { PROFILE_IMG_URL } from '../utils/constants';
+import { MainContext } from '../contexts/MainContext';
 
 const UserDetails = ({ avatarPosition = 'row', posterId }) => {
   const [avatar, setAvatar] = useState();
@@ -14,10 +15,8 @@ const UserDetails = ({ avatarPosition = 'row', posterId }) => {
     role: { name: 'Loading...' },
   });
 
+  const { updateProfile } = useContext(MainContext);
   const { getUserById } = useUser();
-
-  const _showModal = () => setShowModal(true);
-  const _hideModal = () => setShowModal(false);
 
   const direction = avatarPosition === 'right' ? 'row-reverse' : 'row';
   const flexDirection = {
@@ -25,6 +24,9 @@ const UserDetails = ({ avatarPosition = 'row', posterId }) => {
   };
 
   const userAvatarText = ideaOwner?.name[0].toUpperCase();
+
+  const _showModal = () => setShowModal(true);
+  const _hideModal = () => setShowModal(false);
 
   const _getIdeaOwner = async () => {
     try {
@@ -40,7 +42,7 @@ const UserDetails = ({ avatarPosition = 'row', posterId }) => {
 
   useEffect(() => {
     _getIdeaOwner();
-  }, [posterId]);
+  }, [posterId, updateProfile]);
 
   const userAvatar = (size) =>
     avatar ? (

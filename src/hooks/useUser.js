@@ -61,6 +61,18 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}`, options);
   };
 
+  const deleteUser = async (userId) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...authorizationHeaders,
+      },
+    };
+    return await customFetch(`${BASE_URL}users/${userId}`, options);
+  };
+
   const putUserProfileImg = async (data, userId) => {
     const options = {
       method: 'PUT',
@@ -74,5 +86,12 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}/img`, options);
   };
 
-  return { postUser, getUserById, putUser, putUserProfileImg, checkEmail };
+  return {
+    postUser,
+    getUserById,
+    putUser,
+    deleteUser,
+    putUserProfileImg,
+    checkEmail,
+  };
 };
