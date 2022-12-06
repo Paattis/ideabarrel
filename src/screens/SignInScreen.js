@@ -5,7 +5,9 @@ import { Button } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
 import { MainContext } from '../contexts/MainContext';
-import { useSignIn } from '../hooks';
+import { useAuth } from '../hooks';
+import { ACCESS_TOKEN } from '../utils/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const SingInScreen = () => {
@@ -16,12 +18,13 @@ const SingInScreen = () => {
     mode: 'onBlur',
   });
   const { setSignedIn, setUser } = useContext(MainContext);
-  const { postSignIn } = useSignIn();
+  const { postSignIn } = useAuth();
 
   const _signIn = async (data) => {
     try {
       setLoading(true);
       const user = await postSignIn(data);
+      await AsyncStorage.setItem(ACCESS_TOKEN, user.token);
       setUser(user);
       setSignedIn(true);
     } catch (error) {
