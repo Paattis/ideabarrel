@@ -7,16 +7,14 @@ import { StyleSheet } from 'react-native';
 import { MainContext } from '../contexts/MainContext';
 import { useAuth } from '../hooks';
 import { ACCESS_TOKEN } from '../utils/constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const SingInScreen = () => {
   const [loading, setLoading] = useState(false);
 
-  const { control, handleSubmit } = useForm({
-    defaultValues: { email: 'admin@nokia.com', password: 'admin' },
-    mode: 'onBlur',
-  });
+  const { control, handleSubmit } = useForm({ mode: 'onBlur' });
+
   const { setSignedIn, setUser } = useContext(MainContext);
   const { postSignIn } = useAuth();
 
@@ -24,7 +22,7 @@ const SingInScreen = () => {
     try {
       setLoading(true);
       const user = await postSignIn(data);
-      await AsyncStorage.setItem(ACCESS_TOKEN, user.token);
+      await SecureStore.setItemAsync(ACCESS_TOKEN, user.token);
       setUser(user);
       setSignedIn(true);
     } catch (error) {

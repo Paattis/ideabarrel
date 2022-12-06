@@ -18,7 +18,7 @@ import { MainContext } from '../contexts/MainContext';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../hooks';
 import { ACCESS_TOKEN } from '../utils/constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import PropTypes from 'prop-types';
 import ThemeToggle from './ThemeToggle';
 
@@ -58,7 +58,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   };
 
   const _logOut = async () => {
-    await AsyncStorage.removeItem(ACCESS_TOKEN);
+    await SecureStore.deleteItemAsync(ACCESS_TOKEN);
     setSignedIn(false);
   };
 
@@ -107,7 +107,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         leadingIcon="close-circle"
       />
       <Menu.Item
-        onPress={_logOut} // also delete token from storage when created
+        onPress={_logOut}
         title="Log out"
         leadingIcon="logout-variant"
       />
