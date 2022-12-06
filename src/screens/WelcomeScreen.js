@@ -7,7 +7,7 @@ import { PreferencesContext } from '../contexts/PreferencesContext';
 import { useAuth } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 import { ACCESS_TOKEN } from '../utils/constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import WelcomeBG from '../../assets/svg/welcome-screen-bg.svg';
 
 const WelcomeScreen = ({ navigation }) => {
@@ -31,7 +31,7 @@ const WelcomeScreen = ({ navigation }) => {
   const _signInScreen = () => navigation.navigate('Sign In');
 
   const _authUser = async () => {
-    const token = await AsyncStorage.getItem(ACCESS_TOKEN);
+    const token = await SecureStore.getItemAsync(ACCESS_TOKEN);
     if (!token) return;
 
     try {
