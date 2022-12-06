@@ -1,4 +1,4 @@
-export * from './useSignIn';
+export * from './useAuth';
 export * from './useIdea';
 export * from './useUser';
 export * from './useComment';

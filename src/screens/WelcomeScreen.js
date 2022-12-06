@@ -1,9 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Button, Divider, Text } from 'react-native-paper';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import { PreferencesContext } from '../contexts/PreferencesContext';
+import { useAuth } from '../hooks';
+import { MainContext } from '../contexts/MainContext';
+import { ACCESS_TOKEN } from '../utils/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import WelcomeBG from '../../assets/svg/welcome-screen-bg.svg';
 
 const WelcomeScreen = ({ navigation }) => {
@@ -11,6 +15,9 @@ const WelcomeScreen = ({ navigation }) => {
   const _signInScreen = () => navigation.navigate('Sign In');
 
   const { isThemeDark } = useContext(PreferencesContext);
+  const { setUser, setSignedIn } = useContext(MainContext);
+  const { authUser } = useAuth();
+
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
 
   const buttonStyle = {
@@ -20,6 +27,23 @@ const WelcomeScreen = ({ navigation }) => {
   const contentColor = {
     backgroundColor: theme.colors.background,
   };
+
+  const _authUser = async () => {
+    const token = await AsyncStorage.getItem(ACCESS_TOKEN);
+    if (!token) return;
+
+    try {
+      const user = await authUser(token);
+      setUser(user);
+      setSignedIn(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    _authUser();
+  }, []);
 
   return (
     <View style={styles.container}>

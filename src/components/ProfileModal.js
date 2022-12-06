@@ -14,11 +14,13 @@ import {
 import { StyleSheet, View } from 'react-native';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
-import PropTypes from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 import { useNavigation } from '@react-navigation/native';
-import ThemeToggle from './ThemeToggle';
 import { useUser } from '../hooks';
+import { ACCESS_TOKEN } from '../utils/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import PropTypes from 'prop-types';
+import ThemeToggle from './ThemeToggle';
 
 const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -53,6 +55,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const _logOut = async () => {
+    await AsyncStorage.removeItem(ACCESS_TOKEN);
+    setSignedIn(false);
   };
 
   const _editProfileScreen = () => nav.navigate('Edit Profile');
@@ -98,6 +105,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         onPress={_showDialog}
         title="Remove"
         leadingIcon="close-circle"
+      />
+      <Menu.Item
+        onPress={_logOut} // also delete token from storage when created
+        title="Log out"
+        leadingIcon="logout-variant"
       />
     </Menu>
   );
