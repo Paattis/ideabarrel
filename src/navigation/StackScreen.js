@@ -1,19 +1,24 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PaperNavigationBar from './NavigationBar';
+import { MainContext } from '../contexts/MainContext';
 import {
   WelcomeScreen,
   MainScreen,
-  RegisterScreen,
-  NewPost,
+  SignUpScreen,
+  UploadScreen,
   SignInScreen,
+  IdeaScreen,
+  AddCommentScreen,
+  EditIdeaScreen,
+  EditProfileScreen,
+  EditCommentScreen,
 } from '../screens/';
 
 const Stack = createNativeStackNavigator();
 
 const StackScreen = () => {
-  const signedIn = true;
-
+  const { signedIn } = useContext(MainContext);
   return (
     <Stack.Navigator
       initialRouteName="Main"
@@ -25,7 +30,28 @@ const StackScreen = () => {
       {signedIn ? (
         <>
           <Stack.Screen name="Main" component={MainScreen} />
-          <Stack.Screen name="New Post" component={NewPost} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="New Idea"
+            component={UploadScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Add Comment"
+            component={AddCommentScreen}
+          />
+          <Stack.Screen name="Idea" component={IdeaScreen} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Edit"
+            component={EditIdeaScreen}
+          />
+          <Stack.Screen name="Edit Profile" component={EditProfileScreen} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Edit Comment"
+            component={EditCommentScreen}
+          />
         </>
       ) : (
         <>
@@ -34,7 +60,7 @@ const StackScreen = () => {
             component={WelcomeScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Sign Up" component={RegisterScreen} />
+          <Stack.Screen name="Sign Up" component={SignUpScreen} />
           <Stack.Screen name="Sign In" component={SignInScreen} />
         </>
       )}

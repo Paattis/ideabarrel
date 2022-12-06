@@ -3,18 +3,19 @@ import { Button } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import numeral from 'numeral';
 
-const Comments = ({ onPress }) => {
-  const commentsFormatted = numeral(1000).format('0a');
+const CommentCount = ({ onPress, comments }) => {
+  const commentCountFormatted = numeral(comments?.length).format('0a');
 
   return (
     <Button textColor="#fff" icon={'comment'} onPress={onPress}>
-      {commentsFormatted}
+      {commentCountFormatted}
     </Button>
   );
 };
 
-Comments.propTypes = {
+CommentCount.propTypes = {
   onPress: PropTypes.func,
+  comments: PropTypes.array,
 };
 
-export default Comments;
+export default CommentCount;

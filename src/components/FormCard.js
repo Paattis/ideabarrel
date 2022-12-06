@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 
-const CustomCard = ({ children, title }) => {
+const FormCard = ({ children, title }) => {
   const { isThemeDark } = useContext(PreferencesContext);
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
 
@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
   },
 });
 
-CustomCard.propTypes = {
+FormCard.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
 };
 
-export default CustomCard;
+export default FormCard;
