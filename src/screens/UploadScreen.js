@@ -6,7 +6,14 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Button, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  Divider,
+  Paragraph,
+  Portal,
+  Snackbar,
+} from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
@@ -15,10 +22,12 @@ import { MainContext } from '../contexts/MainContext';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const UploadScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
   const [showDialog, setDialog] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postIdea, loading } = useIdea();
+  const { postIdea } = useIdea();
   const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
 
   const title = watch('title');
@@ -31,17 +40,35 @@ const UploadScreen = ({ navigation }) => {
 
   const _post = async (data) => {
     // placeholder
-    const tags = [1];
-    data.tags = tags;
+    // const tags = [1];
+    // data.tags = tags;
     Keyboard.dismiss();
+
     try {
+      setLoading(true);
       await postIdea(data);
       setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      _onToggleSnackBar();
+      setErrorMsg(error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const [showSnack, setShowSnack] = useState(false);
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+
+  const _onDismissSnackBar = () => setShowSnack(false);
+
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
 
   const _dialog = () => (
     <Portal>
@@ -64,6 +91,7 @@ const UploadScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <BgSVG style={styles.bgShape} />
       {_dialog()}
+      {_snackbar()}
       <NavigationHeader
         onPressCancel={title || content ? _showDialog : _goBack}
         onSubmit={handleSubmit(_post)}

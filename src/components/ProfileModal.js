@@ -3,7 +3,6 @@ import { useContext } from 'react';
 import {
   Button,
   Dialog,
-  Divider,
   IconButton,
   Menu,
   Modal,
@@ -27,8 +26,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showDialog, setDialog] = useState(false);
 
   const { isThemeDark } = useContext(PreferencesContext);
-  const { setSignedIn } = useContext(MainContext);
-  const { user } = useContext(MainContext);
+  const { user, setSignedIn } = useContext(MainContext);
   const { deleteUser } = useUser();
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
@@ -100,16 +98,15 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         title="Edit"
         leadingIcon="square-edit-outline"
       />
-      <Divider />
-      <Menu.Item
-        onPress={_showDialog}
-        title="Remove"
-        leadingIcon="close-circle"
-      />
       <Menu.Item
         onPress={_logOut}
         title="Log out"
         leadingIcon="logout-variant"
+      />
+      <Menu.Item
+        onPress={_showDialog}
+        title="Remove"
+        leadingIcon="close-circle"
       />
     </Menu>
   );
@@ -122,7 +119,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         contentContainerStyle={[styles.containerStyle, backGroundStyle]}
       >
         <View style={styles.profileFunctions}>
-          <ThemeToggle />
+          {isUserProfile && <ThemeToggle />}
           {isUserProfile && _menu()}
         </View>
         <View style={styles.contentContainerStyleColumn}>

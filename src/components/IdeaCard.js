@@ -100,7 +100,6 @@ const Media = ({ navigation, idea, ideaScreen }) => {
         title="Edit"
         leadingIcon="square-edit-outline"
       />
-      <Divider />
       <Menu.Item
         onPress={_showDialog}
         title="Remove"

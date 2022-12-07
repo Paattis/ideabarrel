@@ -40,9 +40,7 @@ export const useIdea = () => {
       },
       body: JSON.stringify(data),
     };
-    setLoading(true);
     const res = await customFetch(BASE_URL + 'ideas', options);
-    setLoading(false);
     return res;
   };
 
@@ -56,9 +54,7 @@ export const useIdea = () => {
       },
       body: JSON.stringify(data),
     };
-    setLoading(true);
     const res = await customFetch(`${BASE_URL}ideas/${ideaId}`, options);
-    setLoading(false);
     return res;
   };
 

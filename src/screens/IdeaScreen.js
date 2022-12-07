@@ -7,12 +7,14 @@ import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 import { MainContext } from '../contexts/MainContext';
 
 const IdeaScreen = ({ route: { params }, navigation }) => {
+  const [loading, setLoading] = useState(false);
   const [idea, setIdea] = useState({});
   const [commentsArray, setCommentsArray] = useState([]);
 
   const { updateIdeas } = useContext(MainContext);
-  const { getIdeaById, loading } = useIdea();
+  const { getIdeaById } = useIdea();
   const { ideaId } = params;
+
   const addCommentParams = { ideaId: idea.id };
 
   const ref = useRef(null);
@@ -30,11 +32,14 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
 
   const _getIdea = async () => {
     try {
+      setLoading(true);
       const idea = await getIdeaById(ideaId);
-      setCommentsArray(idea.comments.reverse());
       setIdea(idea);
+      setCommentsArray(idea.comments.reverse());
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 

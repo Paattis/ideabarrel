@@ -83,7 +83,6 @@ const Comment = ({ comment }) => {
         title="Edit"
         leadingIcon="square-edit-outline"
       />
-      <Divider />
       <Menu.Item
         onPress={_showDialog}
         title="Remove"
@@ -107,7 +106,7 @@ const Comment = ({ comment }) => {
         </View>
         <Text style={styles.comment}>{comment.content}</Text>
         <Text style={styles.commentDate}>{ideaDate}</Text>
-        <Divider bold style={styles.divider} />
+        <Divider bold />
       </View>
     </>
   );
@@ -130,9 +129,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginHorizontal: 8,
     marginBottom: 10,
-  },
-  divider: {
-    marginHorizontal: 8,
   },
 });
 
