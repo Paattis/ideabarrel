@@ -23,9 +23,6 @@
       "ts",
       "tsx",
       "node"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/setup-tests.js"
     ]
   },
   "dependencies": {
