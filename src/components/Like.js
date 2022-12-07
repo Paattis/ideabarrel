@@ -1,16 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button } from 'react-native-paper';
+import { Button, Snackbar } from 'react-native-paper';
 import { useLike } from '../hooks';
 import { PropTypes } from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 import numeral from 'numeral';
 
 const Like = ({ ideaId }) => {
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState();
 
   const { user, updateLikes, setUpdateLikes } = useContext(MainContext);
   const { getLikesByIdeaId, postLike, deleteLike } = useLike();
+
+  const likesFormatted = numeral(likes).format('0a');
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _getLikes = async () => {
     try {
@@ -23,7 +30,8 @@ const Like = ({ ideaId }) => {
         });
       }
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     }
   };
 
@@ -35,7 +43,8 @@ const Like = ({ ideaId }) => {
         setLiked(true);
       }
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     }
   };
 
@@ -47,7 +56,8 @@ const Like = ({ ideaId }) => {
         setLiked(false);
       }
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     }
   };
 
@@ -55,16 +65,23 @@ const Like = ({ ideaId }) => {
     _getLikes();
   }, [ideaId, updateLikes]);
 
-  const likesFormatted = numeral(likes).format('0a');
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
 
   return (
-    <Button
-      textColor="#fff"
-      icon={liked ? 'thumb-up' : 'thumb-up-outline'}
-      onPress={liked ? _unlike : _like}
-    >
-      {likesFormatted}
-    </Button>
+    <>
+      {_snackbar()}
+      <Button
+        textColor="#fff"
+        icon={liked ? 'thumb-up' : 'thumb-up-outline'}
+        onPress={liked ? _unlike : _like}
+      >
+        {likesFormatted}
+      </Button>
+    </>
   );
 };
 

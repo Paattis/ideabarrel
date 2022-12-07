@@ -53,8 +53,10 @@ const WelcomeScreen = ({ navigation }) => {
   if (loading)
     return (
       <View style={styles.activityIndicator}>
-        <ActivityIndicator size="large" />
-        <Text style={{ margin: 10 }}>Authenticating...</Text>
+        <ActivityIndicator animating={!loading} size="large" />
+        <Text variant="titleMedium" style={{ margin: 14 }}>
+          Authenticating...
+        </Text>
       </View>
     );
   else

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { FormInput, ScreenWrapper } from '../components';
 import FormCard from '../components/FormCard';
-import { Button } from 'react-native-paper';
+import { Button, Snackbar } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
 import { MainContext } from '../contexts/MainContext';
@@ -12,11 +12,16 @@ import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const SingInScreen = () => {
   const [loading, setLoading] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { control, handleSubmit } = useForm({ mode: 'onBlur' });
 
   const { setSignedIn, setUser } = useContext(MainContext);
   const { postSignIn } = useAuth();
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _signIn = async (data) => {
     try {
@@ -26,11 +31,18 @@ const SingInScreen = () => {
       setUser(user);
       setSignedIn(true);
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     } finally {
       setLoading(false);
     }
   };
+
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
 
   return (
     <ScreenWrapper
@@ -38,6 +50,7 @@ const SingInScreen = () => {
       withScrollView
       keyboardShouldPersistTaps="handled"
     >
+      {_snackbar()}
       <BgSVG style={styles.bgShape} />
       <FormCard title="Sign in to your account">
         <FormInput

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Keyboard,
   SafeAreaView,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Divider } from 'react-native-paper';
+import { Divider, Snackbar } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
@@ -14,8 +14,12 @@ import { useIdea } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 
 const EditIdeaScreen = ({ route: { params }, navigation }) => {
+  const [loading, setLoading] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
   const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
-  const { putIdea, loading } = useIdea();
+  const { putIdea } = useIdea();
   const { title, content, ideaId } = params;
 
   const { control, handleSubmit, watch } = useForm({
@@ -27,24 +31,40 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
 
   const titleInput = watch('title');
 
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
+
   const _goBack = () => navigation.pop();
 
   const _edit = async (data) => {
+    Keyboard.dismiss();
+
     // placeholder
     const tags = [1];
     data.tags = tags;
-    Keyboard.dismiss();
+
     try {
+      setLoading(true);
       await putIdea(data, ideaId);
       setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
+    } finally {
+      setLoading(false);
     }
   };
 
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
+      {_snackbar()}
       <NavigationHeader
         onPressCancel={_goBack}
         onSubmit={handleSubmit(_edit)}
