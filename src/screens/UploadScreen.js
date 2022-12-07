@@ -24,6 +24,7 @@ import BgSVG from '../../assets/svg/top-right-bg.svg';
 const UploadScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showDialog, setDialog] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
@@ -36,13 +37,17 @@ const UploadScreen = ({ navigation }) => {
   const _showDialog = () => setDialog(true);
   const _hideDialog = () => setDialog(false);
 
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
+
   const _goBack = () => navigation.pop();
 
   const _post = async (data) => {
-    // placeholder
-    // const tags = [1];
-    // data.tags = tags;
     Keyboard.dismiss();
+
+    // placeholder
+    const tags = [1];
+    data.tags = tags;
 
     try {
       setLoading(true);
@@ -50,19 +55,12 @@ const UploadScreen = ({ navigation }) => {
       setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
-      // console.error(error);
-      _onToggleSnackBar();
       setErrorMsg(error.message);
+      _onToggleSnackBar();
     } finally {
       setLoading(false);
     }
   };
-
-  const [showSnack, setShowSnack] = useState(false);
-
-  const _onToggleSnackBar = () => setShowSnack(true);
-
-  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _snackbar = () => (
     <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>

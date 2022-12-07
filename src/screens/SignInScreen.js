@@ -12,12 +12,16 @@ import BgSVG from '../../assets/svg/top-right-bg.svg';
 
 const SingInScreen = () => {
   const [loading, setLoading] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   const { control, handleSubmit } = useForm({ mode: 'onBlur' });
 
   const { setSignedIn, setUser } = useContext(MainContext);
   const { postSignIn } = useAuth();
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _signIn = async (data) => {
     try {
@@ -27,19 +31,12 @@ const SingInScreen = () => {
       setUser(user);
       setSignedIn(true);
     } catch (error) {
-      console.error(error);
       setErrorMsg(error.message);
       _onToggleSnackBar();
     } finally {
       setLoading(false);
     }
   };
-
-  const [showSnack, setShowSnack] = useState(false);
-
-  const _onToggleSnackBar = () => setShowSnack(true);
-
-  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _snackbar = () => (
     <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>

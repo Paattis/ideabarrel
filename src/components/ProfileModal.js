@@ -8,6 +8,7 @@ import {
   Modal,
   Paragraph,
   Portal,
+  Snackbar,
   Text,
 } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
@@ -24,6 +25,8 @@ import ThemeToggle from './ThemeToggle';
 const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { isThemeDark } = useContext(PreferencesContext);
   const { user, setSignedIn } = useContext(MainContext);
@@ -41,6 +44,9 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
 
   const isUserProfile = posterInfo.id === user.id;
 
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
+
   const _editProfile = () => {
     _editProfileScreen();
     hideModal();
@@ -49,9 +55,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const _deleteUser = async () => {
     try {
       await deleteUser(user.id);
+      isUserProfile && (await SecureStore.deleteItemAsync(ACCESS_TOKEN));
       setSignedIn(false);
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     }
   };
 
@@ -71,20 +79,29 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   };
   const _hideDialog = () => setDialog(false);
 
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
+
   const _dialog = () => (
-    <Dialog visible={showDialog} onDismiss={_hideDialog}>
-      <Dialog.Title>Delete Account?</Dialog.Title>
-      <Dialog.Content>
-        <Paragraph>
-          Are you sure you want to permanently delete your account? This action
-          is irreversible.
-        </Paragraph>
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={_deleteUser}>Delete</Button>
-        <Button onPress={_hideDialog}>Cancel</Button>
-      </Dialog.Actions>
-    </Dialog>
+    <>
+      {_snackbar()}
+      <Dialog visible={showDialog} onDismiss={_hideDialog}>
+        <Dialog.Title>Delete Account?</Dialog.Title>
+        <Dialog.Content>
+          <Paragraph>
+            Are you sure you want to permanently delete your account? This
+            action is irreversible.
+          </Paragraph>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={_deleteUser}>Delete</Button>
+          <Button onPress={_hideDialog}>Cancel</Button>
+        </Dialog.Actions>
+      </Dialog>
+    </>
   );
 
   const _menu = () => (

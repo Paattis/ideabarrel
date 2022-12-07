@@ -9,6 +9,7 @@ import {
   Menu,
   Paragraph,
   Portal,
+  Snackbar,
   Text,
 } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
@@ -22,6 +23,8 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 const Media = ({ navigation, idea, ideaScreen }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { user, setUpdateIdeas, updateIdeas } = useContext(MainContext);
   const { deleteIdea } = useIdea();
@@ -40,6 +43,9 @@ const Media = ({ navigation, idea, ideaScreen }) => {
         addSuffix: true,
       })
     : 'date unavailable';
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _showDialog = () => {
     _closeMenu();
@@ -60,9 +66,17 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       setUpdateIdeas(updateIdeas + 1);
       _hideDialog();
     } catch (error) {
-      console.error(error);
+      _hideDialog();
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     }
   };
+
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
 
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
@@ -76,6 +90,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
 
   const _dialog = () => (
     <Portal>
+      {_snackbar()}
       <Dialog visible={showDialog} onDismiss={_hideDialog}>
         <Dialog.Title>Remove Idea?</Dialog.Title>
         <Dialog.Content>

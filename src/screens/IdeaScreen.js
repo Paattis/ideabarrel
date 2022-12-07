@@ -3,11 +3,18 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Comment, IdeaCard } from '../components';
 import { useIdea } from '../hooks';
 import { PropTypes } from 'prop-types';
-import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  IconButton,
+  Snackbar,
+  Text,
+} from 'react-native-paper';
 import { MainContext } from '../contexts/MainContext';
 
 const IdeaScreen = ({ route: { params }, navigation }) => {
   const [loading, setLoading] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [idea, setIdea] = useState({});
   const [commentsArray, setCommentsArray] = useState([]);
 
@@ -18,6 +25,9 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
   const addCommentParams = { ideaId: idea.id };
 
   const ref = useRef(null);
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _onScrollUp = () => {
     ref.current?.scrollTo({
@@ -37,7 +47,8 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
       setIdea(idea);
       setCommentsArray(idea.comments.reverse());
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     } finally {
       setLoading(false);
     }
@@ -47,9 +58,16 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
     _getIdea();
   }, [updateIdeas]);
 
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
+
   if (!loading)
     return (
       <>
+        {_snackbar()}
         <ScrollView showsVerticalScrollIndicator={false} ref={ref}>
           <IdeaCard idea={idea} ideaScreen />
           <Text style={styles.commentsHeader}>Comments:</Text>

@@ -8,6 +8,7 @@ import {
   Menu,
   Paragraph,
   Portal,
+  Snackbar,
   Text,
 } from 'react-native-paper';
 import { useComment } from '../hooks';
@@ -20,6 +21,8 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 const Comment = ({ comment }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { deleteComment } = useComment();
   const { user, setUpdateIdeas, updateIdeas } = useContext(MainContext);
@@ -34,12 +37,22 @@ const Comment = ({ comment }) => {
       })
     : 'date unavailable';
 
+  const params = {
+    commentId: comment.id,
+    content: comment.content,
+  };
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
+
   const _removeComment = async () => {
     try {
       await deleteComment(comment.id);
       setUpdateIdeas(updateIdeas + 1);
     } catch (error) {
-      console.error(error);
+      _hideDialog();
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     }
   };
 
@@ -59,6 +72,7 @@ const Comment = ({ comment }) => {
 
   const _dialog = () => (
     <Portal>
+      {_snackbar()}
       <Dialog visible={showDialog} onDismiss={_hideDialog}>
         <Dialog.Title>Remove Comment?</Dialog.Title>
         <Dialog.Content>
@@ -91,10 +105,11 @@ const Comment = ({ comment }) => {
     </Menu>
   );
 
-  const params = {
-    commentId: comment.id,
-    content: comment.content,
-  };
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
 
   return (
     <>
