@@ -7,7 +7,7 @@ export const useIdea = () => {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { updateIdeas, user } = useContext(MainContext);
+  const { updateIdeas, user, ideaSortOrder } = useContext(MainContext);
 
   const authorizationHeaders = {
     Authorization: 'Bearer ' + user?.token,
@@ -18,8 +18,11 @@ export const useIdea = () => {
       headers: { ...authorizationHeaders },
     };
     setLoading(true);
-    const idea = await customFetch(BASE_URL + 'ideas', options);
-    setIdeas(idea.reverse());
+    const idea = await customFetch(
+      `${BASE_URL}ideas/${ideaSortOrder}`,
+      options
+    );
+    setIdeas(idea);
     setLoading(false);
   };
 
@@ -27,7 +30,7 @@ export const useIdea = () => {
     const options = {
       headers: { ...authorizationHeaders },
     };
-    return await customFetch(BASE_URL + 'ideas/' + ideaId, options);
+    return await customFetch(`${BASE_URL}ideas/${ideaId}`, options);
   };
 
   const postIdea = async (data) => {

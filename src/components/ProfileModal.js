@@ -122,7 +122,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       />
       <Menu.Item
         onPress={_showDialog}
-        title="Remove"
+        title="Delete"
         leadingIcon="close-circle"
       />
     </Menu>
