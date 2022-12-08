@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FormInput, ScreenWrapper } from '../components';
 import FormCard from '../components/FormCard';
 import { PropTypes } from 'prop-types';
-import { Button, Avatar } from 'react-native-paper';
+import { Button, Avatar, Snackbar } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { useUser } from '../hooks/useUser';
 import BgSVG from '../../assets/svg/top-left-bg.svg';
@@ -12,17 +12,22 @@ import * as ImagePicker from 'expo-image-picker';
 import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '../utils/constants';
 
 const SignUpScreen = ({ navigation }) => {
-  const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
-
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState();
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postUser, checkEmail } = useUser();
 
+  const password = watch('password');
+
   const _signInScreen = () => navigation.navigate('Sign In');
 
-  const password = watch('password');
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _pickImage = async () => {
     const options = {
@@ -63,22 +68,27 @@ const SignUpScreen = ({ navigation }) => {
       const user = await postUser(formData);
       if (user) _signInScreen();
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     } finally {
       setLoading(false);
     }
   };
 
-  // const _validateEmail = async (value) => {
-  //   try {
-  //     const res = await checkEmail(value);
-  //     if (!res.free) {
-  //       return 'This email is already taken';
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const _validateEmail = async (value) => {
+    try {
+      const res = await checkEmail(value);
+      if (!res.free) return 'This email is already taken';
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
 
   return (
     <ScreenWrapper
@@ -86,14 +96,17 @@ const SignUpScreen = ({ navigation }) => {
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
+      {_snackbar()}
       <BgSVG style={styles.bgShape} />
       <FormCard title="Create your new account">
-        <TouchableOpacity onPress={_pickImage}>
-          <Avatar.Image
-            size={90}
-            source={{ uri: avatar ? avatar : pickAvatarUri }}
-          />
-        </TouchableOpacity>
+        <View style={styles.pfp}>
+          <TouchableOpacity onPress={_pickImage} disabled={loading}>
+            <Avatar.Image
+              size={90}
+              source={{ uri: avatar ? avatar : pickAvatarUri }}
+            />
+          </TouchableOpacity>
+        </View>
         <FormInput
           testID="email_input"
           leftIcon="email"
@@ -107,7 +120,7 @@ const SignUpScreen = ({ navigation }) => {
               value: EMAIL_REGEX,
               message: 'Email has to be valid.',
             },
-            // validate: (value) => _validateEmail(value),
+            validate: (value) => _validateEmail(value),
           }}
         />
         <FormInput
@@ -183,6 +196,11 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
+  },
+  pfp: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5,
   },
   bgShape: {
     position: 'absolute',
