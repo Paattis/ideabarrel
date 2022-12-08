@@ -90,16 +90,14 @@ const EditProfileScreen = ({ navigation }) => {
     }
   };
 
-  // const _validateEmail = async (value) => {
-  //   try {
-  //     const res = await checkEmail(value);
-  //     if (!res.free) {
-  //       return 'This email is already taken';
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const _validateEmail = async (value) => {
+    try {
+      const res = await checkEmail(value);
+      if (!res.free) return 'This email is already taken';
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     user.profile_img
@@ -135,7 +133,7 @@ const EditProfileScreen = ({ navigation }) => {
               value: EMAIL_REGEX,
               message: 'Email has to be valid.',
             },
-            // validate: (value) => _validateEmail(value),
+            validate: (value) => _validateEmail(value),
           }}
         />
         <FormInput
