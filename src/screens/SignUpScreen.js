@@ -111,7 +111,7 @@ const SignUpScreen = ({ navigation }) => {
         <ScrollView style={{ height: 100 }}>
           {roles.slice(1).map((role) => (
             <List.Item
-              key={roles.id}
+              key={role.id}
               title={role.name}
               onPress={() => {
                 setSelectedRole(role);

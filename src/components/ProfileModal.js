@@ -136,18 +136,18 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       {isUserProfile && (
         <>
           <Menu.Item
-            onPress={_logOut}
-            title="Log out"
-            leadingIcon="logout-variant"
-          />
-          <Menu.Item
             onPress={_editProfile}
             title="Edit"
             leadingIcon="square-edit-outline"
           />
+          <Menu.Item
+            onPress={_logOut}
+            title="Log out"
+            leadingIcon="logout-variant"
+          />
         </>
       )}
-      {isAdmin && (
+      {isAdmin && !isUserProfile && (
         <Menu.Item
           onPress={_promoteToAdmin}
           title="Promote to admin"
