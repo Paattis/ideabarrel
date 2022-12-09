@@ -30,6 +30,7 @@ const Comment = ({ comment }) => {
   const nav = useNavigation();
 
   const isUserComment = user.id === comment.user.id;
+  const isAdmin = user?.role?.id === 1;
 
   const ideaDate = comment.created_at
     ? formatDistanceToNow(new Date(comment.created_at), {
@@ -92,11 +93,13 @@ const Comment = ({ comment }) => {
       onDismiss={_closeMenu}
       anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
     >
-      <Menu.Item
-        onPress={_editComment}
-        title="Edit"
-        leadingIcon="square-edit-outline"
-      />
+      {isUserComment && (
+        <Menu.Item
+          onPress={_editComment}
+          title="Edit"
+          leadingIcon="square-edit-outline"
+        />
+      )}
       <Menu.Item
         onPress={_showDialog}
         title="Remove"
@@ -117,7 +120,7 @@ const Comment = ({ comment }) => {
       <View style={styles.container}>
         <View style={styles.userContainer}>
           <UserDetails posterId={comment.user.id} />
-          {isUserComment && _menu()}
+          {(isUserComment || isAdmin) && _menu()}
         </View>
         <Text style={styles.comment}>{comment.content}</Text>
         <Text style={styles.commentDate}>{ideaDate}</Text>

@@ -43,6 +43,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   };
 
   const isUserProfile = posterInfo.id === user.id;
+  const isAdmin = user?.role?.id === 1;
 
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
@@ -110,16 +111,20 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       onDismiss={_closeMenu}
       anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
     >
-      <Menu.Item
-        onPress={_editProfile}
-        title="Edit"
-        leadingIcon="square-edit-outline"
-      />
-      <Menu.Item
-        onPress={_logOut}
-        title="Log out"
-        leadingIcon="logout-variant"
-      />
+      {isUserProfile && (
+        <>
+          <Menu.Item
+            onPress={_editProfile}
+            title="Edit"
+            leadingIcon="square-edit-outline"
+          />
+          <Menu.Item
+            onPress={_logOut}
+            title="Log out"
+            leadingIcon="logout-variant"
+          />
+        </>
+      )}
       <Menu.Item
         onPress={_showDialog}
         title="Delete"
@@ -137,7 +142,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       >
         <View style={styles.profileFunctions}>
           {isUserProfile && <ThemeToggle />}
-          {isUserProfile && _menu()}
+          {(isUserProfile || isAdmin) && _menu()}
         </View>
         <View style={styles.contentContainerStyleColumn}>
           {children}
