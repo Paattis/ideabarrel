@@ -43,9 +43,19 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   };
 
   const isUserProfile = posterInfo.id === user.id;
+  const isAdmin = user.id === 1;
 
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
+
+  const _openMenu = () => setShowMenu(true);
+  const _closeMenu = () => setShowMenu(false);
+
+  const _showDialog = () => {
+    _closeMenu();
+    setDialog(true);
+  };
+  const _hideDialog = () => setDialog(false);
 
   const _editProfile = () => {
     _editProfileScreen();
@@ -69,15 +79,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   };
 
   const _editProfileScreen = () => nav.navigate('Edit Profile');
-
-  const _openMenu = () => setShowMenu(true);
-  const _closeMenu = () => setShowMenu(false);
-
-  const _showDialog = () => {
+  const _addRole = () => {
+    hideModal();
     _closeMenu();
-    setDialog(true);
+    nav.navigate('Add Role');
   };
-  const _hideDialog = () => setDialog(false);
 
   const _snackbar = () => (
     <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
@@ -110,6 +116,13 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       onDismiss={_closeMenu}
       anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
     >
+      {isAdmin && (
+        <Menu.Item
+          onPress={_addRole}
+          title="Add new role"
+          leadingIcon="plus-circle-outline"
+        />
+      )}
       <Menu.Item
         onPress={_editProfile}
         title="Edit"

@@ -24,9 +24,22 @@ export const useRole = () => {
     setRoles(roles);
   };
 
+  const postRole = async (data) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...authorizationHeaders,
+      },
+      body: JSON.stringify({ name: data.name }),
+    };
+    return await customFetch(BASE_URL + 'roles', options);
+  };
+
   useEffect(() => {
     getRoles();
   }, []);
 
-  return { roles, getRoles };
+  return { roles, getRoles, postRole };
 };
