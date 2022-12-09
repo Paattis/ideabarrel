@@ -30,6 +30,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
   const { deleteIdea } = useIdea();
 
   const isUserIdea = idea?.user?.id === user.id;
+  const isAdmin = user?.role?.id === 1;
 
   const ideaIdParam = { ideaId: idea.id };
   const ideaContentParams = {
@@ -110,11 +111,13 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       onDismiss={_closeMenu}
       anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
     >
-      <Menu.Item
-        onPress={_editIdea}
-        title="Edit"
-        leadingIcon="square-edit-outline"
-      />
+      {isUserIdea && (
+        <Menu.Item
+          onPress={_editIdea}
+          title="Edit"
+          leadingIcon="square-edit-outline"
+        />
+      )}
       <Menu.Item
         onPress={_showDialog}
         title="Remove"
@@ -145,7 +148,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
           <View>
             <View style={styles.userContainer}>
               <UserDetails posterId={idea.user.id} navigation={navigation} />
-              {isUserIdea && _menu()}
+              {(isUserIdea || isAdmin) && _menu()}
             </View>
           </View>
         </Card.Content>
