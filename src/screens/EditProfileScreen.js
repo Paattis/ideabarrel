@@ -1,9 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { FormInput, ScreenWrapper } from '../components';
 import FormCard from '../components/FormCard';
 import { PropTypes } from 'prop-types';
-import { Button, Avatar } from 'react-native-paper';
+import { Button, Avatar, Snackbar, List } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { useUser } from '../hooks/useUser';
 import pickAvatarImg from '../../assets/pick-avatar.png';
@@ -15,16 +21,15 @@ import {
   PASSWORD_REGEX,
   PROFILE_IMG_URL,
 } from '../utils/constants';
+import { useRole } from '../hooks/useRole';
 
 const EditProfileScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
 
-  const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState();
-
   const { user, setUser, updateProfile, setUpdateProfile } =
     useContext(MainContext);
   const { putUser, putUserProfileImg, checkEmail } = useUser();
+  const { roles } = useRole();
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -36,9 +41,24 @@ const EditProfileScreen = ({ navigation }) => {
     mode: 'onBlur',
   });
 
-  const _goBack = () => navigation.pop();
+  const [loading, setLoading] = useState(false);
+  const [avatar, setAvatar] = useState();
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [expandedList, setExpandedList] = useState(false);
+  const [selectedRole, setSelectedRole] = useState({
+    name: user.role.name,
+    id: user.role.id,
+  });
 
   const password = watch('password');
+
+  const _goBack = () => navigation.pop();
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
+
+  const _handleListPress = () => setExpandedList(!expandedList);
 
   const _pickImage = async () => {
     const options = {
@@ -69,7 +89,8 @@ const EditProfileScreen = ({ navigation }) => {
   const _editProfile = async (data) => {
     delete data.confirm_password;
     if (data.password === '') delete data.password;
-    data.role_id = 1;
+
+    data.role_id = selectedRole.id;
 
     try {
       setLoading(true);
@@ -84,7 +105,8 @@ const EditProfileScreen = ({ navigation }) => {
         _goBack();
       }
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     } finally {
       setLoading(false);
     }
@@ -93,7 +115,8 @@ const EditProfileScreen = ({ navigation }) => {
   const _validateEmail = async (value) => {
     try {
       const res = await checkEmail(value);
-      if (!res.free) return 'This email is already taken';
+      if (res.free || user.email === value) return;
+      return 'This email is already taken';
     } catch (error) {
       console.error(error);
     }
@@ -105,12 +128,44 @@ const EditProfileScreen = ({ navigation }) => {
       : setAvatar(pickAvatarUri);
   }, []);
 
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
+
+  const isAdminRoles = user.role.id === 1 ? roles : roles.slice(1);
+
+  const _selectRole = () => (
+    <List.Section>
+      <List.Accordion
+        title={selectedRole.name}
+        expanded={expandedList}
+        onPress={_handleListPress}
+      >
+        <ScrollView style={{ height: 100 }}>
+          {isAdminRoles.map((role) => (
+            <List.Item
+              key={role.id}
+              title={role.name}
+              onPress={() => {
+                setSelectedRole(role);
+                _handleListPress();
+              }}
+            />
+          ))}
+        </ScrollView>
+      </List.Accordion>
+    </List.Section>
+  );
+
   return (
     <ScreenWrapper
       withScrollView
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
+      {_snackbar()}
       <FormCard title="Edit your account info">
         <View style={styles.pfp}>
           <TouchableOpacity onPress={_pickImage} disabled={loading}>
@@ -189,6 +244,7 @@ const EditProfileScreen = ({ navigation }) => {
           }}
         />
 
+        {_selectRole()}
         <Button
           disabled={loading}
           loading={loading}
