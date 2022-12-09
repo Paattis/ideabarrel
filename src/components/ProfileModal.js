@@ -28,9 +28,10 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const { user, setSignedIn, updateProfile, setUpdateProfile } =
+    useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
-  const { user, setSignedIn } = useContext(MainContext);
-  const { deleteUser } = useUser();
+  const { deleteUser, putUser } = useUser();
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
   const nav = useNavigation();
@@ -51,6 +52,27 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const _editProfile = () => {
     _editProfileScreen();
     hideModal();
+  };
+
+  const _promoteToAdmin = async () => {
+    if (posterInfo.role.id === 1) {
+      setErrorMsg('User is already an administrator.');
+      _onToggleSnackBar();
+      _closeMenu();
+      return;
+    }
+
+    const roleId = { role_id: 1 };
+    try {
+      await putUser(roleId, posterInfo.id);
+      setErrorMsg('User promoted to administrator.');
+      _onToggleSnackBar();
+      _closeMenu();
+      setUpdateProfile(updateProfile + 1);
+    } catch (error) {
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
+    }
   };
 
   const _deleteUser = async () => {
@@ -114,16 +136,23 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       {isUserProfile && (
         <>
           <Menu.Item
-            onPress={_editProfile}
-            title="Edit"
-            leadingIcon="square-edit-outline"
-          />
-          <Menu.Item
             onPress={_logOut}
             title="Log out"
             leadingIcon="logout-variant"
           />
+          <Menu.Item
+            onPress={_editProfile}
+            title="Edit"
+            leadingIcon="square-edit-outline"
+          />
         </>
+      )}
+      {isAdmin && (
+        <Menu.Item
+          onPress={_promoteToAdmin}
+          title="Promote to admin"
+          leadingIcon="shield-account"
+        />
       )}
       <Menu.Item
         onPress={_showDialog}
