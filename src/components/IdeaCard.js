@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import {
   Button,
   Card,
@@ -19,6 +19,7 @@ import Like from '../components/Like';
 import CommentCount from '../components/CommentCount';
 import UserDetails from './UserDetails';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import Tags from './Tags';
 
 const Media = ({ navigation, idea, ideaScreen }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -103,6 +104,15 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       </Dialog>
     </Portal>
   );
+  const _tags = () =>
+    idea?.tags?.map((tags, id) => (
+      <Tags
+        key={id}
+        idea={tags.tag.name}
+        styleText={styles.tagsText}
+        tagStyle={styles.tagsStyle}
+      />
+    ));
 
   const _menu = () => (
     <Menu
@@ -122,7 +132,6 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       />
     </Menu>
   );
-
   return !ideaScreen ? (
     <>
       {_dialog()}
@@ -135,7 +144,12 @@ const Media = ({ navigation, idea, ideaScreen }) => {
         />
         <Card.Content style={styles.content}>
           <View style={styles.topContainer}>
-            <Text>*tags*</Text>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {_tags()}
+            </ScrollView>
             <Text>{ideaDate}</Text>
           </View>
           <Divider bold style={styles.divider} />
@@ -162,7 +176,9 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       />
       <Card.Content style={expandedStyle.content}>
         <View style={styles.topContainer}>
-          <Text>*tags*</Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {_tags()}
+          </ScrollView>
           <Text>{ideaDate}</Text>
         </View>
         <Divider bold style={styles.divider} />
@@ -210,6 +226,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
+  },
+  tagsText: { fontSize: 10 },
+  tagsStyle: {
+    alignItems: 'center',
+    borderRadius: 5,
+    padding: 4,
+    marginRight: 10,
   },
 });
 
