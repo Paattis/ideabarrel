@@ -29,13 +29,12 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showDialog, setDialog] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [tags, setTags] = useState();
 
   const { isThemeDark } = useContext(PreferencesContext);
   const { user, setSignedIn } = useContext(MainContext);
 
   const { deleteUser } = useUser();
-  const { getAllTags } = useTag();
+  const { tags, getAllTags } = useTag();
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
   const nav = useNavigation();
@@ -55,17 +54,9 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     _editProfileScreen();
     hideModal();
   };
-  const _getTags = async () => {
-    try {
-      if (posterInfo) {
-        const tags = await getAllTags();
-        setTags(tags);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => _getTags, [posterInfo.id]);
+  useEffect(() => {
+    getAllTags();
+  }, [posterInfo.id]);
   const _tags = () =>
     tags?.map((tags, id) =>
       tags.users?.map((tag) => {
@@ -76,7 +67,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
               idea={tags.name}
               styleText={styles.tagsText}
               tagStyle={styles.tagsStyle}
-            ></Tags>
+            />
           );
         }
       })

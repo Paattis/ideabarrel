@@ -111,7 +111,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
         idea={tags.tag.name}
         styleText={styles.tagsText}
         tagStyle={styles.tagsStyle}
-      ></Tags>
+      />
     ));
 
   const _menu = () => (

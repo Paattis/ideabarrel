@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { Text } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 
