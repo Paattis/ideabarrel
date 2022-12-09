@@ -138,6 +138,13 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       onDismiss={_closeMenu}
       anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
     >
+      {isAdmin && isUserProfile && (
+        <Menu.Item
+          onPress={_addRole}
+          title="Add new role"
+          leadingIcon="plus-circle-outline"
+        />
+      )}
       {isUserProfile && (
         <>
           <Menu.Item
@@ -157,13 +164,6 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           onPress={_promoteToAdmin}
           title="Promote to admin"
           leadingIcon="shield-account"
-        />
-      )}
-      {isAdmin && (
-        <Menu.Item
-          onPress={_addRole}
-          title="Add new role"
-          leadingIcon="plus-circle-outline"
         />
       )}
       <Menu.Item
