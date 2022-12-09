@@ -100,11 +100,13 @@ const Comment = ({ comment }) => {
           leadingIcon="square-edit-outline"
         />
       )}
-      <Menu.Item
-        onPress={_showDialog}
-        title="Remove"
-        leadingIcon="close-circle"
-      />
+      {(isUserComment || isAdmin) && (
+        <Menu.Item
+          onPress={_showDialog}
+          title="Remove"
+          leadingIcon="close-circle"
+        />
+      )}
     </Menu>
   );
 
