@@ -5,9 +5,12 @@ import { NavigationHeader, FormInput } from '../components';
 import { PropTypes } from 'prop-types';
 import { useComment } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
+import { Snackbar } from 'react-native-paper';
 
 const AddCommentScreen = ({ route: { params }, navigation }) => {
   const [loading, setLoading] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postComment } = useComment();
@@ -18,6 +21,9 @@ const AddCommentScreen = ({ route: { params }, navigation }) => {
 
   const _goBack = () => navigation.pop();
 
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
+
   const _addComment = async (data) => {
     try {
       Keyboard.dismiss();
@@ -26,14 +32,22 @@ const AddCommentScreen = ({ route: { params }, navigation }) => {
       setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     } finally {
       setLoading(false);
     }
   };
 
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
+
   return (
     <SafeAreaView>
+      {_snackbar()}
       <NavigationHeader
         onPressCancel={_goBack}
         onSubmit={handleSubmit(_addComment)}

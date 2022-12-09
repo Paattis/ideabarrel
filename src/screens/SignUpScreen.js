@@ -1,26 +1,36 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { FormInput, ScreenWrapper } from '../components';
 import FormCard from '../components/FormCard';
 import { PropTypes } from 'prop-types';
-import { Button, Avatar, Snackbar } from 'react-native-paper';
+import { Button, Avatar, Snackbar, List } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { useUser } from '../hooks/useUser';
 import BgSVG from '../../assets/svg/top-left-bg.svg';
 import pickAvatarImg from '../../assets/pick-avatar.png';
 import * as ImagePicker from 'expo-image-picker';
 import { EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from '../utils/constants';
+import { useRole } from '../hooks/useRole';
 
 const SignUpScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState();
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [expandedList, setExpandedList] = useState(false);
+  const [selectedRole, setSelectedRole] = useState({ name: 'Select a role' });
 
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postUser, checkEmail } = useUser();
+  const { roles } = useRole();
 
   const password = watch('password');
 
@@ -28,6 +38,8 @@ const SignUpScreen = ({ navigation }) => {
 
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
+
+  const _handleListPress = () => setExpandedList(!expandedList);
 
   const _pickImage = async () => {
     const options = {
@@ -45,8 +57,7 @@ const SignUpScreen = ({ navigation }) => {
 
     const formData = new FormData();
 
-    const roleId = 1;
-    formData.append('role_id', roleId);
+    formData.append('role_id', selectedRole.id);
 
     if (avatar) {
       const imageName = avatar.split('/').pop();
@@ -90,6 +101,29 @@ const SignUpScreen = ({ navigation }) => {
     </Snackbar>
   );
 
+  const _selectRole = () => (
+    <List.Section>
+      <List.Accordion
+        title={selectedRole.name}
+        expanded={expandedList}
+        onPress={_handleListPress}
+      >
+        <ScrollView style={{ height: 100 }}>
+          {roles.slice(1).map((role) => (
+            <List.Item
+              key={roles.id}
+              title={role.name}
+              onPress={() => {
+                setSelectedRole(role);
+                _handleListPress();
+              }}
+            />
+          ))}
+        </ScrollView>
+      </List.Accordion>
+    </List.Section>
+  );
+
   return (
     <ScreenWrapper
       withScrollView
@@ -98,6 +132,7 @@ const SignUpScreen = ({ navigation }) => {
     >
       {_snackbar()}
       <BgSVG style={styles.bgShape} />
+
       <FormCard title="Create your new account">
         <View style={styles.pfp}>
           <TouchableOpacity onPress={_pickImage} disabled={loading}>
@@ -107,6 +142,7 @@ const SignUpScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
+
         <FormInput
           testID="email_input"
           leftIcon="email"
@@ -178,6 +214,7 @@ const SignUpScreen = ({ navigation }) => {
           }}
         />
 
+        {_selectRole()}
         <Button
           disabled={loading}
           loading={loading}
