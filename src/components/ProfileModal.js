@@ -33,8 +33,14 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const { user, setSignedIn, updateProfile, setUpdateProfile } =
     useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
+
+  const { user, setSignedIn } = useContext(MainContext);
+
+
+  const { tags, getAllTags } = useTag();
   const { deleteUser, putUser } = useUser();
   const { tags, getAllTags } = useTag();
+
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
   const nav = useNavigation();
