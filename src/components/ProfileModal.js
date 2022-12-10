@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import {
   Button,
@@ -21,6 +21,8 @@ import { ACCESS_TOKEN } from '../utils/constants';
 import * as SecureStore from 'expo-secure-store';
 import PropTypes from 'prop-types';
 import ThemeToggle from './ThemeToggle';
+import { useTag } from '../hooks/useTag';
+import Tags from './Tags';
 
 const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -32,15 +34,15 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
   const { deleteUser, putUser } = useUser();
+  const { tags, getAllTags } = useTag();
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
   const nav = useNavigation();
-
   const backGroundStyle = {
     backgroundColor: theme.colors.background,
   };
   const boxBackGroundStyle = {
-    backgroundColor: theme.colors.inversePrimary,
+    backgroundColor: theme.colors.primary,
   };
 
   const isUserProfile = posterInfo.id === user.id;
@@ -62,6 +64,24 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     _editProfileScreen();
     hideModal();
   };
+  useEffect(() => {
+    getAllTags();
+  }, [posterInfo.id]);
+  const _tags = () =>
+    tags?.map((tags, id) =>
+      tags.users?.map((tag) => {
+        if (tag.user.id === posterInfo.id) {
+          return (
+            <Tags
+              key={id}
+              idea={tags.name}
+              styleText={styles.tagsText}
+              tagStyle={styles.tagsStyle}
+            />
+          );
+        }
+      })
+    );
 
   const _promoteToAdmin = async () => {
     if (posterInfo.role.id === 1) {
@@ -99,7 +119,6 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     await SecureStore.deleteItemAsync(ACCESS_TOKEN);
     setSignedIn(false);
   };
-
   const _editProfileScreen = () => nav.navigate('Edit Profile');
   const _addRole = () => {
     hideModal();
@@ -190,12 +209,8 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           <Text style={styles.nameText}>{posterInfo?.name}</Text>
           <Text style={styles.roleText}>{posterInfo?.role?.name}</Text>
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
-            <Text style={styles.titleText}>Profile tags</Text>
-            <View style={styles.tagContainerStyle}>
-              <View style={styles.tagsStyle}>
-                <Text style={styles.tagsText}>tags</Text>
-              </View>
-            </View>
+            <Text style={styles.titleText}>Tags I subscribed to:</Text>
+            <View style={styles.tagContainerStyle}>{_tags()}</View>
           </View>
         </View>
       </Modal>
@@ -228,11 +243,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   titleText: {
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
   },
-  tagsText: { fontSize: 15 },
   roleText: { fontSize: 15, marginBottom: 10 },
+  tagsText: { fontSize: 15 },
+  tagContainerStyle: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: 10,
+  },
   tagsStyle: {
     alignItems: 'center',
     backgroundColor: 'grey',
@@ -240,11 +262,6 @@ const styles = StyleSheet.create({
     padding: 4,
     marginRight: 10,
     marginTop: 10,
-  },
-  tagContainerStyle: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
   },
   boxStyle: {
     padding: 10,
@@ -266,5 +283,6 @@ ProfileModal.propTypes = {
   groups: PropTypes.string,
   children: PropTypes.node,
   posterInfo: PropTypes.object,
+  userTags: PropTypes.object,
 };
 export default ProfileModal;

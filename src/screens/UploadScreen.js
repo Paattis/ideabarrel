@@ -20,19 +20,45 @@ import { useForm } from 'react-hook-form';
 import { useIdea } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
+import { useTag } from '../hooks/useTag';
 
 const UploadScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showDialog, setDialog] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [addedTags, setAddedTags] = useState([]);
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postIdea } = useIdea();
+  const { tags } = useTag();
   const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
 
   const title = watch('title');
   const content = watch('content');
+  const _tags = () =>
+    tags?.map((tag, id) => {
+      const isActive = addedTags.includes(tag.id);
+      return (
+        <Button
+          labelStyle={{ fontSize: 18 }}
+          style={{ marginBottom: 10, borderRadius: 100 }}
+          mode={isActive ? 'contained' : 'outlined'}
+          key={id}
+          onPress={() => {
+            if (!isActive) {
+              setAddedTags((addedTags) => [...addedTags, tag.id]);
+            } else {
+              setAddedTags((tags) =>
+                tags.filter((addedTags) => addedTags !== tag.id)
+              );
+            }
+          }}
+        >
+          {tag.name}
+        </Button>
+      );
+    });
 
   const _showDialog = () => setDialog(true);
   const _hideDialog = () => setDialog(false);
@@ -45,9 +71,7 @@ const UploadScreen = ({ navigation }) => {
   const _post = async (data) => {
     Keyboard.dismiss();
 
-    // placeholder
-    const tags = [1];
-    data.tags = tags;
+    data.tags = addedTags;
 
     try {
       setLoading(true);
@@ -134,6 +158,16 @@ const UploadScreen = ({ navigation }) => {
             }}
           />
         </ScrollView>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+          }}
+        >
+          {_tags()}
+        </View>
       </View>
     </SafeAreaView>
   );
