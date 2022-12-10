@@ -8,17 +8,25 @@ import {
 import { PropTypes } from 'prop-types';
 import { FAB, IdeaCard } from '../components';
 import { useIdea } from '../hooks';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, List } from 'react-native-paper';
 import { MainContext } from '../contexts/MainContext';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
 import BgSVG from '../../assets/svg/top-bottom-bg.svg';
+import {
+  MOST_COMMENTED_IDEAS,
+  MOST_LIKED_IDEAS,
+  NEWEST_IDEAS,
+  OLDEST_IDEAS,
+} from '../utils/constants';
 
 const MainScreen = ({ navigation }) => {
   const [isFabExtended, setIsFabExtended] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
-  const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
+  const { updateIdeas, setUpdateIdeas, setIdeaSortOrder } =
+    useContext(MainContext);
   const { ideas, loading } = useIdea();
   const { isThemeDark } = useContext(PreferencesContext);
 
@@ -46,12 +54,71 @@ const MainScreen = ({ navigation }) => {
 
   const _newIdeaScreen = () => navigation.navigate('New Idea');
 
+  const _handleSortMenu = () => setExpanded(!expanded);
+
+  const _sortOptions = () => (
+    <List.Section style={{ marginHorizontal: 20 }}>
+      <List.Accordion
+        left={(props) => <List.Icon {...props} icon="sort-variant" />}
+        title="Sort Ideas"
+        expanded={expanded}
+        onPress={_handleSortMenu}
+      >
+        <List.Item
+          style={{ backgroundColor: theme.colors.primaryContainer }}
+          left={(props) => <List.Icon {...props} icon="thumb-up" />}
+          onPress={() => {
+            setIdeaSortOrder(MOST_LIKED_IDEAS);
+            setUpdateIdeas(updateIdeas + 1);
+            _handleSortMenu();
+          }}
+          title="Most liked"
+        />
+        <List.Item
+          style={{ backgroundColor: theme.colors.primaryContainer }}
+          left={(props) => <List.Icon {...props} icon="comment" />}
+          onPress={() => {
+            setIdeaSortOrder(MOST_COMMENTED_IDEAS);
+            setUpdateIdeas(updateIdeas + 1);
+            _handleSortMenu();
+          }}
+          title="Most commented"
+        />
+        <List.Item
+          style={{ backgroundColor: theme.colors.primaryContainer }}
+          left={(props) => (
+            <List.Icon {...props} icon="sort-calendar-descending" />
+          )}
+          onPress={() => {
+            setIdeaSortOrder(NEWEST_IDEAS);
+            setUpdateIdeas(updateIdeas + 1);
+            _handleSortMenu();
+          }}
+          title="Most recent"
+        />
+        <List.Item
+          style={{ backgroundColor: theme.colors.primaryContainer }}
+          left={(props) => (
+            <List.Icon {...props} icon="sort-calendar-ascending" />
+          )}
+          onPress={() => {
+            setIdeaSortOrder(OLDEST_IDEAS);
+            setUpdateIdeas(updateIdeas + 1);
+            _handleSortMenu();
+          }}
+          title="Oldest"
+        />
+      </List.Accordion>
+    </List.Section>
+  );
+
   return (
     <>
       <SafeAreaView>
         <BgSVG style={styles.bgShape} />
         {!loading ? (
           <FlatList
+            ListHeaderComponent={_sortOptions}
             refreshControl={_refreshControl()}
             onScroll={_onScroll}
             showsVerticalScrollIndicator={false}

@@ -30,11 +30,16 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const { user, setSignedIn, updateProfile, setUpdateProfile } =
+    useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
+
   const { user, setSignedIn } = useContext(MainContext);
 
-  const { deleteUser } = useUser();
+
   const { tags, getAllTags } = useTag();
+  const { deleteUser, putUser } = useUser();
+
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
   const nav = useNavigation();
@@ -46,9 +51,19 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   };
 
   const isUserProfile = posterInfo.id === user.id;
+  const isAdmin = user?.role?.id === 1;
 
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
+
+  const _openMenu = () => setShowMenu(true);
+  const _closeMenu = () => setShowMenu(false);
+
+  const _showDialog = () => {
+    _closeMenu();
+    setDialog(true);
+  };
+  const _hideDialog = () => setDialog(false);
 
   const _editProfile = () => {
     _editProfileScreen();
@@ -73,6 +88,27 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       })
     );
 
+  const _promoteToAdmin = async () => {
+    if (posterInfo.role.id === 1) {
+      setErrorMsg('User is already an administrator.');
+      _onToggleSnackBar();
+      _closeMenu();
+      return;
+    }
+
+    const roleId = { role_id: 1 };
+    try {
+      await putUser(roleId, posterInfo.id);
+      setErrorMsg('User promoted to administrator.');
+      _onToggleSnackBar();
+      _closeMenu();
+      setUpdateProfile(updateProfile + 1);
+    } catch (error) {
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
+    }
+  };
+
   const _deleteUser = async () => {
     try {
       await deleteUser(user.id);
@@ -89,15 +125,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     setSignedIn(false);
   };
   const _editProfileScreen = () => nav.navigate('Edit Profile');
-
-  const _openMenu = () => setShowMenu(true);
-  const _closeMenu = () => setShowMenu(false);
-
-  const _showDialog = () => {
+  const _addRole = () => {
+    hideModal();
     _closeMenu();
-    setDialog(true);
+    nav.navigate('Add Role');
   };
-  const _hideDialog = () => setDialog(false);
 
   const _snackbar = () => (
     <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
@@ -130,19 +162,37 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       onDismiss={_closeMenu}
       anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
     >
-      <Menu.Item
-        onPress={_editProfile}
-        title="Edit"
-        leadingIcon="square-edit-outline"
-      />
-      <Menu.Item
-        onPress={_logOut}
-        title="Log out"
-        leadingIcon="logout-variant"
-      />
+      {isAdmin && isUserProfile && (
+        <Menu.Item
+          onPress={_addRole}
+          title="Add new role"
+          leadingIcon="plus-circle-outline"
+        />
+      )}
+      {isUserProfile && (
+        <>
+          <Menu.Item
+            onPress={_editProfile}
+            title="Edit"
+            leadingIcon="square-edit-outline"
+          />
+          <Menu.Item
+            onPress={_logOut}
+            title="Log out"
+            leadingIcon="logout-variant"
+          />
+        </>
+      )}
+      {isAdmin && !isUserProfile && (
+        <Menu.Item
+          onPress={_promoteToAdmin}
+          title="Promote to admin"
+          leadingIcon="shield-account"
+        />
+      )}
       <Menu.Item
         onPress={_showDialog}
-        title="Remove"
+        title="Delete"
         leadingIcon="close-circle"
       />
     </Menu>
@@ -157,7 +207,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       >
         <View style={styles.profileFunctions}>
           {isUserProfile && <ThemeToggle />}
-          {isUserProfile && _menu()}
+          {(isUserProfile || isAdmin) && _menu()}
         </View>
         <View style={styles.contentContainerStyleColumn}>
           {children}
