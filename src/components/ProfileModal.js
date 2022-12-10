@@ -39,6 +39,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
 
   const { tags, getAllTags } = useTag();
   const { deleteUser, putUser } = useUser();
+  const { tags, getAllTags } = useTag();
 
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
@@ -214,7 +215,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           <Text style={styles.nameText}>{posterInfo?.name}</Text>
           <Text style={styles.roleText}>{posterInfo?.role?.name}</Text>
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
-            <Text style={styles.titleText}>Profile tags</Text>
+            <Text style={styles.titleText}>Tags I subscribed to:</Text>
             <View style={styles.tagContainerStyle}>{_tags()}</View>
           </View>
         </View>
@@ -248,6 +249,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   titleText: {
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
   },
