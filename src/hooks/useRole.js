@@ -12,6 +12,7 @@ export const useRole = () => {
     Authorization: 'Bearer ' + user?.token,
   };
 
+  // Get all created roles
   const getRoles = async () => {
     const options = {
       headers: {
@@ -24,6 +25,7 @@ export const useRole = () => {
     setRoles(roles);
   };
 
+  // Create new role
   const postRole = async (data) => {
     const options = {
       method: 'POST',

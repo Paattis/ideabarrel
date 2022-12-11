@@ -11,6 +11,7 @@ export const useTag = () => {
     Authorization: 'Bearer ' + user?.token,
   };
 
+  // Get all of the existing tags, and include users who have subscribed to them
   const getAllTags = async () => {
     const options = {
       headers: { ...authorizationHeaders },
@@ -32,6 +33,7 @@ export const useTag = () => {
     return await customFetch(BASE_URL + 'tags', options);
   };
 
+  // Subscribe user to specific tag
   const postUserTag = async (userId, tagId) => {
     const options = {
       method: 'POST',
@@ -43,6 +45,7 @@ export const useTag = () => {
     );
   };
 
+  // Unsubscribe user from specific tag
   const deleteUserTag = async (userId, tagId) => {
     const options = {
       method: 'DELETE',

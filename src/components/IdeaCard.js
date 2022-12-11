@@ -46,9 +46,11 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       })
     : 'date unavailable';
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Toggle dialog visibility
   const _showDialog = () => {
     _closeMenu();
     setDialog(true);
@@ -57,11 +59,13 @@ const Media = ({ navigation, idea, ideaScreen }) => {
 
   const _ideaScreen = () => navigation.navigate('Idea', ideaIdParam);
 
+  // Navigate to edit idea screen
   const _editIdea = () => {
     _closeMenu();
     navigation.navigate('Edit', ideaContentParams);
   };
 
+  // Remove idea
   const _removeIdea = async () => {
     try {
       await deleteIdea(idea.id);

@@ -31,11 +31,13 @@ const EditIdeaScreen = ({ route: { params }, navigation }) => {
 
   const titleInput = watch('title');
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
   const _goBack = () => navigation.pop();
 
+  // Edit existing idea
   const _edit = async (data) => {
     Keyboard.dismiss();
 

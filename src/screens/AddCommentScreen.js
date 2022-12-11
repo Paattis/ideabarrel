@@ -21,9 +21,11 @@ const AddCommentScreen = ({ route: { params }, navigation }) => {
 
   const _goBack = () => navigation.pop();
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Create new comment
   const _addComment = async (data) => {
     try {
       Keyboard.dismiss();

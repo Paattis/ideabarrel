@@ -20,9 +20,11 @@ const SingInScreen = () => {
   const { setSignedIn, setUser } = useContext(MainContext);
   const { postSignIn } = useAuth();
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Sign in to user's account
   const _signIn = async (data) => {
     try {
       setLoading(true);

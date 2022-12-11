@@ -18,9 +18,11 @@ const SubscribeTagScreen = ({ route, navigation }) => {
 
   const _goBack = () => navigation.pop();
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Subscribe to a tag
   const _subscribe = async (userId, tagId) => {
     try {
       await postUserTag(userId, tagId);
@@ -31,6 +33,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
     }
   };
 
+  // Unsubscribe from a tag
   const _unsubscribe = async (userId, tagId) => {
     try {
       await deleteUserTag(userId, tagId);
@@ -42,6 +45,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
     }
   };
 
+  // Filter subscribed tags
   const _getSubscribe = () => {
     tags?.map((tag) => {
       tag.users?.map((users) => {
@@ -52,6 +56,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
     });
   };
 
+  // Get all tags and highlight subscribed ones
   const _tags = () =>
     tags?.map((tag, id) => {
       const isActive = addedTags.includes(tag.id);
@@ -72,6 +77,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
       );
     });
 
+  // Update tags and ideas
   const _save = () => {
     setUpdateTags(updateTags + 1);
     _goBack();

@@ -36,6 +36,8 @@ const UploadScreen = ({ navigation }) => {
 
   const title = watch('title');
   const content = watch('content');
+
+  // Get all available tags and modify highlights depending on if chosen or not
   const _tags = () =>
     tags?.map((tag, id) => {
       const isActive = addedTags.includes(tag.id);
@@ -60,14 +62,17 @@ const UploadScreen = ({ navigation }) => {
       );
     });
 
+  // Toggle dialog visibility
   const _showDialog = () => setDialog(true);
   const _hideDialog = () => setDialog(false);
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
   const _goBack = () => navigation.pop();
 
+  // Upload new idea
   const _post = async (data) => {
     Keyboard.dismiss();
 

@@ -49,18 +49,22 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const isUserProfile = posterInfo.id === user.id;
   const isAdmin = user?.role?.id === 1;
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Toggle menu visibility
   const _openMenu = () => setShowMenu(true);
   const _closeMenu = () => setShowMenu(false);
 
+  // Toggle dialog visibility
   const _showDialog = () => {
     _closeMenu();
     setDialog(true);
   };
   const _hideDialog = () => setDialog(false);
 
+  // Edit user profile
   const _editProfile = () => {
     _editProfileScreen();
     hideModal();
@@ -70,6 +74,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     getAllTags();
   }, [updateTags]);
 
+  // Filter user's profile and create Tags components
   const _tags = () =>
     tags?.map((tags, id) =>
       tags.users?.map((tag) => {
@@ -86,6 +91,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       })
     );
 
+  // Promote user to administrator if not already
   const _promoteToAdmin = async () => {
     if (posterInfo.role.id === 1) {
       setErrorMsg('User is already an administrator.');
@@ -107,6 +113,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     }
   };
 
+  // Delete user
   const _deleteUser = async () => {
     try {
       await deleteUser(user.id);
@@ -118,25 +125,30 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     }
   };
 
+  // Logout and remove token from phone's storage
   const _logOut = async () => {
     await SecureStore.deleteItemAsync(ACCESS_TOKEN);
     setSignedIn(false);
   };
 
+  // Navigate to edit profile screen
   const _editProfileScreen = () => nav.navigate('Edit Profile');
 
+  // Navigate to add new role screen
   const _addRole = () => {
     hideModal();
     _closeMenu();
     nav.navigate('Add Role');
   };
 
+  // Navigate to add new tag screen
   const _addTag = () => {
     hideModal();
     _closeMenu();
     nav.navigate('Add Tag');
   };
 
+  // Navigate to subscribe tags screen
   const _subscribeTag = () => {
     hideModal();
     _closeMenu();

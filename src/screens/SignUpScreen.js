@@ -34,13 +34,17 @@ const SignUpScreen = ({ navigation }) => {
 
   const password = watch('password');
 
+  // Navigate to sign in screen
   const _signInScreen = () => navigation.navigate('Sign In');
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Handle role list
   const _handleListPress = () => setExpandedList(!expandedList);
 
+  // Image picker handler
   const _pickImage = async () => {
     const options = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -52,6 +56,7 @@ const SignUpScreen = ({ navigation }) => {
     if (!result.cancelled) setAvatar(result.uri);
   };
 
+  // Create new user account
   const _signUp = async (data) => {
     delete data.confirm_password;
 
@@ -86,6 +91,7 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
+  // Check if email is available
   const _validateEmail = async (value) => {
     try {
       const res = await checkEmail(value);
@@ -108,6 +114,7 @@ const SignUpScreen = ({ navigation }) => {
         expanded={expandedList}
         onPress={_handleListPress}
       >
+        {/* Remove admin role and list all available roles*/}
         <ScrollView style={{ height: 100 }}>
           {roles.slice(1).map((role) => (
             <List.Item

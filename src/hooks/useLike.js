@@ -10,6 +10,7 @@ export const useLike = () => {
     Authorization: 'Bearer ' + user?.token,
   };
 
+  // Get all likess
   const getAllLikes = async () => {
     const options = {
       headers: { ...authorizationHeaders },
@@ -17,6 +18,7 @@ export const useLike = () => {
     return await customFetch(BASE_URL + 'likes', options);
   };
 
+  // Get idea likes by the idea id
   const getLikesByIdeaId = async (ideaId) => {
     const options = {
       headers: {
@@ -28,6 +30,7 @@ export const useLike = () => {
     return await customFetch(`${BASE_URL}likes/idea/${ideaId}`, options);
   };
 
+  // Create new like
   const postLike = async (ideaId) => {
     const options = {
       method: 'POST',
@@ -36,6 +39,7 @@ export const useLike = () => {
     return await customFetch(`${BASE_URL}likes/idea/${ideaId}`, options);
   };
 
+  // Delete existing like
   const deleteLike = async (ideaId) => {
     const options = {
       method: 'DELETE',
