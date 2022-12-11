@@ -13,7 +13,9 @@ const AddTagScreen = ({ navigation }) => {
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
   const { postTag } = useTag();
+
   const name = watch('name');
+
   const _goBack = () => navigation.pop();
 
   const _onToggleSnackBar = () => setShowSnack(true);
@@ -54,7 +56,7 @@ const AddTagScreen = ({ navigation }) => {
         autoFocus
         style={styles.description}
         placeholderTextColor="#ababab"
-        placeholder="Write a tag"
+        placeholder="Write the tag name"
         control={control}
         fieldName="name"
         outlineStyle={styles.descriptionOutline}
@@ -62,11 +64,11 @@ const AddTagScreen = ({ navigation }) => {
         rules={{
           maxLength: {
             value: 20,
-            message: 'Tags maximum length is 20 characters',
+            message: "Tag's maximum length is 20 characters",
           },
         }}
       />
-      <FormInput
+      {/* <FormInput
         style={styles.description}
         placeholderTextColor="#ababab"
         placeholder="Write a description (optional)"
@@ -77,10 +79,10 @@ const AddTagScreen = ({ navigation }) => {
         rules={{
           maxLength: {
             value: 30,
-            message: 'description maximum length is 30 characters',
+            message: 'Description maximum length is 30 characters',
           },
         }}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

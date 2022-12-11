@@ -11,7 +11,8 @@ const MainProvider = ({ children }) => {
   const [updateIdeas, setUpdateIdeas] = useState(0);
   const [updateLikes, setUpdateLikes] = useState(0);
   const [updateProfile, setUpdateProfile] = useState(0);
-  const [subscribed, setSubscribed] = useState(0);
+  const [updateTags, setUpdateTags] = useState(0);
+
   const [ideaSortOrder, setIdeaSortOrder] = useState(NEWEST_IDEAS);
 
   return (
@@ -29,8 +30,8 @@ const MainProvider = ({ children }) => {
         setUpdateProfile,
         ideaSortOrder,
         setIdeaSortOrder,
-        subscribed,
-        setSubscribed,
+        updateTags,
+        setUpdateTags,
       }}
     >
       {children}

@@ -30,7 +30,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const { user, setSignedIn, updateProfile, setUpdateProfile, subscribed } =
+  const { user, setSignedIn, updateProfile, setUpdateProfile, updateTags } =
     useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
   const { deleteUser, putUser } = useUser();
@@ -65,9 +65,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     _editProfileScreen();
     hideModal();
   };
+
   useEffect(() => {
     getAllTags();
-  }, [posterInfo.id, subscribed]);
+  }, [updateTags]);
+
   const _tags = () =>
     tags?.map((tags, id) =>
       tags.users?.map((tag) => {
@@ -120,22 +122,27 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     await SecureStore.deleteItemAsync(ACCESS_TOKEN);
     setSignedIn(false);
   };
+
   const _editProfileScreen = () => nav.navigate('Edit Profile');
+
   const _addRole = () => {
     hideModal();
     _closeMenu();
     nav.navigate('Add Role');
   };
+
   const _addTag = () => {
     hideModal();
     _closeMenu();
     nav.navigate('Add Tag');
   };
+
   const _subscribeTag = () => {
     hideModal();
     _closeMenu();
-    nav.navigate('Subscribe Tag', { posterInfoId: posterInfo.id });
+    nav.navigate('Subscribe Tag', { userId: posterInfo.id });
   };
+
   const _snackbar = () => (
     <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
       {errorMsg}
@@ -225,7 +232,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           {children}
           <Text style={styles.nameText}>{posterInfo?.name}</Text>
           <Text style={styles.roleText}>{posterInfo?.role?.name}</Text>
-          {(isUserProfile || isAdmin) && (
+          {isUserProfile && (
             <Button
               style={{ margin: 10 }}
               icon="plus"
@@ -236,7 +243,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
             </Button>
           )}
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
-            <Text style={styles.titleText}>Tags I subscribed to:</Text>
+            <Text style={styles.titleText}>Tags subscribed to:</Text>
             <View style={styles.tagContainerStyle}>{_tags()}</View>
           </View>
         </View>

@@ -41,7 +41,7 @@ const UploadScreen = ({ navigation }) => {
       const isActive = addedTags.includes(tag.id);
       return (
         <Button
-          labelStyle={{ fontSize: 18 }}
+          labelStyle={{ fontSize: 14 }}
           style={{ marginBottom: 10, borderRadius: 100 }}
           mode={isActive ? 'contained' : 'outlined'}
           key={id}

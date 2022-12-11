@@ -4,8 +4,8 @@ const PASSWORD_REGEX = /(?=.*[\p{Lu}])(?=.*[0-9]).{8,}/u;
 const NAME_REGEX = /^[a-zA-ZäöüÄÖÜß ,.'-]+$/i;
 
 // API URLs
-const BASE_URL = 'https://a7db-84-231-3-156.eu.ngrok.io/';
-const PROFILE_IMG_URL = 'https://a7db-84-231-3-156.eu.ngrok.io/static/';
+const BASE_URL = 'https://e9d1-91-152-183-8.eu.ngrok.io/';
+const PROFILE_IMG_URL = 'https://e9d1-91-152-183-8.eu.ngrok.io/static/';
 
 // Access token key
 const ACCESS_TOKEN = 'access_token';

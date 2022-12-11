@@ -7,7 +7,8 @@ export const useIdea = () => {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { updateIdeas, user, ideaSortOrder } = useContext(MainContext);
+  const { updateIdeas, updateTags, user, ideaSortOrder } =
+    useContext(MainContext);
 
   const authorizationHeaders = {
     Authorization: 'Bearer ' + user?.token,
@@ -75,7 +76,7 @@ export const useIdea = () => {
 
   useEffect(() => {
     getIdeas();
-  }, [updateIdeas]);
+  }, [updateIdeas, updateTags]);
 
   return {
     loading,

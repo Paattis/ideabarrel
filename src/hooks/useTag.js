@@ -5,10 +5,10 @@ import { MainContext } from '../contexts/MainContext';
 
 export const useTag = () => {
   const [tags, setTags] = useState();
-  const { updateIdeas, user } = useContext(MainContext);
+  const { updateIdeas, updateTags, user } = useContext(MainContext);
 
   const authorizationHeaders = {
-    Authorization: 'Bearer ' + user.token,
+    Authorization: 'Bearer ' + user?.token,
   };
 
   const getAllTags = async () => {
@@ -55,7 +55,7 @@ export const useTag = () => {
   };
   useEffect(() => {
     getAllTags();
-  }, [updateIdeas]);
+  }, [updateIdeas, updateTags]);
 
   return {
     tags,
