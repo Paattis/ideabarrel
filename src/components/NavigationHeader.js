@@ -13,15 +13,17 @@ const NavigationHeader = ({
   return (
     <View style={styles.header}>
       <IconButton size={32} icon="close" onPress={onPressCancel} />
-      <Button
-        disabled={disableButton}
-        mode="contained"
-        style={styles.postButton}
-        onPress={onSubmit}
-        loading={loading}
-      >
-        {buttonText}
-      </Button>
+      {buttonText && (
+        <Button
+          disabled={disableButton}
+          mode="contained"
+          style={styles.postButton}
+          onPress={onSubmit}
+          loading={loading}
+        >
+          {buttonText}
+        </Button>
+      )}
     </View>
   );
 };
