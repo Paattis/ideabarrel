@@ -22,11 +22,13 @@ const EditCommentScreen = ({ route: { params }, navigation }) => {
 
   const comment = watch('comment');
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
   const _goBack = () => navigation.pop();
 
+  // Edit existing comment
   const _editComment = async (data) => {
     try {
       Keyboard.dismiss();

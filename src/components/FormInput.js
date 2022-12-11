@@ -3,6 +3,7 @@ import { HelperText, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { Controller } from 'react-hook-form';
 
+// Form input user to validate inputs throughout the app
 const FormInput = ({
   style,
   multiline,

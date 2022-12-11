@@ -26,9 +26,11 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
 
   const ref = useRef(null);
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Scroll to the top of the screen
   const _onScrollUp = () => {
     ref.current?.scrollTo({
       y: 0,
@@ -36,10 +38,12 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
     });
   };
 
+  // Navigate to add new comment screen
   const _addCommentScreen = () => {
     navigation.navigate('Add Comment', addCommentParams);
   };
 
+  // Get idea by idea id
   const _getIdea = async () => {
     try {
       setLoading(true);

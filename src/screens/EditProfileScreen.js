@@ -21,7 +21,7 @@ import {
   PASSWORD_REGEX,
   PROFILE_IMG_URL,
 } from '../utils/constants';
-import { useRole } from '../hooks/useRole';
+import { useRole } from '../hooks';
 
 const EditProfileScreen = ({ navigation }) => {
   const pickAvatarUri = Image.resolveAssetSource(pickAvatarImg)?.uri;
@@ -55,11 +55,14 @@ const EditProfileScreen = ({ navigation }) => {
 
   const _goBack = () => navigation.pop();
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Handle list
   const _handleListPress = () => setExpandedList(!expandedList);
 
+  // Image picker handler
   const _pickImage = async () => {
     const options = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -71,6 +74,7 @@ const EditProfileScreen = ({ navigation }) => {
     if (!result.cancelled) setAvatar(result.uri);
   };
 
+  // Edit user's avatar image
   const _editProfileImg = async () => {
     const formData = new FormData();
 
@@ -86,6 +90,7 @@ const EditProfileScreen = ({ navigation }) => {
     await putUserProfileImg(formData, user.id);
   };
 
+  // Edit user's info
   const _editProfile = async (data) => {
     delete data.confirm_password;
     if (data.password === '') delete data.password;
@@ -112,6 +117,7 @@ const EditProfileScreen = ({ navigation }) => {
     }
   };
 
+  // Check email availability if it's changed
   const _validateEmail = async (value) => {
     try {
       const res = await checkEmail(value);
@@ -134,6 +140,7 @@ const EditProfileScreen = ({ navigation }) => {
     </Snackbar>
   );
 
+  // Remove admin role if the user is not an admin
   const isAdminRoles = user.role.id === 1 ? roles : roles.slice(1);
 
   const _selectRole = () => (
@@ -143,6 +150,7 @@ const EditProfileScreen = ({ navigation }) => {
         expanded={expandedList}
         onPress={_handleListPress}
       >
+        {/* List all Available roles */}
         <ScrollView style={{ height: 100 }}>
           {isAdminRoles.map((role) => (
             <List.Item

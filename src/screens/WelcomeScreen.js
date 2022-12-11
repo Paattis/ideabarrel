@@ -27,9 +27,11 @@ const WelcomeScreen = ({ navigation }) => {
     backgroundColor: theme.colors.background,
   };
 
+  // Navigate to sign up or sign in screens
   const _registerScreen = () => navigation.navigate('Sign Up');
   const _signInScreen = () => navigation.navigate('Sign In');
 
+  // Authenticate user if token is saved on the device
   const _authUser = async () => {
     const token = await SecureStore.getItemAsync(ACCESS_TOKEN);
     if (!token) return;

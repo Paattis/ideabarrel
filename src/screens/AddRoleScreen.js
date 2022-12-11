@@ -4,7 +4,7 @@ import { Snackbar } from 'react-native-paper';
 import { FormInput, NavigationHeader } from '../components';
 import { PropTypes } from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { useRole } from '../hooks/useRole';
+import { useRole } from '../hooks';
 
 const AddRoleScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -18,9 +18,11 @@ const AddRoleScreen = ({ navigation }) => {
 
   const _goBack = () => navigation.pop();
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Create new role
   const _addRole = async (data) => {
     Keyboard.dismiss();
 

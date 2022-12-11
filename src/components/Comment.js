@@ -32,6 +32,7 @@ const Comment = ({ comment }) => {
   const isUserComment = user.id === comment.user.id;
   const isAdmin = user?.role?.id === 1;
 
+  // Format comment date
   const ideaDate = comment.created_at
     ? formatDistanceToNow(new Date(comment.created_at), {
         addSuffix: true,
@@ -43,9 +44,11 @@ const Comment = ({ comment }) => {
     content: comment.content,
   };
 
+  // Toggle snack bar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Remove comment
   const _removeComment = async () => {
     try {
       await deleteComment(comment.id);
@@ -57,11 +60,13 @@ const Comment = ({ comment }) => {
     }
   };
 
+  // Edit comment
   const _editComment = () => {
     _closeMenu();
     nav.navigate('Edit Comment', params);
   };
 
+  // Toggle menu visibility
   const _openMenu = () => setShowMenu(true);
   const _closeMenu = () => setShowMenu(false);
 

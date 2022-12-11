@@ -10,6 +10,7 @@ export const useUser = () => {
     Authorization: 'Bearer ' + user?.token,
   };
 
+  // Get user by user id
   const getUserById = async (userId) => {
     const options = {
       headers: { Authorization: 'Bearer ' + user.token },
@@ -17,6 +18,7 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}`, options);
   };
 
+  // Check if email is available
   const checkEmail = async (email) => {
     const options = {
       method: 'POST',
@@ -29,6 +31,7 @@ export const useUser = () => {
     return await customFetch(BASE_URL + 'users/email/free', options);
   };
 
+  // Create new user
   const postUser = async (data) => {
     const options = {
       method: 'POST',
@@ -42,6 +45,7 @@ export const useUser = () => {
     return await customFetch(BASE_URL + 'users', options);
   };
 
+  // Edit user info
   const putUser = async (data, userId) => {
     const options = {
       method: 'PUT',
@@ -55,6 +59,7 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}`, options);
   };
 
+  // Delete user
   const deleteUser = async (userId) => {
     const options = {
       method: 'DELETE',
@@ -67,6 +72,7 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}`, options);
   };
 
+  // Edit user's avatar image
   const putUserProfileImg = async (data, userId) => {
     const options = {
       method: 'PUT',

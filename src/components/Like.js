@@ -14,11 +14,14 @@ const Like = ({ ideaId }) => {
   const { user, updateLikes, setUpdateLikes } = useContext(MainContext);
   const { getLikesByIdeaId, postLike, deleteLike } = useLike();
 
+  // Format like count
   const likesFormatted = numeral(likes).format('0a');
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Get idea likes
   const _getLikes = async () => {
     try {
       if (ideaId) {
@@ -35,6 +38,7 @@ const Like = ({ ideaId }) => {
     }
   };
 
+  // Like an idea
   const _like = async () => {
     try {
       const res = await postLike(ideaId);
@@ -48,6 +52,7 @@ const Like = ({ ideaId }) => {
     }
   };
 
+  // Remove like from idea
   const _unlike = async () => {
     try {
       const res = await deleteLike(ideaId);

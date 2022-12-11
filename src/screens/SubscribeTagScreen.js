@@ -16,11 +16,17 @@ const SubscribeTagScreen = ({ route, navigation }) => {
 
   const { userId } = route.params;
 
-  const _goBack = () => navigation.pop();
+  // Go back and update
+  const _goBack = () => {
+    setUpdateTags(updateTags + 1);
+    navigation.pop();
+  };
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Subscribe to a tag
   const _subscribe = async (userId, tagId) => {
     try {
       await postUserTag(userId, tagId);
@@ -31,6 +37,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
     }
   };
 
+  // Unsubscribe from a tag
   const _unsubscribe = async (userId, tagId) => {
     try {
       await deleteUserTag(userId, tagId);
@@ -42,6 +49,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
     }
   };
 
+  // Filter subscribed tags
   const _getSubscribe = () => {
     tags?.map((tag) => {
       tag.users?.map((users) => {
@@ -52,6 +60,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
     });
   };
 
+  // Get all tags and highlight subscribed ones
   const _tags = () =>
     tags?.map((tag, id) => {
       const isActive = addedTags.includes(tag.id);
@@ -72,11 +81,6 @@ const SubscribeTagScreen = ({ route, navigation }) => {
       );
     });
 
-  const _save = () => {
-    setUpdateTags(updateTags + 1);
-    _goBack();
-  };
-
   useEffect(() => {
     _getSubscribe();
   }, [userId, tags]);
@@ -90,11 +94,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {_snackbar()}
-      <NavigationHeader
-        onPressCancel={_goBack}
-        onSubmit={_save}
-        buttonText="Save"
-      />
+      <NavigationHeader onPressCancel={_goBack} />
       <Text style={{ margin: 10 }}>
         Subscribe or unsubscribe from a tag by clicking on it.
       </Text>

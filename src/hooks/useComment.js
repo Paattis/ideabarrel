@@ -10,6 +10,7 @@ export const useComment = () => {
     Authorization: 'Bearer ' + user?.token,
   };
 
+  // Post new comment
   const postComment = async (data, ideaId) => {
     const options = {
       method: 'POST',
@@ -23,6 +24,7 @@ export const useComment = () => {
     return await customFetch(BASE_URL + 'comments', options);
   };
 
+  // Update comment
   const putComment = async (data, commentId) => {
     const options = {
       method: 'PUT',
@@ -36,6 +38,7 @@ export const useComment = () => {
     return await customFetch(`${BASE_URL}comments/${commentId}`, options);
   };
 
+  // Delete comment
   const deleteComment = async (commentId) => {
     const options = {
       method: 'DELETE',

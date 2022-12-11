@@ -25,14 +25,18 @@ const UserDetails = ({ avatarPosition = 'row', posterId }) => {
     flexDirection: direction,
   };
 
+  // Take the first letter from user's name and change it to an upper case
   const userAvatarText = ideaOwner?.name[0].toUpperCase();
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Toggle modal visibility
   const _showModal = () => setShowModal(true);
   const _hideModal = () => setShowModal(false);
 
+  // Get idea owner and set avatar image
   const _getIdeaOwner = async () => {
     try {
       if (posterId) {

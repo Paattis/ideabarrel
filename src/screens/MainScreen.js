@@ -36,14 +36,17 @@ const MainScreen = ({ navigation }) => {
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
 
+  // Update ideas on refresh
   const onRefresh = useCallback(() => {
     setUpdateIdeas(updateIdeas + 1);
     loading && setRefreshing(true);
   });
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Refresh control
   const _refreshControl = () => (
     <RefreshControl
       colors={[theme.colors.primary]}
@@ -53,12 +56,14 @@ const MainScreen = ({ navigation }) => {
     />
   );
 
+  // Expands FAB on scroll
   const _onScroll = ({ nativeEvent }) => {
     const currentScrollPosition =
       Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
     setIsFabExtended(currentScrollPosition <= 0);
   };
 
+  // Filters tags to user's subscribed tags and displays ideas with user's tags
   const _getUserSubscribedTags = () => {
     const arr = [];
     tags.forEach((tag) => {
@@ -80,8 +85,10 @@ const MainScreen = ({ navigation }) => {
     _handleSortMenu();
   };
 
+  // Navigate to add new idea screen
   const _newIdeaScreen = () => navigation.navigate('New Idea');
 
+  // Handle sort list
   const _handleSortMenu = () => setExpanded(!expanded);
 
   const _sortOptions = () => (
