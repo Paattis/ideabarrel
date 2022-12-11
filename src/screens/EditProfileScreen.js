@@ -94,6 +94,7 @@ const EditProfileScreen = ({ navigation }) => {
   const _editProfile = async (data) => {
     delete data.confirm_password;
     if (data.password === '') delete data.password;
+    if (user.email === data.email) delete data.email;
 
     data.role_id = selectedRole.id;
 
@@ -173,7 +174,6 @@ const EditProfileScreen = ({ navigation }) => {
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
-      {_snackbar()}
       <FormCard title="Edit your account info">
         <View style={styles.pfp}>
           <TouchableOpacity onPress={_pickImage} disabled={loading}>
@@ -263,6 +263,7 @@ const EditProfileScreen = ({ navigation }) => {
           Save
         </Button>
       </FormCard>
+      {_snackbar()}
     </ScreenWrapper>
   );
 };
