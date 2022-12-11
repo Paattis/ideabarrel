@@ -7,8 +7,8 @@ import {
 } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { FAB, IdeaCard } from '../components';
-import { useIdea } from '../hooks';
-import { ActivityIndicator, List } from 'react-native-paper';
+import { useIdea, useTag } from '../hooks';
+import { ActivityIndicator, List, Snackbar } from 'react-native-paper';
 import { MainContext } from '../contexts/MainContext';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../theme';
@@ -20,12 +20,13 @@ import {
   OLDEST_IDEAS,
   SUBSCRIBED_TAGS,
 } from '../utils/constants';
-import { useTag } from '../hooks/useTag';
 
 const MainScreen = ({ navigation }) => {
   const [isFabExtended, setIsFabExtended] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { updateIdeas, setUpdateIdeas, setIdeaSortOrder, user } =
     useContext(MainContext);
@@ -39,6 +40,9 @@ const MainScreen = ({ navigation }) => {
     setUpdateIdeas(updateIdeas + 1);
     loading && setRefreshing(true);
   });
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _refreshControl = () => (
     <RefreshControl
@@ -57,14 +61,23 @@ const MainScreen = ({ navigation }) => {
 
   const _getUserSubscribedTags = () => {
     const arr = [];
-    tags.forEach((tag) =>
+    tags.forEach((tag) => {
       tag.users.forEach((users) => {
         if (users.user.id === user.id) {
           arr.push(tag.id);
         }
-      })
-    );
+      });
+    });
+
+    if (arr.length === 0) {
+      setErrorMsg('Not subscribed to any tags yet...');
+      _onToggleSnackBar();
+      return;
+    }
+
     setIdeaSortOrder(SUBSCRIBED_TAGS + arr);
+    setUpdateIdeas(updateIdeas + 1);
+    _handleSortMenu();
   };
 
   const _newIdeaScreen = () => navigation.navigate('New Idea');
@@ -84,8 +97,6 @@ const MainScreen = ({ navigation }) => {
           left={(props) => <List.Icon {...props} icon="tag-multiple" />}
           onPress={() => {
             _getUserSubscribedTags();
-            setUpdateIdeas(updateIdeas + 1);
-            _handleSortMenu();
           }}
           title="Tags I subscribed to"
         />
@@ -137,6 +148,12 @@ const MainScreen = ({ navigation }) => {
     </List.Section>
   );
 
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
+
   return (
     <>
       <SafeAreaView>
@@ -163,6 +180,7 @@ const MainScreen = ({ navigation }) => {
         extended={isFabExtended}
         onPress={_newIdeaScreen}
       />
+      {_snackbar()}
     </>
   );
 };

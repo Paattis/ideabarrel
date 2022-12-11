@@ -13,8 +13,8 @@ const UserDetails = ({ avatarPosition = 'row', posterId }) => {
   const [avatar, setAvatar] = useState();
   const [showModal, setShowModal] = useState(false);
   const [ideaOwner, setIdeaOwner] = useState({
-    name: 'Loading...',
-    role: { name: 'Loading...' },
+    name: 'loading',
+    role: { name: 'loading' },
   });
 
   const { updateProfile } = useContext(MainContext);

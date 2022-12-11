@@ -30,7 +30,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const { user, setSignedIn, updateProfile, setUpdateProfile } =
+  const { user, setSignedIn, updateProfile, setUpdateProfile, updateTags } =
     useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
   const { deleteUser, putUser } = useUser();
@@ -65,9 +65,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     _editProfileScreen();
     hideModal();
   };
+
   useEffect(() => {
     getAllTags();
-  }, [posterInfo.id]);
+  }, [updateTags]);
+
   const _tags = () =>
     tags?.map((tags, id) =>
       tags.users?.map((tag) => {
@@ -120,11 +122,25 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     await SecureStore.deleteItemAsync(ACCESS_TOKEN);
     setSignedIn(false);
   };
+
   const _editProfileScreen = () => nav.navigate('Edit Profile');
+
   const _addRole = () => {
     hideModal();
     _closeMenu();
     nav.navigate('Add Role');
+  };
+
+  const _addTag = () => {
+    hideModal();
+    _closeMenu();
+    nav.navigate('Add Tag');
+  };
+
+  const _subscribeTag = () => {
+    hideModal();
+    _closeMenu();
+    nav.navigate('Subscribe Tag', { userId: posterInfo.id });
   };
 
   const _snackbar = () => (
@@ -162,6 +178,13 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         <Menu.Item
           onPress={_addRole}
           title="Add new role"
+          leadingIcon="plus-circle-outline"
+        />
+      )}
+      {isAdmin && isUserProfile && (
+        <Menu.Item
+          onPress={_addTag}
+          title="Add new tag"
           leadingIcon="plus-circle-outline"
         />
       )}
@@ -209,8 +232,18 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           {children}
           <Text style={styles.nameText}>{posterInfo?.name}</Text>
           <Text style={styles.roleText}>{posterInfo?.role?.name}</Text>
+          {isUserProfile && (
+            <Button
+              style={{ margin: 10 }}
+              icon="plus"
+              mode="contained"
+              onPress={_subscribeTag}
+            >
+              Subscribe to tags
+            </Button>
+          )}
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
-            <Text style={styles.titleText}>Tags I subscribed to:</Text>
+            <Text style={styles.titleText}>Tags subscribed to:</Text>
             <View style={styles.tagContainerStyle}>{_tags()}</View>
           </View>
         </View>

@@ -15,6 +15,8 @@ import {
   EditCommentScreen,
   AddRoleScreen,
 } from '../screens/';
+import AddTagScreen from '../screens/AddTagScreen';
+import SubscribeTagScreen from '../screens/SubscribeTagScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +59,16 @@ const StackScreen = () => {
             options={{ headerShown: false }}
             name="Add Role"
             component={AddRoleScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Add Tag"
+            component={AddTagScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Subscribe Tag"
+            component={SubscribeTagScreen}
           />
         </>
       ) : (
