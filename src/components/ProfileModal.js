@@ -30,11 +30,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const { user, setSignedIn, updateProfile, setUpdateProfile } =
+  const { user, setSignedIn, updateProfile, setUpdateProfile, subscribed } =
     useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
   const { deleteUser, putUser } = useUser();
-  const { tags, getAllTags, postUserTag } = useTag();
+  const { tags, getAllTags } = useTag();
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
   const nav = useNavigation();
@@ -67,7 +67,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   };
   useEffect(() => {
     getAllTags();
-  }, [posterInfo.id]);
+  }, [posterInfo.id, subscribed]);
   const _tags = () =>
     tags?.map((tags, id) =>
       tags.users?.map((tag) => {
@@ -131,7 +131,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     _closeMenu();
     nav.navigate('Add Tag');
   };
-
+  const _subscribeTag = () => {
+    hideModal();
+    _closeMenu();
+    nav.navigate('Subscribe Tag', { posterInfoId: posterInfo.id });
+  };
   const _snackbar = () => (
     <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
       {errorMsg}
@@ -221,6 +225,16 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           {children}
           <Text style={styles.nameText}>{posterInfo?.name}</Text>
           <Text style={styles.roleText}>{posterInfo?.role?.name}</Text>
+          {(isUserProfile || isAdmin) && (
+            <Button
+              style={{ margin: 10 }}
+              icon="plus"
+              mode="contained"
+              onPress={_subscribeTag}
+            >
+              Subscribe to tags
+            </Button>
+          )}
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
             <Text style={styles.titleText}>Tags I subscribed to:</Text>
             <View style={styles.tagContainerStyle}>{_tags()}</View>

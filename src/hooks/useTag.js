@@ -10,6 +10,7 @@ export const useTag = () => {
   const authorizationHeaders = {
     Authorization: 'Bearer ' + user.token,
   };
+
   const getAllTags = async () => {
     const options = {
       headers: { ...authorizationHeaders },
@@ -17,6 +18,7 @@ export const useTag = () => {
     const tag = await customFetch(BASE_URL + 'tags?usr=1', options);
     setTags(tag);
   };
+
   const postTag = async (data) => {
     const options = {
       method: 'POST',
@@ -40,9 +42,10 @@ export const useTag = () => {
       options
     );
   };
+
   const deleteUserTag = async (userId, tagId) => {
     const options = {
-      method: 'DELETE ',
+      method: 'DELETE',
       headers: { ...authorizationHeaders },
     };
     return await customFetch(
