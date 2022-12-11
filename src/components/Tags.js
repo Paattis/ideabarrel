@@ -12,7 +12,6 @@ const Tags = ({ idea, styleText, tagStyle }) => {
 
   const colorValue = {
     admin: 'red',
-    'Payment Adjustment Coordinator': 'grey',
   };
 
   return (

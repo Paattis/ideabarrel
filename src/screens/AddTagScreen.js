@@ -4,7 +4,7 @@ import { Snackbar } from 'react-native-paper';
 import { FormInput, NavigationHeader } from '../components';
 import { PropTypes } from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { useTag } from '../hooks/useTag';
+import { useTag } from '../hooks';
 
 const AddTagScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -18,9 +18,11 @@ const AddTagScreen = ({ navigation }) => {
 
   const _goBack = () => navigation.pop();
 
+  // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
+  // Create new tag
   const _addTag = async (data) => {
     Keyboard.dismiss();
 
@@ -68,21 +70,6 @@ const AddTagScreen = ({ navigation }) => {
           },
         }}
       />
-      {/* <FormInput
-        style={styles.description}
-        placeholderTextColor="#ababab"
-        placeholder="Write a description (optional)"
-        control={control}
-        fieldName="description"
-        outlineStyle={styles.descriptionOutline}
-        disabled={loading}
-        rules={{
-          maxLength: {
-            value: 30,
-            message: 'Description maximum length is 30 characters',
-          },
-        }}
-      /> */}
     </SafeAreaView>
   );
 };

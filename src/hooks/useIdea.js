@@ -14,6 +14,7 @@ export const useIdea = () => {
     Authorization: 'Bearer ' + user?.token,
   };
 
+  // Get ideas by sort order
   const getIdeas = async () => {
     const options = {
       headers: { ...authorizationHeaders },
@@ -27,6 +28,7 @@ export const useIdea = () => {
     setLoading(false);
   };
 
+  // Get idea by idea id
   const getIdeaById = async (ideaId) => {
     const options = {
       headers: { ...authorizationHeaders },
@@ -34,6 +36,7 @@ export const useIdea = () => {
     return await customFetch(`${BASE_URL}ideas/${ideaId}`, options);
   };
 
+  // Create new idea
   const postIdea = async (data) => {
     const options = {
       method: 'POST',
@@ -48,6 +51,7 @@ export const useIdea = () => {
     return res;
   };
 
+  // Update idea
   const putIdea = async (data, ideaId) => {
     const options = {
       method: 'PUT',
@@ -62,6 +66,7 @@ export const useIdea = () => {
     return res;
   };
 
+  // Delete idea
   const deleteIdea = async (ideaId) => {
     const options = {
       method: 'DELETE',

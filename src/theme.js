@@ -4,7 +4,6 @@ import {
 } from '@react-navigation/native';
 import { MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 
-// Placeholder color
 const CustomNavigationDefaultTheme = {
   ...NavigationDefaultTheme,
   roundness: 2,
@@ -52,7 +51,6 @@ const CustomNavigationDefaultTheme = {
   },
 };
 
-// Placeholder color
 const CustomNavigationDarkTheme = {
   ...NavigationDarkTheme,
   roundness: 2,
@@ -100,7 +98,6 @@ const CustomNavigationDarkTheme = {
   },
 };
 
-// Placeholder color
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
   ...CustomNavigationDefaultTheme,
@@ -110,7 +107,6 @@ const CombinedDefaultTheme = {
   },
 };
 
-// Placeholder color
 const CombinedDarkTheme = {
   ...MD3DarkTheme,
   ...CustomNavigationDarkTheme,
