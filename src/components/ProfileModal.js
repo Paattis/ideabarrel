@@ -34,7 +34,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
   const { deleteUser, putUser } = useUser();
-  const { tags, getAllTags } = useTag();
+  const { tags, getAllTags, postUserTag } = useTag();
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
   const nav = useNavigation();
@@ -126,6 +126,11 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     _closeMenu();
     nav.navigate('Add Role');
   };
+  const _addTag = () => {
+    hideModal();
+    _closeMenu();
+    nav.navigate('Add Tag');
+  };
 
   const _snackbar = () => (
     <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
@@ -162,6 +167,13 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         <Menu.Item
           onPress={_addRole}
           title="Add new role"
+          leadingIcon="plus-circle-outline"
+        />
+      )}
+      {isAdmin && isUserProfile && (
+        <Menu.Item
+          onPress={_addTag}
+          title="Add new tag"
           leadingIcon="plus-circle-outline"
         />
       )}
