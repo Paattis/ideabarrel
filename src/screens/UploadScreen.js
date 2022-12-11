@@ -75,7 +75,6 @@ const UploadScreen = ({ navigation }) => {
   // Upload new idea
   const _post = async (data) => {
     Keyboard.dismiss();
-
     data.tags = addedTags;
 
     try {

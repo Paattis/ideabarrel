@@ -38,8 +38,10 @@ const Media = ({ navigation, idea, ideaScreen }) => {
     title: idea.title,
     content: idea.content,
     ideaId: idea.id,
+    ideaTags: idea.tags,
   };
 
+  // Format idea date
   const ideaDate = idea.created_at
     ? formatDistanceToNow(new Date(idea.created_at), {
         addSuffix: true,

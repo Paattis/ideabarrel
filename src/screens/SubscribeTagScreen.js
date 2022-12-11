@@ -16,7 +16,11 @@ const SubscribeTagScreen = ({ route, navigation }) => {
 
   const { userId } = route.params;
 
-  const _goBack = () => navigation.pop();
+  // Go back and update
+  const _goBack = () => {
+    setUpdateTags(updateTags + 1);
+    navigation.pop();
+  };
 
   // Toggle snackbar visibility
   const _onToggleSnackBar = () => setShowSnack(true);
@@ -77,12 +81,6 @@ const SubscribeTagScreen = ({ route, navigation }) => {
       );
     });
 
-  // Update tags and ideas
-  const _save = () => {
-    setUpdateTags(updateTags + 1);
-    _goBack();
-  };
-
   useEffect(() => {
     _getSubscribe();
   }, [userId, tags]);
@@ -96,11 +94,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {_snackbar()}
-      <NavigationHeader
-        onPressCancel={_goBack}
-        onSubmit={_save}
-        buttonText="Save"
-      />
+      <NavigationHeader onPressCancel={_goBack} />
       <Text style={{ margin: 10 }}>
         Subscribe or unsubscribe from a tag by clicking on it.
       </Text>
