@@ -1,35 +1,33 @@
-import React, { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
 import { Keyboard, SafeAreaView, StyleSheet } from 'react-native';
-import { NavigationHeader, FormInput } from '../components';
-import { PropTypes } from 'prop-types';
-import { useComment } from '../hooks';
-import { MainContext } from '../contexts/MainContext';
 import { Snackbar } from 'react-native-paper';
+import { FormInput, NavigationHeader } from '../components';
+import { PropTypes } from 'prop-types';
+import { useForm } from 'react-hook-form';
+import { useRole } from '../hooks/useRole';
 
-const AddCommentScreen = ({ route: { params }, navigation }) => {
+const AddRoleScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postComment } = useComment();
-  const { ideaId } = params;
-  const { setUpdateIdeas, updateIdeas } = useContext(MainContext);
+  const { postRole } = useRole();
 
-  const comment = watch('comment');
+  const name = watch('name');
 
   const _goBack = () => navigation.pop();
 
   const _onToggleSnackBar = () => setShowSnack(true);
   const _onDismissSnackBar = () => setShowSnack(false);
 
-  const _addComment = async (data) => {
+  const _addRole = async (data) => {
+    Keyboard.dismiss();
+
     try {
-      Keyboard.dismiss();
       setLoading(true);
-      await postComment(data, ideaId);
-      setUpdateIdeas(updateIdeas + 1);
+      console.log(data);
+      await postRole(data);
       _goBack();
     } catch (error) {
       setErrorMsg(error.message);
@@ -46,29 +44,28 @@ const AddCommentScreen = ({ route: { params }, navigation }) => {
   );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       {_snackbar()}
       <NavigationHeader
         onPressCancel={_goBack}
-        onSubmit={handleSubmit(_addComment)}
-        disableButton={!comment || loading}
+        onSubmit={handleSubmit(_addRole)}
+        disableButton={!name || loading}
         loading={loading}
-        buttonText="Post"
+        buttonText="Add"
       />
       <FormInput
-        multiline
         autoFocus
         style={styles.description}
         placeholderTextColor="#ababab"
-        placeholder="Write a comment"
+        placeholder="Write the role name"
         control={control}
-        fieldName="comment"
+        fieldName="name"
         outlineStyle={styles.descriptionOutline}
         disabled={loading}
         rules={{
           maxLength: {
-            value: 500,
-            message: 'Comment maximum length is 500 characters',
+            value: 20,
+            message: 'Role maximum length is 20 characters',
           },
         }}
       />
@@ -77,18 +74,13 @@ const AddCommentScreen = ({ route: { params }, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  description: {
-    maxHeight: '80%',
-  },
   descriptionOutline: {
     borderColor: 'transparent',
   },
 });
 
-AddCommentScreen.propTypes = {
-  route: PropTypes.object,
+AddRoleScreen.propTypes = {
   navigation: PropTypes.object,
-  ideaId: PropTypes.number,
 };
 
-export default AddCommentScreen;
+export default AddRoleScreen;

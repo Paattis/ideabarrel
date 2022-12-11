@@ -6,42 +6,91 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Button, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  Divider,
+  Paragraph,
+  Portal,
+  Snackbar,
+} from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
 import { useForm } from 'react-hook-form';
 import { useIdea } from '../hooks';
 import { MainContext } from '../contexts/MainContext';
 import BgSVG from '../../assets/svg/top-right-bg.svg';
+import { useTag } from '../hooks/useTag';
 
 const UploadScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
   const [showDialog, setDialog] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [addedTags, setAddedTags] = useState([]);
 
   const { control, handleSubmit, watch } = useForm({ mode: 'onBlur' });
-  const { postIdea, loading } = useIdea();
+  const { postIdea } = useIdea();
+  const { tags } = useTag();
   const { updateIdeas, setUpdateIdeas } = useContext(MainContext);
 
   const title = watch('title');
   const content = watch('content');
+  const _tags = () =>
+    tags?.map((tag, id) => {
+      const isActive = addedTags.includes(tag.id);
+      return (
+        <Button
+          labelStyle={{ fontSize: 14 }}
+          style={{ marginBottom: 10, borderRadius: 100 }}
+          mode={isActive ? 'contained' : 'outlined'}
+          key={id}
+          onPress={() => {
+            if (!isActive) {
+              setAddedTags((addedTags) => [...addedTags, tag.id]);
+            } else {
+              setAddedTags((tags) =>
+                tags.filter((addedTags) => addedTags !== tag.id)
+              );
+            }
+          }}
+        >
+          {tag.name}
+        </Button>
+      );
+    });
 
   const _showDialog = () => setDialog(true);
   const _hideDialog = () => setDialog(false);
 
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
+
   const _goBack = () => navigation.pop();
 
   const _post = async (data) => {
-    // placeholder
-    const tags = [1];
-    data.tags = tags;
     Keyboard.dismiss();
+
+    data.tags = addedTags;
+
     try {
+      setLoading(true);
       await postIdea(data);
       setUpdateIdeas(updateIdeas + 1);
       _goBack();
     } catch (error) {
-      console.error(error);
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
+    } finally {
+      setLoading(false);
     }
   };
+
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
 
   const _dialog = () => (
     <Portal>
@@ -64,6 +113,7 @@ const UploadScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <BgSVG style={styles.bgShape} />
       {_dialog()}
+      {_snackbar()}
       <NavigationHeader
         onPressCancel={title || content ? _showDialog : _goBack}
         onSubmit={handleSubmit(_post)}
@@ -108,6 +158,16 @@ const UploadScreen = ({ navigation }) => {
             }}
           />
         </ScrollView>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+          }}
+        >
+          {_tags()}
+        </View>
       </View>
     </SafeAreaView>
   );

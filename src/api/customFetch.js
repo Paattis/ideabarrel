@@ -6,10 +6,13 @@ export const customFetch = async (url, options = {}) => {
     if (res.ok) {
       return json;
     } else {
-      const message = json.msg
-        ? `${json.status}: ${json.msg}`
-        : json.errors.msg;
-      throw new Error(message || res.statusText);
+      let msg = '';
+      if ('errors' in json && json['errors'].length !== 0) {
+        msg = `${json.errors[0].param} ${json.errors[0].msg}`;
+      } else {
+        msg = json.msg;
+      }
+      throw new Error(msg || res.statusText);
     }
   } catch (error) {
     throw new Error(error.message);

@@ -8,3 +8,4 @@ export { default as AddCommentScreen } from './AddCommentScreen';
 export { default as EditIdeaScreen } from './EditIdeaScreen';
 export { default as EditProfileScreen } from './EditProfileScreen';
 export { default as EditCommentScreen } from './EditCommentScreen';
+export { default as AddRoleScreen } from './AddRoleScreen';

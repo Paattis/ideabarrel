@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import {
   Button,
   Card,
@@ -9,6 +9,7 @@ import {
   Menu,
   Paragraph,
   Portal,
+  Snackbar,
   Text,
 } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
@@ -18,15 +19,19 @@ import Like from '../components/Like';
 import CommentCount from '../components/CommentCount';
 import UserDetails from './UserDetails';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import Tags from './Tags';
 
 const Media = ({ navigation, idea, ideaScreen }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { user, setUpdateIdeas, updateIdeas } = useContext(MainContext);
   const { deleteIdea } = useIdea();
 
   const isUserIdea = idea?.user?.id === user.id;
+  const isAdmin = user?.role?.id === 1;
 
   const ideaIdParam = { ideaId: idea.id };
   const ideaContentParams = {
@@ -40,6 +45,9 @@ const Media = ({ navigation, idea, ideaScreen }) => {
         addSuffix: true,
       })
     : 'date unavailable';
+
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _showDialog = () => {
     _closeMenu();
@@ -60,9 +68,17 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       setUpdateIdeas(updateIdeas + 1);
       _hideDialog();
     } catch (error) {
-      console.error(error);
+      _hideDialog();
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
     }
   };
+
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
 
   const rightButtons = () => (
     <View style={{ flexDirection: 'row' }}>
@@ -76,6 +92,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
 
   const _dialog = () => (
     <Portal>
+      {_snackbar()}
       <Dialog visible={showDialog} onDismiss={_hideDialog}>
         <Dialog.Title>Remove Idea?</Dialog.Title>
         <Dialog.Content>
@@ -88,6 +105,15 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       </Dialog>
     </Portal>
   );
+  const _tags = () =>
+    idea?.tags?.map((tags, id) => (
+      <Tags
+        key={id}
+        idea={tags.tag.name}
+        styleText={styles.tagsText}
+        tagStyle={styles.tagsStyle}
+      />
+    ));
 
   const _menu = () => (
     <Menu
@@ -95,12 +121,13 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       onDismiss={_closeMenu}
       anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
     >
-      <Menu.Item
-        onPress={_editIdea}
-        title="Edit"
-        leadingIcon="square-edit-outline"
-      />
-      <Divider />
+      {isUserIdea && (
+        <Menu.Item
+          onPress={_editIdea}
+          title="Edit"
+          leadingIcon="square-edit-outline"
+        />
+      )}
       <Menu.Item
         onPress={_showDialog}
         title="Remove"
@@ -108,7 +135,6 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       />
     </Menu>
   );
-
   return !ideaScreen ? (
     <>
       {_dialog()}
@@ -121,7 +147,12 @@ const Media = ({ navigation, idea, ideaScreen }) => {
         />
         <Card.Content style={styles.content}>
           <View style={styles.topContainer}>
-            <Text>*tags*</Text>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {_tags()}
+            </ScrollView>
             <Text>{ideaDate}</Text>
           </View>
           <Divider bold style={styles.divider} />
@@ -131,7 +162,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
           <View>
             <View style={styles.userContainer}>
               <UserDetails posterId={idea.user.id} navigation={navigation} />
-              {isUserIdea && _menu()}
+              {(isUserIdea || isAdmin) && _menu()}
             </View>
           </View>
         </Card.Content>
@@ -148,7 +179,9 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       />
       <Card.Content style={expandedStyle.content}>
         <View style={styles.topContainer}>
-          <Text>*tags*</Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {_tags()}
+          </ScrollView>
           <Text>{ideaDate}</Text>
         </View>
         <Divider bold style={styles.divider} />
@@ -196,6 +229,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
+  },
+  tagsText: { fontSize: 10 },
+  tagsStyle: {
+    alignItems: 'center',
+    borderRadius: 5,
+    padding: 4,
+    marginRight: 10,
   },
 });
 

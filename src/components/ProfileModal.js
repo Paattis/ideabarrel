@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import {
   Button,
   Dialog,
-  Divider,
   IconButton,
   Menu,
   Modal,
   Paragraph,
   Portal,
+  Snackbar,
   Text,
 } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
@@ -18,18 +18,23 @@ import { MainContext } from '../contexts/MainContext';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../hooks';
 import { ACCESS_TOKEN } from '../utils/constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import PropTypes from 'prop-types';
 import ThemeToggle from './ThemeToggle';
+import { useTag } from '../hooks/useTag';
+import Tags from './Tags';
 
 const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
+  const [showSnack, setShowSnack] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
+  const { user, setSignedIn, updateProfile, setUpdateProfile, updateTags } =
+    useContext(MainContext);
   const { isThemeDark } = useContext(PreferencesContext);
-  const { setSignedIn } = useContext(MainContext);
-  const { user } = useContext(MainContext);
-  const { deleteUser } = useUser();
+  const { deleteUser, putUser } = useUser();
+  const { tags, getAllTags } = useTag();
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
   const nav = useNavigation();
@@ -38,31 +43,14 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     backgroundColor: theme.colors.background,
   };
   const boxBackGroundStyle = {
-    backgroundColor: theme.colors.inversePrimary,
+    backgroundColor: theme.colors.primary,
   };
 
   const isUserProfile = posterInfo.id === user.id;
+  const isAdmin = user?.role?.id === 1;
 
-  const _editProfile = () => {
-    _editProfileScreen();
-    hideModal();
-  };
-
-  const _deleteUser = async () => {
-    try {
-      await deleteUser(user.id);
-      setSignedIn(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const _logOut = async () => {
-    await AsyncStorage.removeItem(ACCESS_TOKEN);
-    setSignedIn(false);
-  };
-
-  const _editProfileScreen = () => nav.navigate('Edit Profile');
+  const _onToggleSnackBar = () => setShowSnack(true);
+  const _onDismissSnackBar = () => setShowSnack(false);
 
   const _openMenu = () => setShowMenu(true);
   const _closeMenu = () => setShowMenu(false);
@@ -73,20 +61,111 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   };
   const _hideDialog = () => setDialog(false);
 
+  const _editProfile = () => {
+    _editProfileScreen();
+    hideModal();
+  };
+
+  useEffect(() => {
+    getAllTags();
+  }, [updateTags]);
+
+  const _tags = () =>
+    tags?.map((tags, id) =>
+      tags.users?.map((tag) => {
+        if (tag.user.id === posterInfo.id) {
+          return (
+            <Tags
+              key={id}
+              idea={tags.name}
+              styleText={styles.tagsText}
+              tagStyle={styles.tagsStyle}
+            />
+          );
+        }
+      })
+    );
+
+  const _promoteToAdmin = async () => {
+    if (posterInfo.role.id === 1) {
+      setErrorMsg('User is already an administrator.');
+      _onToggleSnackBar();
+      _closeMenu();
+      return;
+    }
+
+    const roleId = { role_id: 1 };
+    try {
+      await putUser(roleId, posterInfo.id);
+      setErrorMsg('User promoted to administrator.');
+      _onToggleSnackBar();
+      _closeMenu();
+      setUpdateProfile(updateProfile + 1);
+    } catch (error) {
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
+    }
+  };
+
+  const _deleteUser = async () => {
+    try {
+      await deleteUser(user.id);
+      isUserProfile && (await SecureStore.deleteItemAsync(ACCESS_TOKEN));
+      setSignedIn(false);
+    } catch (error) {
+      setErrorMsg(error.message);
+      _onToggleSnackBar();
+    }
+  };
+
+  const _logOut = async () => {
+    await SecureStore.deleteItemAsync(ACCESS_TOKEN);
+    setSignedIn(false);
+  };
+
+  const _editProfileScreen = () => nav.navigate('Edit Profile');
+
+  const _addRole = () => {
+    hideModal();
+    _closeMenu();
+    nav.navigate('Add Role');
+  };
+
+  const _addTag = () => {
+    hideModal();
+    _closeMenu();
+    nav.navigate('Add Tag');
+  };
+
+  const _subscribeTag = () => {
+    hideModal();
+    _closeMenu();
+    nav.navigate('Subscribe Tag', { userId: posterInfo.id });
+  };
+
+  const _snackbar = () => (
+    <Snackbar visible={showSnack} onDismiss={_onDismissSnackBar}>
+      {errorMsg}
+    </Snackbar>
+  );
+
   const _dialog = () => (
-    <Dialog visible={showDialog} onDismiss={_hideDialog}>
-      <Dialog.Title>Delete Account?</Dialog.Title>
-      <Dialog.Content>
-        <Paragraph>
-          Are you sure you want to permanently delete your account? This action
-          is irreversible.
-        </Paragraph>
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={_deleteUser}>Delete</Button>
-        <Button onPress={_hideDialog}>Cancel</Button>
-      </Dialog.Actions>
-    </Dialog>
+    <>
+      {_snackbar()}
+      <Dialog visible={showDialog} onDismiss={_hideDialog}>
+        <Dialog.Title>Delete Account?</Dialog.Title>
+        <Dialog.Content>
+          <Paragraph>
+            Are you sure you want to permanently delete your account? This
+            action is irreversible.
+          </Paragraph>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={_deleteUser}>Delete</Button>
+          <Button onPress={_hideDialog}>Cancel</Button>
+        </Dialog.Actions>
+      </Dialog>
+    </>
   );
 
   const _menu = () => (
@@ -95,21 +174,45 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
       onDismiss={_closeMenu}
       anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
     >
-      <Menu.Item
-        onPress={_editProfile}
-        title="Edit"
-        leadingIcon="square-edit-outline"
-      />
-      <Divider />
+      {isAdmin && isUserProfile && (
+        <Menu.Item
+          onPress={_addRole}
+          title="Add new role"
+          leadingIcon="plus-circle-outline"
+        />
+      )}
+      {isAdmin && isUserProfile && (
+        <Menu.Item
+          onPress={_addTag}
+          title="Add new tag"
+          leadingIcon="plus-circle-outline"
+        />
+      )}
+      {isUserProfile && (
+        <>
+          <Menu.Item
+            onPress={_editProfile}
+            title="Edit"
+            leadingIcon="square-edit-outline"
+          />
+          <Menu.Item
+            onPress={_logOut}
+            title="Log out"
+            leadingIcon="logout-variant"
+          />
+        </>
+      )}
+      {isAdmin && !isUserProfile && (
+        <Menu.Item
+          onPress={_promoteToAdmin}
+          title="Promote to admin"
+          leadingIcon="shield-account"
+        />
+      )}
       <Menu.Item
         onPress={_showDialog}
-        title="Remove"
+        title="Delete"
         leadingIcon="close-circle"
-      />
-      <Menu.Item
-        onPress={_logOut} // also delete token from storage when created
-        title="Log out"
-        leadingIcon="logout-variant"
       />
     </Menu>
   );
@@ -122,20 +225,26 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         contentContainerStyle={[styles.containerStyle, backGroundStyle]}
       >
         <View style={styles.profileFunctions}>
-          <ThemeToggle />
-          {isUserProfile && _menu()}
+          {isUserProfile && <ThemeToggle />}
+          {(isUserProfile || isAdmin) && _menu()}
         </View>
         <View style={styles.contentContainerStyleColumn}>
           {children}
           <Text style={styles.nameText}>{posterInfo?.name}</Text>
           <Text style={styles.roleText}>{posterInfo?.role?.name}</Text>
+          {isUserProfile && (
+            <Button
+              style={{ margin: 10 }}
+              icon="plus"
+              mode="contained"
+              onPress={_subscribeTag}
+            >
+              Subscribe to tags
+            </Button>
+          )}
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
-            <Text style={styles.titleText}>Profile tags</Text>
-            <View style={styles.tagContainerStyle}>
-              <View style={styles.tagsStyle}>
-                <Text style={styles.tagsText}>tags</Text>
-              </View>
-            </View>
+            <Text style={styles.titleText}>Tags subscribed to:</Text>
+            <View style={styles.tagContainerStyle}>{_tags()}</View>
           </View>
         </View>
       </Modal>
@@ -168,11 +277,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   titleText: {
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
   },
-  tagsText: { fontSize: 15 },
   roleText: { fontSize: 15, marginBottom: 10 },
+  tagsText: { fontSize: 15 },
+  tagContainerStyle: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: 10,
+  },
   tagsStyle: {
     alignItems: 'center',
     backgroundColor: 'grey',
@@ -180,11 +296,6 @@ const styles = StyleSheet.create({
     padding: 4,
     marginRight: 10,
     marginTop: 10,
-  },
-  tagContainerStyle: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
   },
   boxStyle: {
     padding: 10,
@@ -206,5 +317,6 @@ ProfileModal.propTypes = {
   groups: PropTypes.string,
   children: PropTypes.node,
   posterInfo: PropTypes.object,
+  userTags: PropTypes.object,
 };
 export default ProfileModal;

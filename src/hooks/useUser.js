@@ -18,21 +18,15 @@ export const useUser = () => {
   };
 
   const checkEmail = async (email) => {
-    const stump = async () => {
-      // This is stump request, replace with code
-      // thats commented out bellow, when ready.
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ free: Math.random() > 0.5 }); // :)
-        }, 200);
-      });
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: email }),
     };
-    return await stump();
-    // const options = {
-    //   method: 'POST',
-    //   body: { email }
-    // }
-    // return await customFetch(BASE_URL + 'users/email/free', options)
+    return await customFetch(BASE_URL + 'users/email/free', options);
   };
 
   const postUser = async (data) => {

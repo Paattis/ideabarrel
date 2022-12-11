@@ -7,7 +7,8 @@ export const useIdea = () => {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { updateIdeas, user } = useContext(MainContext);
+  const { updateIdeas, updateTags, user, ideaSortOrder } =
+    useContext(MainContext);
 
   const authorizationHeaders = {
     Authorization: 'Bearer ' + user?.token,
@@ -18,8 +19,11 @@ export const useIdea = () => {
       headers: { ...authorizationHeaders },
     };
     setLoading(true);
-    const idea = await customFetch(BASE_URL + 'ideas', options);
-    setIdeas(idea.reverse());
+    const idea = await customFetch(
+      `${BASE_URL}ideas/${ideaSortOrder}`,
+      options
+    );
+    setIdeas(idea);
     setLoading(false);
   };
 
@@ -27,7 +31,7 @@ export const useIdea = () => {
     const options = {
       headers: { ...authorizationHeaders },
     };
-    return await customFetch(BASE_URL + 'ideas/' + ideaId, options);
+    return await customFetch(`${BASE_URL}ideas/${ideaId}`, options);
   };
 
   const postIdea = async (data) => {
@@ -40,9 +44,7 @@ export const useIdea = () => {
       },
       body: JSON.stringify(data),
     };
-    setLoading(true);
     const res = await customFetch(BASE_URL + 'ideas', options);
-    setLoading(false);
     return res;
   };
 
@@ -56,9 +58,7 @@ export const useIdea = () => {
       },
       body: JSON.stringify(data),
     };
-    setLoading(true);
     const res = await customFetch(`${BASE_URL}ideas/${ideaId}`, options);
-    setLoading(false);
     return res;
   };
 
@@ -76,7 +76,7 @@ export const useIdea = () => {
 
   useEffect(() => {
     getIdeas();
-  }, [updateIdeas]);
+  }, [updateIdeas, updateTags]);
 
   return {
     loading,
