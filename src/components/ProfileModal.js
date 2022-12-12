@@ -116,9 +116,12 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   // Delete user
   const _deleteUser = async () => {
     try {
-      await deleteUser(user.id);
       isUserProfile && (await SecureStore.deleteItemAsync(ACCESS_TOKEN));
-      setSignedIn(false);
+      await deleteUser(posterInfo.id);
+      isUserProfile && setSignedIn(false);
+      _closeMenu();
+      _hideDialog();
+      hideModal();
     } catch (error) {
       setErrorMsg(error.message);
       _onToggleSnackBar();
