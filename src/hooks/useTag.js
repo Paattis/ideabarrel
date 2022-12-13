@@ -20,6 +20,7 @@ export const useTag = () => {
     setTags(tag);
   };
 
+  // Create a new tag
   const postTag = async (data) => {
     const options = {
       method: 'POST',
@@ -31,6 +32,19 @@ export const useTag = () => {
       body: JSON.stringify({ name: data.name, description: data.description }),
     };
     return await customFetch(BASE_URL + 'tags', options);
+  };
+
+  // Delete a tag by id
+  const deleteTag = async (id) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...authorizationHeaders,
+      },
+    };
+    return await customFetch(`${BASE_URL}tags/${id}`, options);
   };
 
   // Subscribe user to specific tag
@@ -65,6 +79,7 @@ export const useTag = () => {
     getAllTags,
     postUserTag,
     postTag,
+    deleteTag,
     deleteUserTag,
   };
 };

@@ -13,6 +13,7 @@ import {
   Paragraph,
   Portal,
   Snackbar,
+  Text,
 } from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { NavigationHeader, FormInput } from '../components';
@@ -43,8 +44,8 @@ const UploadScreen = ({ navigation }) => {
       const isActive = addedTags.includes(tag.id);
       return (
         <Button
-          labelStyle={{ fontSize: 14 }}
-          style={{ marginBottom: 10, borderRadius: 100 }}
+          labelStyle={{ fontSize: 12 }}
+          style={{ borderRadius: 100, marginHorizontal: 2 }}
           mode={isActive ? 'contained' : 'outlined'}
           key={id}
           onPress={() => {
@@ -72,7 +73,7 @@ const UploadScreen = ({ navigation }) => {
 
   const _goBack = () => navigation.pop();
 
-  // Upload new idea
+  // Upload new idea and update them
   const _post = async (data) => {
     Keyboard.dismiss();
     data.tags = addedTags;
@@ -126,6 +127,10 @@ const UploadScreen = ({ navigation }) => {
         buttonText="Post"
       />
       <View style={styles.inputContainer}>
+        <Text style={{ marginVertical: 10 }}>Choose a tag</Text>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {_tags()}
+        </ScrollView>
         <FormInput
           placeholderTextColor="#ababab"
           placeholder="Write your idea title"
@@ -143,6 +148,7 @@ const UploadScreen = ({ navigation }) => {
           }}
         />
         <Divider />
+
         <ScrollView>
           <FormInput
             multiline
@@ -162,16 +168,6 @@ const UploadScreen = ({ navigation }) => {
             }}
           />
         </ScrollView>
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-evenly',
-            alignItems: 'center',
-          }}
-        >
-          {_tags()}
-        </View>
       </View>
     </SafeAreaView>
   );
@@ -195,6 +191,7 @@ const styles = StyleSheet.create({
     margin: 12,
   },
   title: {
+    marginTop: 10,
     fontSize: 18,
   },
   titleOutLine: {
