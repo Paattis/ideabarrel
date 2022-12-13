@@ -113,12 +113,15 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     }
   };
 
-  // Delete user
+  // Delete user, delete token from storage and sign out if the deleted account is user's account
   const _deleteUser = async () => {
     try {
-      await deleteUser(user.id);
       isUserProfile && (await SecureStore.deleteItemAsync(ACCESS_TOKEN));
-      setSignedIn(false);
+      await deleteUser(posterInfo.id);
+      isUserProfile && setSignedIn(false);
+      _closeMenu();
+      _hideDialog();
+      hideModal();
     } catch (error) {
       setErrorMsg(error.message);
       _onToggleSnackBar();
@@ -168,8 +171,8 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         <Dialog.Title>Delete Account?</Dialog.Title>
         <Dialog.Content>
           <Paragraph>
-            Are you sure you want to permanently delete your account? This
-            action is irreversible.
+            Are you sure you want to permanently delete this account? The action
+            is irreversible.
           </Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
@@ -247,11 +250,10 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           {isUserProfile && (
             <Button
               style={{ margin: 10 }}
-              icon="plus"
               mode="contained"
               onPress={_subscribeTag}
             >
-              Subscribe to tags
+              Tags selection
             </Button>
           )}
           <View style={[styles.boxStyle, boxBackGroundStyle]}>
