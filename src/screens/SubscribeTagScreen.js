@@ -101,25 +101,24 @@ const SubscribeTagScreen = ({ route, navigation }) => {
       const isActive = addedTags.includes(tag.id);
       return (
         <View key={id}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              margin: 5,
-            }}
-          >
-            <Button
-              labelStyle={{ fontSize: 14 }}
-              style={{ margin: 8, borderRadius: 100 }}
-              mode={isActive ? 'contained' : 'outlined'}
-              onPress={() => {
-                isActive
-                  ? _unsubscribe(userId, tag.id)
-                  : _subscribe(userId, tag.id);
-              }}
-            >
-              {tag.name}
-            </Button>
+          <View style={styles.tagContainer}>
+            <View style={styles.tagAndDesc}>
+              <Button
+                labelStyle={{ fontSize: 12 }}
+                style={{ margin: 8, borderRadius: 100 }}
+                mode={isActive ? 'contained' : 'outlined'}
+                onPress={() => {
+                  isActive
+                    ? _unsubscribe(userId, tag.id)
+                    : _subscribe(userId, tag.id);
+                }}
+              >
+                {tag.name}
+              </Button>
+              <Text style={{ maxWidth: 200, fontSize: 12 }}>
+                {tag.description}
+              </Text>
+            </View>
             {isAdmin && (
               <IconButton
                 iconColor="#ff0000"
@@ -187,6 +186,16 @@ const SubscribeTagScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   hintTxt: { margin: 10 },
+  tagContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 5,
+    flexWrap: 'wrap',
+  },
+  tagAndDesc: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
 });
 
 SubscribeTagScreen.propTypes = {
