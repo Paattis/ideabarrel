@@ -42,7 +42,9 @@ const UserDetails = ({ avatarPosition = 'row', posterId }) => {
       if (posterId) {
         const user = await getUserById(posterId);
         setIdeaOwner(user);
-        user.profile_img && setAvatar(PROFILE_IMG_URL + user.profile_img);
+        user.profile_img
+          ? setAvatar(PROFILE_IMG_URL + user.profile_img)
+          : setAvatar('');
       }
     } catch (error) {
       setErrorMsg(error.message);
