@@ -25,6 +25,7 @@ import { useTag } from '../hooks/useTag';
 import Tags from './Tags';
 
 const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
+  const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
@@ -66,8 +67,8 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
 
   // Edit user profile
   const _editProfile = () => {
-    _editProfileScreen();
     hideModal();
+    _editProfileScreen();
   };
 
   useEffect(() => {
@@ -116,6 +117,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
   // Delete user, delete token from storage and sign out if the deleted account is user's account
   const _deleteUser = async () => {
     try {
+      setLoading(true);
       isUserProfile && (await SecureStore.deleteItemAsync(ACCESS_TOKEN));
       await deleteUser(posterInfo.id);
       isUserProfile && setSignedIn(false);
@@ -125,6 +127,8 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     } catch (error) {
       setErrorMsg(error.message);
       _onToggleSnackBar();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -176,7 +180,9 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
           </Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={_deleteUser}>Delete</Button>
+          <Button loading={loading} textColor="#ff0000" onPress={_deleteUser}>
+            {!loading && 'Delete'}
+          </Button>
           <Button onPress={_hideDialog}>Cancel</Button>
         </Dialog.Actions>
       </Dialog>
@@ -187,7 +193,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     <Menu
       visible={showMenu}
       onDismiss={_closeMenu}
-      anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
+      anchor={<IconButton size={23} icon="dots-vertical" onPress={_openMenu} />}
     >
       {isAdmin && isUserProfile && (
         <Menu.Item
@@ -200,7 +206,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
         <Menu.Item
           onPress={_addTag}
           title="Add new tag"
-          leadingIcon="plus-circle-outline"
+          leadingIcon="tag-plus"
         />
       )}
       {isUserProfile && (

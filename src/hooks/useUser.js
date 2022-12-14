@@ -86,12 +86,26 @@ export const useUser = () => {
     return await customFetch(`${BASE_URL}users/${userId}/img`, options);
   };
 
+  // Delete user's avatar image
+  const deleteUserProfileImg = async (userId) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
+        ...authorizationHeaders,
+      },
+    };
+    return await customFetch(`${BASE_URL}users/${userId}/img`, options);
+  };
+
   return {
     postUser,
     getUserById,
     putUser,
     deleteUser,
     putUserProfileImg,
+    deleteUserProfileImg,
     checkEmail,
   };
 };
