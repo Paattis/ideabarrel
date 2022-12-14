@@ -187,7 +187,7 @@ const ProfileModal = ({ visible, hideModal, children, posterInfo }) => {
     <Menu
       visible={showMenu}
       onDismiss={_closeMenu}
-      anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
+      anchor={<IconButton size={23} icon="dots-vertical" onPress={_openMenu} />}
     >
       {isAdmin && isUserProfile && (
         <Menu.Item
