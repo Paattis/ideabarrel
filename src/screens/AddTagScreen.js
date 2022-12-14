@@ -56,12 +56,11 @@ const AddTagScreen = ({ navigation }) => {
       />
       <FormInput
         autoFocus
-        style={styles.description}
         placeholderTextColor="#ababab"
         placeholder="Write the tag name"
         control={control}
         fieldName="name"
-        outlineStyle={styles.descriptionOutline}
+        outlineStyle={styles.outline}
         disabled={loading}
         rules={{
           maxLength: {
@@ -70,12 +69,26 @@ const AddTagScreen = ({ navigation }) => {
           },
         }}
       />
+      <FormInput
+        placeholderTextColor="#ababab"
+        placeholder="Write the tag description (optional)"
+        control={control}
+        fieldName="description"
+        outlineStyle={styles.outline}
+        disabled={loading}
+        rules={{
+          maxLength: {
+            value: 40,
+            message: "Description's maximum length is 40 characters",
+          },
+        }}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  descriptionOutline: {
+  outline: {
     borderColor: 'transparent',
   },
 });

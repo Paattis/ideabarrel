@@ -199,7 +199,7 @@ const EditProfileScreen = ({ navigation }) => {
               source={{ uri: avatar ? avatar : pickAvatarUri }}
             />
           </TouchableOpacity>
-          <Button onPress={() => setAvatar('')}>remove image</Button>
+          <Button onPress={() => setAvatar('')}>remove avatar</Button>
         </View>
         <FormInput
           testID="email_input"
