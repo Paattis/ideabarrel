@@ -115,7 +115,7 @@ const SignUpScreen = ({ navigation }) => {
         onPress={_handleListPress}
       >
         {/* Remove admin role and list all available roles*/}
-        <ScrollView style={{ height: 100 }}>
+        <ScrollView nestedScrollEnabled={true} style={{ height: 100 }}>
           {roles.slice(1).map((role) => (
             <List.Item
               key={role.id}

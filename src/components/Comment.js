@@ -19,6 +19,8 @@ import UserDetails from './UserDetails';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 const Comment = ({ comment }) => {
+  const [loading, setLoading] = useState(false);
+
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
@@ -51,12 +53,15 @@ const Comment = ({ comment }) => {
   // Remove comment
   const _removeComment = async () => {
     try {
+      setLoading(true);
       await deleteComment(comment.id);
       setUpdateIdeas(updateIdeas + 1);
     } catch (error) {
       _hideDialog();
       setErrorMsg(error.message);
       _onToggleSnackBar();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +90,13 @@ const Comment = ({ comment }) => {
           <Paragraph>Are you sure you want to remove your comment?</Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={_removeComment}>Remove</Button>
+          <Button
+            loading={loading}
+            textColor="#ff0000"
+            onPress={_removeComment}
+          >
+            {!loading && 'Remove'}
+          </Button>
           <Button onPress={_hideDialog}>Cancel</Button>
         </Dialog.Actions>
       </Dialog>

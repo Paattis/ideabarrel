@@ -22,6 +22,7 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import Tags from './Tags';
 
 const Media = ({ navigation, idea, ideaScreen }) => {
+  const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showDialog, setDialog] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
@@ -70,6 +71,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
   // Remove idea
   const _removeIdea = async () => {
     try {
+      setLoading(true);
       await deleteIdea(idea.id);
       setUpdateIdeas(updateIdeas + 1);
       _hideDialog();
@@ -77,6 +79,8 @@ const Media = ({ navigation, idea, ideaScreen }) => {
       _hideDialog();
       setErrorMsg(error.message);
       _onToggleSnackBar();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,7 +109,9 @@ const Media = ({ navigation, idea, ideaScreen }) => {
           <Paragraph>Are you sure you want to remove your idea?</Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={_removeIdea}>Remove</Button>
+          <Button loading={loading} textColor="#ff0000" onPress={_removeIdea}>
+            {!loading && 'Remove'}
+          </Button>
           <Button onPress={_hideDialog}>Cancel</Button>
         </Dialog.Actions>
       </Dialog>

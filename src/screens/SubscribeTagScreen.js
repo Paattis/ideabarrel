@@ -1,12 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { Button, Dialog, Paragraph, Snackbar, Text } from 'react-native-paper';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Button,
+  Dialog,
+  Divider,
+  IconButton,
+  Paragraph,
+  Snackbar,
+  Text,
+} from 'react-native-paper';
 import { PropTypes } from 'prop-types';
 import { useTag } from '../hooks/useTag';
 import { MainContext } from '../contexts/MainContext';
 import { NavigationHeader } from '../components';
 
 const SubscribeTagScreen = ({ route, navigation }) => {
+  const [loading, setLoading] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [showDialog, setDialog] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -61,6 +70,7 @@ const SubscribeTagScreen = ({ route, navigation }) => {
   // Delete specific tag
   const _deleteTag = async (tagId) => {
     try {
+      setLoading(true);
       await deleteTag(tagId);
       setErrorMsg('Tag deleted');
       _hideDialog();
@@ -69,6 +79,8 @@ const SubscribeTagScreen = ({ route, navigation }) => {
     } catch (error) {
       setErrorMsg(error.message);
       _onToggleSnackBar();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,30 +95,44 @@ const SubscribeTagScreen = ({ route, navigation }) => {
     });
   };
 
-  // Get all tags and highlight subscribed ones
+  // Tags view
   const _tags = () =>
     tags?.map((tag, id) => {
       const isActive = addedTags.includes(tag.id);
       return (
-        <Button
-          labelStyle={{ fontSize: 14 }}
-          style={{ margin: 8, borderRadius: 100 }}
-          mode={isActive ? 'contained' : 'outlined'}
-          key={id}
-          onLongPress={() => {
-            if (isAdmin) {
-              _showDialog();
-              setChosenTag(tag.id);
-            }
-          }}
-          onPress={() => {
-            isActive
-              ? _unsubscribe(userId, tag.id)
-              : _subscribe(userId, tag.id);
-          }}
-        >
-          {tag.name}
-        </Button>
+        <View key={id}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              margin: 5,
+            }}
+          >
+            <Button
+              labelStyle={{ fontSize: 14 }}
+              style={{ margin: 8, borderRadius: 100 }}
+              mode={isActive ? 'contained' : 'outlined'}
+              onPress={() => {
+                isActive
+                  ? _unsubscribe(userId, tag.id)
+                  : _subscribe(userId, tag.id);
+              }}
+            >
+              {tag.name}
+            </Button>
+            {isAdmin && (
+              <IconButton
+                iconColor="#ff0000"
+                icon="delete-outline"
+                onPress={() => {
+                  _showDialog();
+                  setChosenTag(tag.id);
+                }}
+              />
+            )}
+          </View>
+          <Divider style={{ marginHorizontal: 10 }} />
+        </View>
       );
     });
 
@@ -129,11 +155,13 @@ const SubscribeTagScreen = ({ route, navigation }) => {
         </Dialog.Content>
         <Dialog.Actions>
           <Button
+            loading={loading}
+            textColor="red"
             onPress={() => {
               _deleteTag(chosenTag);
             }}
           >
-            Delete
+            {!loading && 'Delete'}
           </Button>
           <Button onPress={_hideDialog}>Cancel</Button>
         </Dialog.Actions>
@@ -142,30 +170,23 @@ const SubscribeTagScreen = ({ route, navigation }) => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {_snackbar()}
+    <SafeAreaView style={styles.container}>
       <NavigationHeader onPressCancel={_goBack} />
-      <View style={{ margin: 10 }}>
-        <Text>Subscribe or unsubscribe from a tag by clicking on it.</Text>
-        {isAdmin && <Text>Delete a tag by long pressing on it.</Text>}
+      <View style={styles.hintTxt}>
+        <Text variant="labelLarge">
+          Subscribe or unsubscribe from a tag by clicking on it.
+        </Text>
       </View>
-      <View style={styles.tags}>{_tags()}</View>
+      <ScrollView>{_tags()}</ScrollView>
       {_dialog()}
+      {_snackbar()}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 28,
-  },
-  tags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
+  container: { flex: 1 },
+  hintTxt: { margin: 10 },
 });
 
 SubscribeTagScreen.propTypes = {

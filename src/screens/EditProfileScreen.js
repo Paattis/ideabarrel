@@ -28,7 +28,8 @@ const EditProfileScreen = ({ navigation }) => {
 
   const { user, setUser, updateProfile, setUpdateProfile } =
     useContext(MainContext);
-  const { putUser, putUserProfileImg, checkEmail } = useUser();
+  const { putUser, putUserProfileImg, deleteUserProfileImg, checkEmail } =
+    useUser();
   const { roles } = useRole();
 
   const { control, handleSubmit, watch } = useForm({
@@ -87,7 +88,22 @@ const EditProfileScreen = ({ navigation }) => {
       type: 'image/' + imgExtension,
     });
 
-    await putUserProfileImg(formData, user.id);
+    try {
+      await putUserProfileImg(formData, user.id);
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
+  // Delete user's avatar image
+  const _deleteProfileImg = async () => {
+    try {
+      setAvatar('');
+      await deleteUserProfileImg(user.id);
+      setUpdateProfile(updateProfile + 1);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Edit user's info
@@ -95,13 +111,14 @@ const EditProfileScreen = ({ navigation }) => {
     delete data.confirm_password;
     if (data.password === '') delete data.password;
     if (user.email === data.email) delete data.email;
+    if (avatar) _editProfileImg();
+    if (!avatar) _deleteProfileImg();
 
     data.role_id = selectedRole.id;
 
     try {
       setLoading(true);
       const res = await putUser(data, user.id);
-      if (avatar) _editProfileImg();
 
       if (res) {
         delete data.password;
@@ -132,7 +149,7 @@ const EditProfileScreen = ({ navigation }) => {
   useEffect(() => {
     user.profile_img
       ? setAvatar(PROFILE_IMG_URL + user.profile_img)
-      : setAvatar(pickAvatarUri);
+      : setAvatar('');
   }, []);
 
   const _snackbar = () => (
@@ -152,7 +169,7 @@ const EditProfileScreen = ({ navigation }) => {
         onPress={_handleListPress}
       >
         {/* List all Available roles */}
-        <ScrollView style={{ height: 100 }}>
+        <ScrollView nestedScrollEnabled={true} style={{ height: 100 }}>
           {isAdminRoles.map((role) => (
             <List.Item
               key={role.id}
@@ -182,6 +199,7 @@ const EditProfileScreen = ({ navigation }) => {
               source={{ uri: avatar ? avatar : pickAvatarUri }}
             />
           </TouchableOpacity>
+          <Button onPress={() => setAvatar('')}>remove image</Button>
         </View>
         <FormInput
           testID="email_input"
