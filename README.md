@@ -33,3 +33,6 @@ $ npm start
 ## Backend
 
 [Backend repository](https://github.com/Paattis/ideabarrel-backend)
+
+## License
+[MIT License](https://github.com/Paattis/ideabarrel/blob/master/LICENSE)

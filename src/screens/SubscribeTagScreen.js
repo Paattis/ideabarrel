@@ -144,13 +144,13 @@ const SubscribeTagScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {_snackbar()}
-      {_dialog()}
       <NavigationHeader onPressCancel={_goBack} />
       <View style={{ margin: 10 }}>
         <Text>Subscribe or unsubscribe from a tag by clicking on it.</Text>
         {isAdmin && <Text>Delete a tag by long pressing on it.</Text>}
       </View>
       <View style={styles.tags}>{_tags()}</View>
+      {_dialog()}
     </SafeAreaView>
   );
 };

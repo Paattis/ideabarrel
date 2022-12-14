@@ -125,7 +125,14 @@ const Media = ({ navigation, idea, ideaScreen }) => {
     <Menu
       visible={showMenu}
       onDismiss={_closeMenu}
-      anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
+      anchor={
+        <IconButton
+          style={{ marginLeft: -7 }}
+          size={18}
+          icon="dots-vertical"
+          onPress={_openMenu}
+        />
+      }
     >
       {isUserIdea && (
         <Menu.Item
@@ -159,7 +166,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
             >
               {_tags()}
             </ScrollView>
-            <Text>{ideaDate}</Text>
+            <Text style={{ fontSize: 12 }}>{ideaDate}</Text>
           </View>
           <Divider bold style={styles.divider} />
           <Text numberOfLines={5} style={styles.description}>
@@ -188,7 +195,7 @@ const Media = ({ navigation, idea, ideaScreen }) => {
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {_tags()}
           </ScrollView>
-          <Text>{ideaDate}</Text>
+          <Text style={{ fontSize: 12 }}>{ideaDate}</Text>
         </View>
         <Divider bold style={styles.divider} />
         <View style={expandedStyle.userContainer}>
@@ -216,6 +223,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     justifyContent: 'space-between',
     flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     paddingTop: 4,

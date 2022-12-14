@@ -81,7 +81,7 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
             ))
           ) : (
             <View style={styles.commentsContainer}>
-              <Text>no comments</Text>
+              <Text style={styles.noCommentTxt}>No comments yet...</Text>
             </View>
           )}
         </ScrollView>
@@ -107,14 +107,18 @@ const IdeaScreen = ({ route: { params }, navigation }) => {
 const styles = StyleSheet.create({
   commentsHeader: { margin: 20 },
   commentsContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
   },
   commentInputContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  noCommentTxt: {
+    fontStyle: 'italic',
+    marginTop: 25,
   },
   commentInput: {
     width: '75%',

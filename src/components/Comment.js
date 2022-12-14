@@ -96,7 +96,7 @@ const Comment = ({ comment }) => {
     <Menu
       visible={showMenu}
       onDismiss={_closeMenu}
-      anchor={<IconButton icon="dots-vertical" onPress={_openMenu} />}
+      anchor={<IconButton size={18} icon="dots-vertical" onPress={_openMenu} />}
     >
       {isUserComment && (
         <Menu.Item
@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   commentDate: {
+    fontSize: 12,
     alignItems: 'flex-start',
     marginHorizontal: 8,
     marginBottom: 10,
